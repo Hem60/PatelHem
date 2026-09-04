@@ -1,0 +1,26 @@
+{
+  "name": "meridian",
+  "private": true,
+  "description": "A self-classifying engineering portfolio. The site lives in meridian/site and is built from the engine and pipeline beside it.",
+  "comment": [
+    "This manifest exists for one reason: Vercel reads the framework from the",
+    "package.json at the Root Directory, and the root had none — so the deploy",
+    "failed with 'No Next.js version detected' before it ever reached a build.",
+    "",
+    "The root has to BE the root directory here, because meridian/site depends",
+    "on ../engine and ../pipeline through file: links and cannot build without",
+    "its siblings present. So the framework is declared here instead, and the",
+    "version is pinned to the one meridian/site actually uses. Keep them equal.",
+    "",
+    "Nothing is installed from this file locally: each package installs its own",
+    "dependencies, and vercel.json's installCommand does the same on the",
+    "builder. It is a declaration, not a dependency tree."
+  ],
+  "dependencies": {
+    "next": "16.3.3"
+  },
+  "scripts": {
+    "build": "npm --prefix meridian/engine run build && npm --prefix meridian/pipeline run build && npm --prefix meridian/site run build",
+    "test": "npm --prefix meridian/engine test && npm --prefix meridian/pipeline test && npm --prefix meridian/site test"
+  }
+}
