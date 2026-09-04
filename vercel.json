@@ -1,0 +1,7 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "nextjs",
+  "installCommand": "npm --prefix meridian/engine install && npm --prefix meridian/pipeline install && npm --prefix meridian/site install",
+  "buildCommand": "npm --prefix meridian/engine run build && npm --prefix meridian/pipeline run build && npm --prefix meridian/site run build",
+  "outputDirectory": "meridian/site/.next"
+}
