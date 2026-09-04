@@ -1,0 +1,23 @@
+# What never leaves the machine.
+#
+# The CLI falls back to .gitignore when this file is absent, but relying on
+# that fallback means a 1GB upload the first time someone adds a .vercelignore
+# for another reason and forgets a line. This is explicit.
+node_modules/
+.next/
+.git/
+.meridian-cache/
+
+# secrets
+.env
+.env.local
+.env.*.local
+
+# 62MB of reference frames — components/Lattice.tsx records what was measured
+# off them, so the build does not need them
+ezgif-frame-*.png
+*.zip
+
+# working screenshots and the plan document
+photo/
+*.pdf
