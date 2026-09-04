@@ -1,0 +1,16 @@
+# Normalise to LF in the repository and in the working tree.
+#
+# Git's autocrlf checked files out as CRLF, which broke two things that read
+# their own source as text: scripts/contrast.mjs matches a two-line selector
+# in tokens.css and stopped finding it, and a test file failed to parse. Both
+# were silent until the tooling ran.
+#
+# The engine is meant to be reproducible by anyone who clones this. That has
+# to include the line endings.
+* text=auto eol=lf
+
+# binary, never touched
+*.png binary
+*.mp3 binary
+*.pdf binary
+*.zip binary

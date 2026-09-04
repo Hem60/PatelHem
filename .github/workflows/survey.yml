@@ -1,0 +1,95 @@
+name: Survey
+
+# Button only. There is no schedule, and that is deliberate: a catalogue that
+# rewrites itself every night makes `generated` meaningless, and every commit
+# it produced would be noise. The record keeps itself when somebody asks it to.
+on:
+  workflow_dispatch:
+    inputs:
+      rebuild:
+        description: "Republish even if no reading moved (use after a schema change)"
+        type: boolean
+        default: false
+
+# The survey writes catalogue.json and contributions.json back to the branch.
+permissions:
+  contents: write
+
+concurrency:
+  group: survey
+  cancel-in-progress: false
+
+jobs:
+  survey:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # ── the cache is the trap ─────────────────────────────────────────────
+      # phase00/gh.mjs writes every API response to phase00/cache/ and returns
+      # the file on the next read. Those files are committed, so a run that
+      # left them in place would replay a survey from August and report it as
+      # today's. Clearing the cache first is what makes this an actual reading.
+      - name: Clear the response cache
+        run: rm -rf meridian/phase00/cache && mkdir -p meridian/phase00/cache
+
+      - name: Collect the account
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node meridian/phase00/collect.mjs "${{ github.repository_owner }}"
+
+      - name: Build the instruments
+        run: |
+          npm --prefix meridian/engine install
+          npm --prefix meridian/engine run build
+          npm --prefix meridian/pipeline install
+          npm --prefix meridian/pipeline run build
+
+      - name: Measure and publish
+        run: |
+          cd meridian/pipeline
+          node dist/run.js ${{ inputs.rebuild && '--rebuild' || '' }}
+
+      - name: Survey shared work
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node meridian/pipeline/scripts/contributions.mjs
+
+      # The engine is pure and the pipeline verifies every clause, so a survey
+      # that produced a broken catalogue should fail here rather than commit.
+      - name: Check the published catalogue
+        run: |
+          npm --prefix meridian/engine test
+          npm --prefix meridian/pipeline test
+          npm --prefix meridian/site install
+          npm --prefix meridian/site test
+
+      - name: Commit if anything moved
+        run: |
+          git config user.name "meridian survey"
+          git config user.email "patelhem60@gmail.com"
+          git add meridian/pipeline/data
+          if git diff --cached --quiet; then
+            echo "Nothing moved. No commit."
+          else
+            git commit -m "survey: $(date -u +%Y-%m-%d) readings"
+            git push
+            echo "Published."
+          fi
+
+      - name: Summary
+        run: |
+          echo "### Survey complete" >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          node -e "
+            const c = require('./meridian/pipeline/data/catalogue.json');
+            console.log('generated ' + c.generated);
+            for (const e of c.entries) {
+              console.log(e.name.padEnd(20) + String(e.classification).padEnd(11) + e.composite);
+            }
+          " >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"

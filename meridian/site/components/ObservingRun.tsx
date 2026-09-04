@@ -20,6 +20,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { RunEvent } from "@/lib/run/instruments";
 import { ESTIMATED_CALLS } from "@/lib/run/plan";
+import { SURVEY_WORKFLOW } from "@/lib/owner";
 import type { Catalogue, Entry } from "@/lib/catalogue";
 import { classVar } from "@/lib/bands";
 import { Observed, XP_AWARDS, useProgress } from "./Calibration";
@@ -285,6 +286,37 @@ export function ObservingRun({ cat }: { cat: Catalogue }) {
           dispatched — an open target box here would be an open proxy on somebody else&rsquo;s rate
           limit.
         </p>
+
+        {/*
+          * The catalogue itself, refreshed.
+          *
+          * A mission above re-measures ONE repository in the browser and shows
+          * its working; it changes nothing that is published. This re-surveys
+          * the whole account on GitHub's runners and commits the result, which
+          * is what actually moves the figures on this page.
+          *
+          * It is a link to the workflow, not a button that fires it — see the
+          * note on SURVEY_WORKFLOW in lib/owner.ts for why.
+          */}
+        <div className="dispatch">
+          <div>
+            <p className="label" style={{ color: "var(--oxide)" }}>
+              Refresh the published catalogue
+            </p>
+            <p className="margin-note mt-1">
+              Re-reads every repository on the account, re-scores it, verifies every clause and
+              commits only what moved. Runs on a button press, never on a schedule.
+            </p>
+          </div>
+          <a
+            className="btn no-underline dispatch__go"
+            href={SURVEY_WORKFLOW}
+            rel="noreferrer noopener"
+            target="_blank"
+          >
+            Run the survey ↗
+          </a>
+        </div>
       </div>
 
       <div className="spread mt-4">

@@ -14,6 +14,22 @@ export const OWNER = {
   email: "patelhem60@gmail.com",
 } as const;
 
+/** The repository this account publishes from. */
+export const REPO = "PatelHem";
+
+/**
+ * Where the survey is run.
+ *
+ * GitHub's dispatch page for .github/workflows/survey.yml. The site LINKS to
+ * it rather than firing it, and that is the whole design: dispatching a
+ * workflow needs a token with `actions: write`, and putting one behind a
+ * public endpoint would let any visitor spend the account's Actions minutes
+ * and push commits to this repository. The control belongs where the
+ * permission already is.
+ */
+export const SURVEY_WORKFLOW =
+  "https://github.com/" + OWNER.handle + "/" + REPO + "/actions/workflows/survey.yml";
+
 /**
  * The availability line.
  *
