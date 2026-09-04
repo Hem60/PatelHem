@@ -1,0 +1,970 @@
+<title>Meridian Build Plan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@400;600;800&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,600;1,6..72,400&family=JetBrains+Mono:wght@400;500;700&family=Handjet:wght@400;500;700&display=swap">
+
+<style>
+:root{
+  --ground:#E9E7E0;
+  --plate:#F4F2EC;
+  --plate-2:#DFDCD2;
+  --ink:#141B29;
+  --ink-soft:#4A5468;
+  --ink-faint:#7B8496;
+  --rule:#C6C2B5;
+  --rule-hard:#9EA091;
+  --signal:#B4681A;
+  --signal-ink:#FFF8EF;
+  --grid:rgba(20,27,41,.055);
+
+  --c-common:#6B7688;
+  --c-uncommon:#3D7F55;
+  --c-rare:#2F63A8;
+  --c-epic:#6C43A8;
+  --c-legendary:#A8641B;
+  --c-mythic:#B5352B;
+
+  --ok:#3D7F55;
+  --warn:#A8641B;
+  --crit:#B5352B;
+
+  --s1:.35rem; --s2:.7rem; --s3:1.1rem; --s4:1.7rem; --s5:2.6rem; --s6:4rem; --s7:6rem;
+  --maxw:74rem;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#0B1220;
+    --plate:#111A2B;
+    --plate-2:#162034;
+    --ink:#E4E7EE;
+    --ink-soft:#A2ADC0;
+    --ink-faint:#6E7A90;
+    --rule:#26324a;
+    --rule-hard:#3A4964;
+    --signal:#F0A32C;
+    --signal-ink:#1A1206;
+    --grid:rgba(228,231,238,.045);
+
+    --c-common:#8994A6;
+    --c-uncommon:#5FBE84;
+    --c-rare:#5C9CE8;
+    --c-epic:#A583E6;
+    --c-legendary:#F0A32C;
+    --c-mythic:#F0685C;
+
+    --ok:#5FBE84;
+    --warn:#F0A32C;
+    --crit:#F0685C;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0B1220;
+  --plate:#111A2B;
+  --plate-2:#162034;
+  --ink:#E4E7EE;
+  --ink-soft:#A2ADC0;
+  --ink-faint:#6E7A90;
+  --rule:#26324a;
+  --rule-hard:#3A4964;
+  --signal:#F0A32C;
+  --signal-ink:#1A1206;
+  --grid:rgba(228,231,238,.045);
+
+  --c-common:#8994A6;
+  --c-uncommon:#5FBE84;
+  --c-rare:#5C9CE8;
+  --c-epic:#A583E6;
+  --c-legendary:#F0A32C;
+  --c-mythic:#F0685C;
+
+  --ok:#5FBE84;
+  --warn:#F0A32C;
+  --crit:#F0685C;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--ground);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:2.2rem 2.2rem;
+  color:var(--ink);
+  font-family:"Newsreader",Georgia,serif;
+  font-size:17px;
+  line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:var(--s5) var(--s4) var(--s7)}
+
+/* ---------- type ---------- */
+h1,h2,h3,h4{font-family:"Big Shoulders Display","Arial Narrow",sans-serif;text-wrap:balance;margin:0;line-height:.94;letter-spacing:.005em}
+h1{font-size:clamp(3rem,8.5vw,6.4rem);font-weight:800;text-transform:uppercase}
+h2{font-size:clamp(2rem,4.6vw,3.4rem);font-weight:800;text-transform:uppercase}
+h3{font-size:1.5rem;font-weight:600;text-transform:uppercase;letter-spacing:.02em}
+h4{font-size:1.12rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+p{margin:0;max-width:66ch}
+.lede{font-size:1.22rem;color:var(--ink-soft);max-width:60ch}
+a{color:var(--signal);text-underline-offset:.18em}
+code,.mono,td.num{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:.86em}
+code{background:var(--plate-2);padding:.08em .34em;border:1px solid var(--rule)}
+.pix{font-family:"Handjet","Courier New",monospace;text-transform:uppercase;letter-spacing:.06em;font-size:.7rem;line-height:1}
+.eyebrow{font-family:"Handjet","Courier New",monospace;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--signal)}
+.tnum{font-variant-numeric:tabular-nums}
+
+/* ---------- structure ---------- */
+section{margin-top:var(--s7)}
+.sechead{display:flex;align-items:flex-start;gap:var(--s3);border-top:2px solid var(--ink);padding-top:var(--s2);margin-bottom:var(--s4)}
+.secnum{font-family:"Handjet","Courier New",monospace;font-size:.78rem;color:var(--signal);padding-top:.5rem;flex:0 0 2.6rem}
+.sechead p{margin-top:var(--s2)}
+.stack{display:flex;flex-direction:column;gap:var(--s3)}
+.stack-lg{display:flex;flex-direction:column;gap:var(--s4)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(19rem,1fr));gap:var(--s3)}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(14rem,1fr));gap:var(--s2)}
+
+.plate{background:var(--plate);border:1px solid var(--rule);padding:var(--s3)}
+.plate h4{margin-bottom:var(--s2)}
+.plate p{font-size:.95rem;color:var(--ink-soft)}
+
+.scroller{overflow-x:auto;border:1px solid var(--rule);background:var(--plate)}
+table{border-collapse:collapse;width:100%;font-size:.9rem;min-width:34rem}
+th,td{text-align:left;padding:.55rem .8rem;border-bottom:1px solid var(--rule);vertical-align:top}
+thead th{font-family:"Handjet","Courier New",monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);background:var(--plate-2);border-bottom:1px solid var(--rule-hard);white-space:nowrap}
+tbody tr:last-child td{border-bottom:none}
+td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+td strong{font-family:"Big Shoulders Display",sans-serif;font-size:1.05rem;text-transform:uppercase;letter-spacing:.02em;font-weight:600}
+
+/* ---------- hero ---------- */
+.hero{border-bottom:2px solid var(--ink);padding-bottom:var(--s4)}
+.hero-meta{display:flex;flex-wrap:wrap;gap:var(--s3);margin-top:var(--s3);padding-top:var(--s2);border-top:1px solid var(--rule)}
+.hero-meta div{min-width:9rem}
+.hero-meta .k{font-family:"Handjet",monospace;font-size:.6rem;letter-spacing:.12em;color:var(--ink-faint);display:block;margin-bottom:.3rem}
+.hero-meta .v{font-family:"JetBrains Mono",monospace;font-size:.82rem;color:var(--ink)}
+
+/* ---------- class ramp ---------- */
+.ramp{display:grid;grid-template-columns:repeat(6,1fr);gap:2px;margin:var(--s3) 0}
+.ramp div{padding:.6rem .5rem;color:#fff;text-align:center}
+.ramp .pix{display:block;font-size:.6rem}
+.ramp .sc{font-family:"JetBrains Mono",monospace;font-size:.72rem;display:block;margin-top:.3rem;opacity:.9}
+.t-common{background:var(--c-common)}.t-uncommon{background:var(--c-uncommon)}.t-rare{background:var(--c-rare)}
+.t-epic{background:var(--c-epic)}.t-legendary{background:var(--c-legendary)}.t-mythic{background:var(--c-mythic)}
+@media(max-width:640px){.ramp{grid-template-columns:repeat(3,1fr)}}
+
+.chip{display:inline-block;font-family:"Handjet",monospace;font-size:.6rem;letter-spacing:.08em;padding:.28rem .45rem;border:1px solid currentColor;white-space:nowrap}
+.chip.ok{color:var(--ok)}.chip.warn{color:var(--warn)}.chip.crit{color:var(--crit)}
+
+/* ---------- callout ---------- */
+.note{border-left:3px solid var(--signal);background:var(--plate);padding:var(--s3);}
+.note h4{color:var(--signal);margin-bottom:var(--s2)}
+.note p{font-size:.96rem}
+
+pre{margin:0;background:var(--plate);border:1px solid var(--rule);padding:var(--s3);overflow-x:auto;font-family:"JetBrains Mono",monospace;font-size:.8rem;line-height:1.55;color:var(--ink)}
+pre b{color:var(--signal);font-weight:600}
+
+ul,ol{margin:0;padding-left:1.15rem;max-width:66ch}
+li{margin-bottom:.4rem}
+li::marker{color:var(--signal)}
+
+.phase{display:grid;grid-template-columns:5.5rem 1fr;gap:var(--s3);border-top:1px solid var(--rule);padding-top:var(--s3)}
+.phase .pnum{font-family:"Big Shoulders Display",sans-serif;font-size:2.6rem;font-weight:800;line-height:.8;color:var(--signal)}
+.phase .pnum span{display:block;font-family:"Handjet",monospace;font-size:.55rem;letter-spacing:.1em;color:var(--ink-faint);margin-top:.45rem}
+@media(max-width:640px){.phase{grid-template-columns:1fr;gap:var(--s2)}}
+
+.check{list-style:none;padding-left:0}
+.check li{display:flex;gap:.6rem;align-items:baseline}
+.check li::before{content:"▢";color:var(--signal);font-size:.9rem}
+
+footer{margin-top:var(--s7);border-top:2px solid var(--ink);padding-top:var(--s3);color:var(--ink-faint);font-family:"JetBrains Mono",monospace;font-size:.76rem}
+:focus-visible{outline:2px solid var(--signal);outline-offset:2px}
+@media(prefers-reduced-motion:no-preference){a{transition:color .15s}}
+</style>
+
+<div class="wrap">
+
+<header class="hero">
+  <div class="eyebrow">Build plan · drafted 2026-08-25 · from information.txt + 18 reference plates</div>
+  <h1 style="margin-top:1rem">Meridian</h1>
+  <p class="lede" style="margin-top:1.2rem">A self-classifying portfolio. You do not write the project cards and you do not set the ranks — an agent reads your repositories every night, measures them, writes the entry, and promotes it when the work gets better.</p>
+  <div class="hero-meta">
+    <div><span class="k">Working name</span><span class="v">MERIDIAN</span></div>
+    <div><span class="k">Thesis</span><span class="v">The record keeps itself</span></div>
+    <div><span class="k">Genre</span><span class="v">Observatory / catalogue</span></div>
+    <div><span class="k">Theme</span><span class="v">Professional maximalism</span></div>
+    <div><span class="k">Classes</span><span class="v">6 computed tiers</span></div>
+    <div><span class="k">Agents</span><span class="v">5, real tool calls</span></div>
+  </div>
+</header>
+
+<section>
+  <div class="sechead">
+    <div class="secnum">01</div>
+    <div>
+      <h2>The brief, traced</h2>
+      <p class="lede">Every requirement from your <code>information.txt</code>, split out so nothing gets lost in the build. Each one is tagged with where it is answered in this plan.</p>
+    </div>
+  </div>
+
+  <div class="scroller">
+    <table>
+      <thead><tr><th>#</th><th>Your requirement</th><th>How it is answered</th><th>Section</th></tr></thead>
+      <tbody>
+        <tr><td class="num">R1</td><td>Analyse the photo folder / friend's foundry</td><td>Done — 18 plates, plus the live build operated directly: missions dispatched, shell run, network inspected.</td><td class="num">03</td></tr>
+        <tr><td class="num">R2</td><td>Research browser and GitHub for new concepts</td><td>Done — two sweeps. No existing project applies computed rarity to repos; the territory is open.</td><td class="num">04</td></tr>
+        <tr><td class="num">R3</td><td>New themes and new concepts — not a copy</td><td>Observatory genre, five instruments, resolution mechanic, dual-ground palette. Nothing carried over from the reference.</td><td class="num">04 · 06</td></tr>
+        <tr><td class="num">R4</td><td>Professional · maximalism · a little pixelism</td><td>Density earned by real data, not ornament. Pixel face restricted to labels and class chips.</td><td class="num">06</td></tr>
+        <tr><td class="num">R5</td><td>Console with real agent integration</td><td>Deterministic instruments making real GitHub API calls, streamed over SSE. No model — real network, real latency, non-scripted.</td><td class="num">09</td></tr>
+        <tr><td class="num">R6</td><td>See the live GitHub repo</td><td>REST + GraphQL read at build and on demand; every card links the exact commit range it was scored on.</td><td class="num">10</td></tr>
+        <tr><td class="num">R7</td><td>Rank projects mythic / legendary / …</td><td>Six classes from a deterministic five-axis score. Templates write prose; nothing writes the number but the maths.</td><td class="num">07</td></tr>
+        <tr><td class="num">R8</td><td>Button in GitHub Actions triggers the ranking agent</td><td><code>workflow_dispatch</code> only — a manual <strong>Run workflow</strong> button. No cron.</td><td class="num">10</td></tr>
+        <tr><td class="num">R9</td><td>New project card made automatically, unprompted</td><td>Pipeline diffs your repo list against the catalogue and drafts any missing entry itself.</td><td class="num">10</td></tr>
+        <tr><td class="num">R10</td><td>Improve an epic project → agent promotes it to legendary</td><td>Re-scored each run, promoted through hysteresis gates, and written into a public promotion log with the reason.</td><td class="num">07 · 10</td></tr>
+        <tr><td class="num">R11</td><td>Mention contributions everywhere</td><td>A contributions strand that surfaces upstream PRs, with per-repo authorship stats computed rather than claimed.</td><td class="num">08</td></tr>
+        <tr><td class="num">R12</td><td>Cover every section the reference has</td><td>Full coverage map — eleven sections, all replaced rather than reskinned.</td><td class="num">05</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <div class="sechead">
+    <div class="secnum">02</div>
+    <div>
+      <h2>The anti-clone contract</h2>
+      <p class="lede">What the reference does, and the rule that keeps Meridian off it. This table is the check to run before shipping any section.</p>
+    </div>
+  </div>
+
+  <div class="scroller">
+    <table>
+      <thead><tr><th>Dimension</th><th>Reference (PAVAN//FOUNDRY)</th><th>Meridian</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Metaphor</strong></td><td>Foundry, missions, operatives</td><td>Observatory — instruments, surveys, a catalogue that gets revised</td></tr>
+        <tr><td><strong>Thesis</strong></td><td>"Deterministic by design" — verification of other systems</td><td>"The record keeps itself" — continuous measurement of your own work</td></tr>
+        <tr><td><strong>Ranks</strong></td><td>Five tiers, hand-assigned, static strings</td><td>Six tiers, computed from evidence, promote and demote on their own when you run the survey</td></tr>
+        <tr><td><strong>Scoring axes</strong></td><td>Depth · Rigour · Surface · Novelty (four, authored)</td><td>Mass · Stability · Luminosity · Anomaly · Cadence (five, measured)</td></tr>
+        <tr><td><strong>Agents</strong></td><td>Six operatives, scripted runtime — verified: no model, no API calls, every tool returns in 0ms</td><td>Five instruments, no model, real API calls, real parallel tool calls, real latency shown</td></tr>
+        <tr><td><strong>Cards</strong></td><td>Hand-written, ten of them, fixed</td><td>Drafted by the pipeline, count is whatever your account holds</td></tr>
+        <tr><td><strong>Visitor mechanic</strong></td><td>XP, levels, achievement list</td><td>Resolution — exploring sharpens the data shown, from 1× to 8×</td></tr>
+        <tr><td><strong>Ground</strong></td><td>Single near-black field, one coral accent</td><td>Ink-navy sky against chart-paper plates; six class colours doing real work</td></tr>
+        <tr><td><strong>Type</strong></td><td>Pixel display + serif pull quotes + mono</td><td>Industrial condensed display + editorial serif + technical mono, pixel as label only</td></tr>
+        <tr><td><strong>Art</strong></td><td>Engraved mountain range, full bleed</td><td>Dithered sky field, coordinate rules, registration marks, plate margins</td></tr>
+        <tr><td><strong>Skills view</strong></td><td>Four-column left-to-right prerequisite DAG</td><td>Radial constellation — skills as a sky, edges as lines of sight</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note" style="margin-top:var(--s3)">
+    <h4>The rule</h4>
+    <p>If a section can be described with a sentence that also describes the reference, it is not finished. The reference is a portfolio that <em>argues</em> its work is good. Meridian is a portfolio that <em>measures</em> it and publishes the readings, including the unflattering ones. That distinction has to survive into every plate.</p>
+  </div>
+</section>
+
+<section>
+  <div class="sechead">
+    <div class="secnum">03</div>
+    <div>
+      <h2>Reference teardown</h2>
+      <p class="lede">Findings from operating the live build — dispatching missions, running the shell, toggling stock, watching the network. Some of this could not be seen from screenshots, and one finding changes the plan.</p>
+    </div>
+  </div>
+
+  <div class="stack-lg">
+
+    <div class="note" style="border-left-color:var(--crit)">
+      <h4 style="color:var(--crit)">The console does not do what its copy says</h4>
+      <p>The section header reads: <em>"Tool calls are real; github.repo queries the public API live."</em> Two missions were dispatched — M-01 and M-03 — and the network log shows <strong>zero requests to api.github.com</strong>, or anywhere except his own domain for fonts, chunks and the ridge artwork. Every tool result returns in <code>[0ms]</code> or <code>[2ms]</code>, which is not a network round trip. The runtime is a local simulation with scripted latency.</p>
+      <p style="margin-top:var(--s2)">The footer is honest about the model — <em>"no model was called to render this page"</em> — but the console copy overclaims the tools. That gap is the reference's one real vulnerability, and anyone technical who opens a network tab finds it in about thirty seconds.</p>
+    </div>
+
+    <div>
+      <h4 style="margin-bottom:var(--s2)">Honesty rules for Meridian</h4>
+      <p>Which makes this a constraint rather than a gloat. The whole premise of this build is a page whose claims are checkable, so it cannot afford a single sentence it would fail on:</p>
+      <ul style="margin-top:var(--s2)">
+        <li><strong>Never describe a capability the page does not have.</strong> If the API is not called, the copy does not say it was.</li>
+        <li><strong>Show real latencies.</strong> Meridian's calls take hundreds of milliseconds to seconds. That slowness is the proof — never mask it with cosmetic timings.</li>
+        <li><strong>Label cached results as cached.</strong> When a survey is served from the per-SHA cache rather than a fresh API call, the panel says so on the line it affects.</li>
+        <li><strong>Print the receipt.</strong> Every number on the page traces to something a visitor can fetch independently.</li>
+      </ul>
+    </div>
+
+    <div class="scroller">
+      <table>
+        <thead><tr><th>Observed</th><th>Detail</th><th>Bearing on Meridian</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Trace grammar</strong></td><td>Three line types per agent: <code>→ tool({args})</code>, <code>← result · k=v [Xms]</code>, and plain-language narration between them</td><td>Genuinely good, worth learning from. Meridian keeps the dual register — machine line plus human line — but fills it with real payloads.</td></tr>
+          <tr><td><strong>Interleaving</strong></td><td>M-03 shows WARDEN issuing two tool calls before either returns, and lanes finishing out of order</td><td>Simulated concurrency. Meridian gets this free and truthfully through parallel tool calls in the SDK.</td></tr>
+          <tr><td><strong>Estimate vs actual</strong></td><td>Header says <code>~1800 TOK</code>; footer reports <code>TOKENS 405 · ELAPSED 11.6s · STEPS 4/4</code></td><td>Adopt it. Showing the estimate beside the true cost is a credibility move, and Meridian's numbers are real.</td></tr>
+          <tr><td><strong>Missions gate content</strong></td><td>M-02 "unlocks the card vault", M-04 "unlocks the capability tree" — yet the explainer promises "scroll past it and you lose nothing"</td><td>A contradiction to avoid outright. Calibration must never hide a section; resolution only sharpens data already on screen.</td></tr>
+          <tr><td><strong>Shell surface</strong></td><td>Nine commands: <code>whoami · projects · open · skills · education · awards · find · contact · clear</code> — all lookups against a local index</td><td>Ephemeris must carry what his cannot: <code>why</code>, <code>survey</code>, <code>diff</code>, <code>class</code>. Commands that need a real engine underneath.</td></tr>
+          <tr><td><strong>Theme naming</strong></td><td>"Light stock" and "dark stock" — a paper-stock metaphor, carried through to an achievement called Night Shift</td><td>Charming and print-native. Meridian's equivalent is exposure: <em>day plate</em> and <em>night plate</em>, with separate artwork per theme as he does.</td></tr>
+          <tr><td><strong>Light palette</strong></td><td>Warm cream ground with near-black ink</td><td>Confirms the separation already planned — Meridian's light ground is cool chart paper, not warm cream.</td></tr>
+          <tr><td><strong>Build shape</strong></td><td>Next.js, four typefaces, smooth-scroll hijack, lazily rendered sections, 13,418px tall</td><td>Comparable scale, so four faces are justified. Lazy section rendering is worth copying for page weight.</td></tr>
+          <tr><td><strong>XP curve</strong></td><td>Thresholds scale by level — 150 at LVL 1, 400 at LVL 3</td><td>Not carried over. Resolution has eight steps tied to sections genuinely read, not to a points economy.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="grid2">
+      <div class="plate" style="border-left:3px solid var(--ok)">
+        <h4>Worth learning from</h4>
+        <p>The dual-register trace. The estimate-beside-actual footer. Per-theme artwork. Lazy section rendering. Naming the themes after something in the subject's own world rather than "light" and "dark". A shell that indexes the same content the rest of the page shows.</p>
+      </div>
+      <div class="plate" style="border-left:3px solid var(--crit)">
+        <h4>Rejected outright</h4>
+        <p>Claiming live API calls that never happen. Gating real content behind a game. Hand-assigned ranks presented as though measured. Zero-millisecond tool results. An XP economy that rewards clicking rather than reading.</p>
+      </div>
+    </div>
+
+    <div class="note">
+      <h4>What this sharpens</h4>
+      <p>Before operating it, the difference between the two builds was a claim about ambition. After, it is a claim about fact: his console simulates the thing, Meridian performs it — and Meridian can prove it with a network tab. That is a far stronger position than "mine looks different", and it belongs stated plainly on the page rather than implied.</p>
+    </div>
+
+  </div>
+</section>
+
+<section>
+  <div class="sechead">
+    <div class="secnum">04</div>
+    <div>
+      <h2>Concept</h2>
+      <p class="lede">One recommendation, two live alternates. All three cover the same sections and carry the same engine — only the world changes.</p>
+    </div>
+  </div>
+
+  <div class="stack-lg">
+    <div class="plate" style="border-left:3px solid var(--signal)">
+      <div class="eyebrow">Recommended</div>
+      <h3 style="margin:.5rem 0 .8rem">Meridian — the observatory</h3>
+      <p style="color:var(--ink);font-size:1.05rem;max-width:64ch">An observatory does not argue about what it sees. It points instruments at things, records magnitudes, publishes a catalogue, and revises that catalogue when the readings change. Objects get reclassified. The log of reclassifications is itself the evidence that anyone is still looking.</p>
+      <p style="margin-top:var(--s2)">That is exactly the machine you described: instruments that read your repositories, measure them on fixed axes, publish an entry, and upgrade it when you improve the work. The metaphor is not decoration here — reclassification-on-new-evidence is literally how astronomical catalogues work, so every feature you asked for has a native name inside it. Rarity becomes <em>class</em>. The auto-promotion becomes a <em>revision</em>. The nightly Action becomes an <em>observing run</em>.</p>
+      <p style="margin-top:var(--s2)">It also gives maximalism somewhere honest to go. Star atlases and survey plates are among the densest documents ever printed and none of that density is ornament — it is coordinates, magnitudes, marginalia, registration marks. That is the licence to be visually loud while staying professional.</p>
+    </div>
+
+    <div class="grid2">
+      <div class="plate">
+        <div class="eyebrow">Alternate A</div>
+        <h4 style="margin:.5rem 0 .7rem">The Assay Office</h4>
+        <p>Metallurgical testing: samples come in, get assayed against fixed standards, and receive a hallmark. Classes become purity marks. Strong fit for the "measured, not claimed" thesis and gives a gorgeous stamped-metal visual language. Weaker on the <em>continuous re-measurement</em> idea — an assay happens once, which fights your auto-promotion feature.</p>
+      </div>
+      <div class="plate">
+        <div class="eyebrow">Alternate B</div>
+        <h4 style="margin:.5rem 0 .7rem">The Exchange</h4>
+        <p>Repositories as listed instruments with live ratings, a ticker of upgrades and downgrades, analyst notes. Maps perfectly onto rank changes and suits dense readouts. Risk: finance framing reads as cold, invites "why is your art priced", and the ticker aesthetic is closer to the reference's console than the other two.</p>
+      </div>
+    </div>
+
+    <div class="note">
+      <h4>What makes this genuinely new</h4>
+      <p>Both research sweeps came back empty on this: star-count leaderboards exist, repo health scoring exists, gamified portfolios exist — but nothing joins them. No project computes rarity tiers from repository evidence and republishes a portfolio without being asked. You are not building a better version of your friend's site. You are building the thing his site is pretending to be.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="sechead">
+    <div class="secnum">05</div>
+    <div>
+      <h2>Section coverage</h2>
+      <p class="lede">Verified against the live DOM — every section id and every piece of persistent chrome on his page has an heir here, replaced at the concept level rather than restyled.</p>
+    </div>
+  </div>
+
+  <div class="scroller">
+    <table>
+      <thead><tr><th>Reference plate</th><th>Meridian section</th><th>What changes</th></tr></thead>
+      <tbody>
+        <tr><td>Hero — "Deterministic by design"</td><td><strong>First Light</strong></td><td>Headline sits beside a live readout: objects catalogued, last observing run, most recent revision. The hero is data, not a slogan.</td></tr>
+        <tr><td>About — plain / technical toggle</td><td><strong>Parallax</strong></td><td>Three positions, not two: recruiter, engineer, and the machine's own summary of you generated from repo evidence. Same subject, three angles.</td></tr>
+        <tr><td>Skills chip wall</td><td><strong>Instrument Specs</strong></td><td>Folded into the constellation and the agent panel — each capability shows the projects that evidence it, so no unbacked claims.</td></tr>
+        <tr><td>"This page is a console" explainer</td><td><strong>How to Read This Chart</strong></td><td>Explains the classification system and states plainly that ranks are computed, so a visitor knows the numbers are not self-flattery.</td></tr>
+        <tr><td>The Roster — six operatives</td><td><strong>The Instruments</strong></td><td>Five instruments, each with a declared tool set and a visible call count. Framed as apparatus you point at things, not characters you recruit.</td></tr>
+        <tr><td>Mission Console</td><td><strong>The Observing Run</strong></td><td>Deterministic instruments, real parallel GitHub API calls, live call-and-cache meter. You can dispatch a survey of any repo in the account.</td></tr>
+        <tr><td>The Vault — 10 cards</td><td><strong>The Catalogue</strong></td><td>Auto-generated entries, six classes, filterable by class, axis, language and year. Each entry shows its score breakdown.</td></tr>
+        <tr><td>Capability Tree</td><td><strong>The Constellation</strong></td><td>Radial rather than columnar; node size is evidence weight, edges are dependencies, and every node traces back to real commits.</td></tr>
+        <tr><td>Career Log</td><td><strong>The Log</strong> + <strong>Revisions</strong></td><td>Education and awards as before, plus a new live strand: every class change with its date and cause.</td></tr>
+        <tr><td>Terminal</td><td><strong>Ephemeris</strong></td><td>Command line over the same index the agents use — <code>survey</code>, <code>class</code>, <code>diff</code>, <code>why</code>. <code>why &lt;repo&gt;</code> prints the score maths.</td></tr>
+        <tr><td>Contact</td><td><strong>Hailing</strong></td><td>Standard contact, plus the machine-readable dossier as downloadable JSON.</td></tr>
+        <tr><td>Operator record — XP and levels</td><td><strong>Calibration</strong></td><td>Exploring raises resolution, 1× to 8×. Higher resolution reveals more precise data, not points — the reward is information.</td></tr>
+        <tr><td>Persistent HUD — sticky nav, six agent glyphs, LVL and XP meter, stock toggle, mobile drawer</td><td><strong>The Reticle</strong></td><td>Always-on overlay: nav, five instrument glyphs, the resolution meter, day/night plate toggle, and a live stamp of the last observing run and most recent class change.</td></tr>
+        <tr><td>Footer colophon — "built as a pnpm monorepo… no model was called to render this page"</td><td><strong>Colophon</strong></td><td>States how the page is built and, under the honesty rules, exactly which parts are live and which are cached — the claim his footer makes only half of.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <div class="sechead">
+    <div class="secnum">06</div>
+    <div>
+      <h2>Visual system</h2>
+      <p class="lede">Professional, maximalist, lightly pixelated — in that order of priority. Density comes from real data; the pixel face is an accent, not the identity.</p>
+    </div>
+  </div>
+
+  <div class="stack-lg">
+    <div>
+      <h4 style="margin-bottom:var(--s2)">Ground and palette</h4>
+      <p>Two surfaces in tension: a deep <strong>ink-navy sky</strong> and inset <strong>chart-paper plates</strong>. That dual-ground is the single biggest visual separation from the reference's flat near-black field, and it gives layered composition something to layer against. Neutrals carry a slight blue bias so they read as chosen rather than defaulted.</p>
+      <p style="margin-top:var(--s2)">The accent is a <strong>signal amber</strong>, used only for live state — something is running, something changed, something needs reading. The six class colours are semantic and separate from the accent: they encode rank and appear nowhere else, which means colour on this page always means something.</p>
+      <div class="ramp">
+        <div class="t-common"><span class="pix">Common</span><span class="sc">&lt; 34</span></div>
+        <div class="t-uncommon"><span class="pix">Uncommon</span><span class="sc">34–49</span></div>
+        <div class="t-rare"><span class="pix">Rare</span><span class="sc">50–63</span></div>
+        <div class="t-epic"><span class="pix">Epic</span><span class="sc">64–75</span></div>
+        <div class="t-legendary"><span class="pix">Legendary</span><span class="sc">76–87</span></div>
+        <div class="t-mythic"><span class="pix">Mythic</span><span class="sc">88+</span></div>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="plate">
+        <h4>Typography</h4>
+        <p><strong>Big Shoulders Display</strong> — display. Industrial condensed grotesk, 800, uppercase. Chart-label energy, nothing like the reference's pixel headlines.<br>
+        <strong>Newsreader</strong> — body. Editorial serif with optical sizing, for the arguments and card prose.<br>
+        <strong>JetBrains Mono</strong> — data. Tabular figures, every number and trace line on the page.<br>
+        <strong>Handjet</strong> — pixel. Class chips, plate markers and eyebrows only, roughly five percent of type on screen. It is <em>variable</em>: the <code>ELSHAPE</code> and <code>ELGRAD</code> axes dial pixel roundness and density, which ties the pixel face directly to the dither ramps in layers 09 and 10 rather than leaving it a decorative afterthought.</p>
+        <p style="margin-top:var(--s2);color:var(--ink-soft);font-size:.9rem">Zero overlap with the reference's four — Pixelify Sans, Silkscreen, Instrument Serif, IBM Plex Mono — checked against the live build. All four here are on Google Fonts. <strong>This document is set in the stack it prescribes.</strong></p>
+      </div>
+      <div class="plate">
+        <h4>Texture and layout</h4>
+        <p>Coordinate grid as a foreground element rather than a background wash. Dithered gradients instead of smooth ones. Plate registration marks, margin rails carrying footnotes, and multi-column survey tables. Composition is asymmetric — plates of different widths butted against each other, marginalia in the gutters. Loud through information, quiet through ornament.</p>
+      </div>
+    </div>
+
+    <div>
+      <h4 style="margin-bottom:var(--s2)">Background components</h4>
+      <p>Named layers with fixed values, so the ground is buildable rather than described. The reference achieves its whole identity with one raster and roughly six gradient declarations on a flat field; this is the denser equivalent, and every layer below is CSS except the two survey plates.</p>
+      <div class="scroller" style="margin-top:var(--s3)">
+        <table>
+          <thead><tr><th>Layer</th><th>Component</th><th>Technique</th><th>Value</th></tr></thead>
+          <tbody>
+            <tr><td class="num">00</td><td><strong>Sky</strong></td><td>Flat ground, no image</td><td><code>--sky</code> · night <code>#0B1220</code> / day <code>#E9E7E0</code></td></tr>
+            <tr><td class="num">01</td><td><strong>Survey plate</strong></td><td>Raster, one per theme, veiled into the sky</td><td><code>/art/plate-north.webp</code> · <code>plate-north-day.webp</code> — engraved all-sky chart</td></tr>
+            <tr><td class="num">02</td><td><strong>Veil</strong></td><td>Linear gradient, blends plate into sky</td><td><code>linear-gradient(var(--sky), transparent 68%)</code></td></tr>
+            <tr><td class="num">03</td><td><strong>Graticule — minor</strong></td><td>Repeating linear gradient, both axes, <em>foreground</em></td><td>1px at <code>2.2rem</code>, ink @ <code>.055</code> day / <code>.045</code> night</td></tr>
+            <tr><td class="num">04</td><td><strong>Graticule — major</strong></td><td>Same, every fifth line, with edge tick labels</td><td>1px at <code>11rem</code>, ink @ <code>.14</code> — this is what makes it read as a chart, not a wash</td></tr>
+            <tr><td class="num">05</td><td><strong>Chart-paper plate</strong></td><td>Inset second ground for content blocks</td><td><code>--plate</code> <code>#111A2B</code> / <code>#F4F2EC</code>, 1px <code>--rule</code> border</td></tr>
+            <tr><td class="num">06</td><td><strong>Plate grain</strong></td><td>SVG <code>feTurbulence</code> as data URI, tiled</td><td><code>baseFrequency .8</code>, alpha <code>.025</code>, <code>180×180</code> tile — paper tooth, not noise</td></tr>
+            <tr><td class="num">07</td><td><strong>Registration marks</strong></td><td>Corner crop marks via <code>::before/::after</code></td><td>8px arms, 1px, <code>--rule-hard</code>, inset <code>-1px</code></td></tr>
+            <tr><td class="num">08</td><td><strong>Margin rail</strong></td><td>Fixed gutter strip, rotated mono label + footnote ticks</td><td><code>writing-mode: vertical-rl</code>, <code>--ink-faint</code>, 2.4rem gutter</td></tr>
+            <tr><td class="num">09</td><td><strong>Dither ramp</strong></td><td>Hard-stop gradient — never a smooth one</td><td>8 stops, <code>repeating-linear-gradient</code>, no interpolation between steps</td></tr>
+            <tr><td class="num">10</td><td><strong>Class field</strong></td><td>Dither ramp tinted by class colour — the rarity treatment</td><td>8-step ramp from <code>--c-{class}</code> @<code>.20</code> to transparent, 45°</td></tr>
+            <tr><td class="num">11</td><td><strong>Resolution meter</strong></td><td>Repeating gradient as discrete cells, not a bar</td><td>8 cells, <code>--signal</code>, 5px on / 2px off — one cell per resolution step</td></tr>
+            <tr><td class="num">12</td><td><strong>Live rule</strong></td><td>Animated dashed rule, marks a running survey</td><td>4px/4px dashes, <code>--signal</code>, 900ms translate, halts under reduced-motion</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="grid2" style="margin-top:var(--s3)">
+        <div class="plate">
+          <h4>Two ideas taken from the reference</h4>
+          <p>Its XP bar is drawn as pixel segments rather than a solid fill, and its card foil is a single repeating gradient doing the work of an image. Layers 11 and 10 are the same moves — kept because they are genuinely good, and re-valued so neither looks like a copy.</p>
+        </div>
+        <div class="plate">
+          <h4>Budget</h4>
+          <p>Two rasters total, both theme-scoped and lazily loaded below the fold. Everything else is CSS. Layers 06 and 12 are the only ones that can cost frames — grain is a static tile, and the live rule animates <code>transform</code> only. If a layer cannot justify itself on a plate showing real measurements, it does not ship.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid3">
+      <div class="plate"><h4>Motion</h4><p>Every animation reports something real — a value arriving, a state changing, a rank moving. Timings and easings are fixed below. Everything behind <code>prefers-reduced-motion</code>.</p></div>
+      <div class="plate"><h4>Contrast</h4><p>Gated in CI. Maximalist density fails fastest on contrast, so it is a build step, not a review note.</p></div>
+      <div class="plate"><h4>Themes</h4><p>Named for exposure — <em>day plate</em> and <em>night plate</em>. Both grounds designed rather than inverted, separate sky artwork per theme, and class colours revalued so the ramp stays legible on either.</p></div>
+    </div>
+
+    <div>
+      <h4 style="margin-bottom:var(--s2)">Impact — the first five seconds</h4>
+      <p>Attraction does not come from uniform heaviness; it comes from a few moments strong enough to be remembered and described to someone else. Uniformly heavy pages read as noisy and get closed. What follows is the arrival sequence and the five signature moments, specified rather than left to taste.</p>
+
+      <div class="note" style="margin-top:var(--s3)">
+        <h4>The arrival — Plate Development</h4>
+        <p>The single strongest moment on the site, and it is thematically exact: an astronomical survey plate <em>develops</em>. The page opens on bare sky. Over <code>1400ms</code> the graticule draws in from the top-left origin, the survey plate fades up beneath it through a dither mask so it resolves in visible steps rather than smoothly, and the headline sets. Then the live readout counts from zero to the real figures — objects catalogued, last observing run, most recent class change — and stops on values a visitor can verify in the repository.</p>
+        <p style="margin-top:var(--s2)">It is striking, it is cheap (one raster, one mask, one counter), and it is <strong>honest</strong> — the motion is the page reporting its own data arriving. Under <code>prefers-reduced-motion</code> the plate is simply present and the numbers are simply correct.</p>
+      </div>
+
+      <div class="scroller" style="margin-top:var(--s3)">
+        <table>
+          <thead><tr><th>Moment</th><th>Where</th><th>What happens</th><th>Timing</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Plate development</strong></td><td>First Light</td><td>Graticule draws, plate resolves through a dither mask, readout counts to real values</td><td><code>1400ms</code> · staged, cubic-bezier(.2,.7,.3,1)</td></tr>
+            <tr><td><strong>Class field shift</strong></td><td>Catalogue cards</td><td>The 8-step dither ramp tilts with the pointer — rank made physical. Mythic gets one extra step no other class has</td><td><code>120ms</code> · transform only</td></tr>
+            <tr><td><strong>Promotion tick</strong></td><td>Hero + Log</td><td>A class change inside 30 days animates onto the hero as a live line: <code>VAKIL · RARE → EPIC · +9.0</code></td><td><code>600ms</code> · once per visit</td></tr>
+            <tr><td><strong>The run</strong></td><td>Observing Run</td><td>Real API latencies, lanes settling out of order, call meter climbing. Nothing holds attention like a system visibly working</td><td>real-time · <code>~4s</code></td></tr>
+            <tr><td><strong>Chain ignition</strong></td><td>Constellation</td><td>Hovering a skill lights its whole prerequisite chain back to a root and forward to what it enabled</td><td><code>200ms</code> · staggered <code>30ms</code>/node</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="grid2" style="margin-top:var(--s3)">
+        <div class="plate">
+          <h4>Where the weight goes</h4>
+          <p>Heavy at the top and at the cards, quiet in the reading passages. First Light and the Catalogue carry the density — full graticule, plate artwork, class fields, live readouts. The prose sections drop to plate-on-sky with a margin rail and nothing else, so the arguments stay readable. Loud, quiet, loud is a rhythm; loud throughout is noise.</p>
+        </div>
+        <div class="plate">
+          <h4>The line that gets repeated</h4>
+          <p>Every memorable site has one sentence a visitor repeats to someone else. Here it is the thesis, printed in the Colophon and true: <strong>no model was called to render this page, and no rank on it was typed by hand.</strong> The reference can claim only the first half. That claim is the reason to look, and the design exists to deliver you to it.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="note">
+      <h4>The trap to avoid</h4>
+      <p>Every source on the current maximalist revival gives the same warning, and it applies directly here: overcrowded layouts overwhelm, heavy graphics slow load, and contrast is usually the first casualty. The discipline is that <em>density must be earned by content</em>. A plate is allowed to be dense because it is showing eleven real measurements — never because empty space felt underused.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="sechead">
+    <div class="secnum">07</div>
+    <div>
+      <h2>The classification engine</h2>
+      <p class="lede">The heart of the build. Deterministic maths decides the class; templates only describe it. This is what stops ranks flickering and what lets any claim be defended.</p>
+    </div>
+  </div>
+
+  <div class="stack-lg">
+    <div>
+      <h4 style="margin-bottom:var(--s2)">Five axes</h4>
+      <div class="scroller">
+        <table>
+          <thead><tr><th>Axis</th><th>Question it answers</th><th>Computed from</th><th class="num">Weight</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Stability</strong></td><td>Does it hold together?</td><td>Test files and ratio, CI workflow present, last CI conclusion, coverage report, lint config, strict typing, licence, unpinned or vulnerable deps</td><td class="num">0.28</td></tr>
+            <tr><td><strong>Mass</strong></td><td>How much is actually there?</td><td>Commit count (log-scaled), lines of code, package or module count, repo lifespan, distinct languages</td><td class="num">0.24</td></tr>
+            <tr><td><strong>Anomaly</strong></td><td>How unusual is it?</td><td>Topic rarity against a corpus, uncommon dependencies, domain distinctness within your own catalogue, bounded rule-based heuristics (±10 max)</td><td class="num">0.20</td></tr>
+            <tr><td><strong>Luminosity</strong></td><td>Can anyone else see it?</td><td>Deploy URL returning 200, README length and imagery, releases, docs directory, topics set, stars and forks (capped, low weight)</td><td class="num">0.16</td></tr>
+            <tr><td><strong>Cadence</strong></td><td>Is it alive?</td><td>Recency of last commit, distribution of commits over time, sustained work versus a single weekend, issue and PR activity</td><td class="num">0.12</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="margin-top:var(--s2);color:var(--ink-soft);font-size:.95rem">Weighting is deliberate: <strong>stability outranks size</strong>, so a small well-tested library beats a large untested one. And stars sit inside the lightest axis with a cap — popularity contributes, but it can never carry a project on its own.</p>
+    </div>
+
+    <div>
+      <h4 style="margin-bottom:var(--s2)">Score to class</h4>
+      <pre><b>composite</b> = 0.28·stability + 0.24·mass + 0.20·anomaly + 0.16·luminosity + 0.12·cadence
+
+<b>class</b>  MYTHIC     composite ≥ 88
+       LEGENDARY  76 – 87
+       EPIC       64 – 75
+       RARE       50 – 63
+       UNCOMMON   34 – 49
+       COMMON     &lt; 34
+
+<b>hysteresis</b>   promote  : exceed threshold by +2, hold 2 consecutive runs
+              demote   : fall below by −3, hold 3 consecutive runs
+              floor    : a class is never revoked within 30 days of being granted</pre>
+      <p style="margin-top:var(--s2)">The hysteresis gate is the difference between a feature and an annoyance. Without it, a repo sitting on 75.6 flips between epic and legendary every night and the promotion log fills with noise. With it, a promotion means something actually improved and stayed improved.</p>
+    </div>
+
+    <div class="note">
+      <h4>Why nothing subjective picks the number</h4>
+      <p>Ask a language model to rank the same repository twice and you get two answers. Ranks would drift with no cause, and the first person to ask "why is this legendary?" gets nothing back. So the pipeline computes the score from evidence, and the model's job is narrower and safer: read the code and the README, then write the prose that explains what the numbers already decided. Every entry can print its own maths on demand via <code>why &lt;repo&gt;</code>.</p>
+    </div>
+
+    <div>
+      <h4 style="margin-bottom:var(--s2)">Calibration — required before launch</h4>
+      <p>Thresholds above are a starting point, not a truth. They must be tuned against your actual repositories, because a rubric calibrated on large mature projects will grade a portfolio of hackathon builds as ten commons, and one calibrated too kindly makes everything legendary and the ladder stops meaning anything. Target distribution for a healthy catalogue: roughly one mythic at most, two or three legendary, and a real tail. <strong>The ladder has to be able to say no.</strong></p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="sechead">
+    <div class="secnum">08</div>
+    <div>
+      <h2>Attribution</h2>
+      <p class="lede">Your brief asked that contributions be referenced everywhere. Here is how that becomes a feature rather than a liability.</p>
+    </div>
+  </div>
+
+  <div class="stack">
+    <p>You wrote that the whole repository is essentially your work. The safe and stronger version of that is to <em>show</em> it rather than assert it: the pipeline can compute your authorship share directly — commits by you against total, files touched, lines changed, PRs merged, review comments left — and print it on the entry. A recruiter will check the commit graph regardless, so a number that matches what they find reads as confidence, whereas a claim that overshoots costs the whole page its credibility.</p>
+
+    <div class="grid2">
+      <div class="plate">
+        <h4>Solo repositories</h4>
+        <p>Entry shows the full build with no authorship footnote needed. These carry the strongest claims and should be the loudest plates in the catalogue.</p>
+      </div>
+      <div class="plate">
+        <h4>Shared repositories</h4>
+        <p>Entry carries an authorship strip: <span class="chip ok">142 / 168 COMMITS</span> <span class="chip ok">OWNER</span>. Precise, verifiable, and more impressive than a vague claim.</p>
+      </div>
+    </div>
+
+    <p><strong>The contributions strand.</strong> Beyond your own repos, the pipeline searches the API for merged PRs, filed issues and reviews you authored anywhere on GitHub, and surfaces them as their own catalogue class — upstream work against other people's projects, each linked to the exact commit. Your friend's page mentions two upstream findings at Google as a headline number. Yours generates that list automatically and keeps it current, which is both the honest version and the more impressive one.</p>
+  </div>
+</section>
+
+<section>
+  <div class="sechead">
+    <div class="secnum">09</div>
+    <div>
+      <h2>The instrument runtime</h2>
+      <p class="lede">No language model, anywhere in this build. The instruments are deterministic programs that make real network calls to the GitHub API and stream real results. The reference fakes agency with a scripted runtime; Meridian drops the pretence and ships the honest version — measurement, not conversation.</p>
+    </div>
+  </div>
+
+  <div class="stack-lg">
+    <div class="scroller">
+      <table>
+        <thead><tr><th>Instrument</th><th>Discipline</th><th>Tools</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Sextant</strong></td><td>Measurement and classification</td><td><code>repo.score</code> <code>repo.stats</code> <code>class.explain</code></td></tr>
+          <tr><td><strong>Prism</strong></td><td>Code reading and decomposition</td><td><code>repo.tree</code> <code>repo.read</code> <code>dep.resolve</code></td></tr>
+          <tr><td><strong>Almanac</strong></td><td>Archive and retrieval</td><td><code>index.search</code> <code>catalogue.query</code> <code>log.lookup</code></td></tr>
+          <tr><td><strong>Herald</strong></td><td>Composing the entry from templates</td><td><code>entry.compose</code> <code>entry.revise</code></td></tr>
+          <tr><td><strong>Plumb</strong></td><td>Checking the other four</td><td><code>claim.verify</code> <code>source.cite</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="color:var(--ink-soft);font-size:.95rem">Five, not six — and every one corresponds to a step the pipeline genuinely performs, rather than to a subject area. Four of the five were always deterministic; only Herald ever needed a model, and the section below replaces it. <strong>Plumb still matters most</strong>: no entry reaches the catalogue until each factual claim is matched to a file that actually exists in the repository. An entry that says "tested against a real Postgres" must point at the compose file that starts one — and that check is a file-tree lookup, not a judgement call.</p>
+
+    <div class="note">
+      <h4>What replaces the model</h4>
+      <p>Herald composes prose from <strong>hard-coded sentence templates filled by real signals</strong> — no generation, no API. A repository with <code>tests/</code>, a green CI workflow and a coverage report produces: <em>"47 tests, CI green across the last 12 runs, coverage reported at 88%."</em> True by construction, because every clause is bound to a measured value and a template only fires when its evidence is present.</p>
+      <p style="margin-top:var(--s2)">What templates cannot write is the <em>thesis</em> — the one line saying why a project is interesting. So you write that, once, per project, in <code>prose.json</code>. The machine supplies every number and every claim about structure; you supply the argument. That split is honest and it is also better: the sentences worth reading on the reference site are the ones a person wrote.</p>
+    </div>
+
+    <div class="grid2">
+      <div class="plate">
+        <h4>Architecture</h4>
+        <p>A Next.js route handler runs the instrument graph and streams over SSE. Concurrency is real — independent probes fire together and settle out of order because they are genuine network calls to the GitHub API, not timers. No key to protect, no server-side secret beyond a read-only GitHub token.</p>
+      </div>
+      <div class="plate">
+        <h4>Controls</h4>
+        <p>The only budget is the GitHub rate limit: 5,000 requests an hour authenticated. Responses are cached to disk per commit SHA, so repeat runs cost nothing. Rate-limit exhaustion serves the cached survey and says so on the panel.</p>
+      </div>
+    </div>
+
+    <div>
+      <h4 style="margin-bottom:var(--s2)">Trace grammar</h4>
+      <p>Adapted from the reference's best idea — a machine line and a human line, so the panel is legible to a recruiter and verifiable by an engineer. The difference is that every value below is real, including the latency. The reference's tool calls return in <code>0ms</code> because nothing leaves the browser; these return in hundreds of milliseconds because a request genuinely goes to <code>api.github.com</code> and comes back.</p>
+      <pre style="margin-top:var(--s2)"><b>SEXTANT</b>  → repo.score({"repo":"vakil","rubric":"v3"})
+<b>SEXTANT</b>  ← GET /repos/Hem60/vakil/contents  200 · 1,284 B <b>[412ms]</b>
+<b>SEXTANT</b>  ← stability=74 mass=38 anomaly=72 luminosity=34 cadence=44 <b>[1.34s]</b>
+<b>SEXTANT</b>  tests/ present · workflows/eval.yml present · LICENSE absent
+<b>SEXTANT</b>  composite 55.0 → RARE · next gate EPIC at 64.0
+<b>PLUMB</b>    → claim.verify({"claim":"evaluation harness in CI"})
+<b>PLUMB</b>    ← cited .github/workflows/eval.yml:1 · <b>upheld</b> [287ms]
+
+header  4 STEPS · 3 STAGES · 11 API CALLS  est.
+footer  11 CALLS · 3 CACHED · ELAPSED 4.2s · STEPS 4/4  actual</pre>
+      <p style="margin-top:var(--s2);color:var(--ink-soft);font-size:.95rem">Estimate in the header, truth in the footer — but the meter counts <strong>API calls and cache hits</strong> instead of tokens and dollars. A visitor who opens a network tab finds exactly what the panel described. That correspondence is the entire credibility of the page, and without a model in the loop it is now trivially true rather than something you have to engineer.</p>
+    </div>
+
+    <div class="note">
+      <h4>What this costs you, and what it buys</h4>
+      <p><strong>Costs:</strong> the instruments cannot read a repository and understand it. They can see that <code>tests/</code> exists and count the files in it; they cannot tell you the tests are any good. Every judgement of quality in the catalogue is either a measured proxy or a sentence you wrote yourself.</p>
+      <p style="margin-top:var(--s2)"><strong>Buys:</strong> zero running cost, no key to leak, no rate-limited public endpoint that a stranger can drain, nothing that can hallucinate a claim about your work, and a page that is fully reproducible — anyone can clone the repo, run the engine and get byte-identical scores. The reference's footer boasts <em>"no model was called to render this page"</em> as a footnote while the console overclaims. Yours can print the same sentence as a <strong>thesis</strong>, and have it be completely true.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="sechead">
+    <div class="secnum">10</div>
+    <div>
+      <h2>Automation</h2>
+      <p class="lede">Requirements R8, R9 and R10 — the button, the automatic card, and the automatic promotion. One pipeline covers all three.</p>
+    </div>
+  </div>
+
+  <pre><b>trigger</b>   workflow_dispatch  ← your button, and the only trigger
+           inputs: repo (optional — blank surveys everything)
+                   dry_run (report the diff, commit nothing)
+           NO cron. NO push trigger. It runs when you say so.
+
+<b>01 collect</b>   list repos (REST + GraphQL) · fetch tree, workflows, CI runs,
+              releases, languages, commit history, your authorship share
+              search merged PRs + issues you authored across all of GitHub
+
+<b>02 measure</b>   compute five axes from evidence · no model involved
+              write scores.json with every raw signal preserved
+
+<b>03 diff</b>      compare against catalogue.json
+              new repo?        → mark FOR DRAFTING
+              class changed?   → test hysteresis gates
+              nothing moved?   → exit, no commit
+
+<b>04 compose</b>   Prism extracts signals → Herald fills hard-coded templates
+              → Plumb verifies every claim against real files
+              a template whose evidence is missing simply does not fire
+              no thesis line yet?  → entry publishes as UNANNOTATED
+
+<b>05 revise</b>    class change passes gates → update entry
+              → append to revisions.json with the cause:
+                "COMPLYLITE · EPIC → LEGENDARY · stability 61 → 88
+                 (CI added, 47 tests, coverage report)"
+
+<b>06 publish</b>   commit catalogue.json + revisions.json → deploy</pre>
+
+  <div class="grid2" style="margin-top:var(--s3)">
+    <div class="plate">
+      <h4>Manual trigger only</h4>
+      <p>No schedule. The workflow appears in the Actions tab with a <strong>Run workflow</strong> button, and nothing happens until you press it. That keeps R8 exactly as you wrote it — click the button, the instruments survey the repositories, the ranking comes back — and it means the repository history stays clean instead of accumulating a commit every night reporting that nothing changed.</p>
+      <p style="margin-top:var(--s2)">R9 and R10 still hold: you never ask for a card or a promotion. You press one button and the pipeline decides what is new, what moved, and what to write. <code>dry_run</code> lets you see the diff before anything is committed.</p>
+    </div>
+    <div class="plate">
+      <h4>The feature to push hardest</h4>
+      <p>The revisions log. When your epic becomes legendary, do not just swap a badge — publish <em>why</em>, dated, with the axis that moved and the evidence that moved it. A portfolio that visibly levels up as you work, with receipts, is something nobody else currently has. Put it on the hero.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="sechead">
+    <div class="secnum">11</div>
+    <div>
+      <h2>Stack and data</h2>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="plate">
+      <h4>Stack</h4>
+      <p>Next.js (App Router) · TypeScript strict · Tailwind · Zod contracts for every artifact file · GitHub REST + GraphQL · GitHub Actions · Vercel · Vitest for the scoring engine · Playwright for visual regression · axe and contrast checks gated in CI.</p>
+    </div>
+    <div class="plate">
+      <h4>Artifacts on disk</h4>
+      <p><code>scores.json</code> — raw signals per repo, every run<br>
+      <code>catalogue.json</code> — published entries and classes<br>
+      <code>revisions.json</code> — append-only class-change log<br>
+      <code>contributions.json</code> — upstream PRs and issues<br>
+      <code>rubric.json</code> — weights and thresholds, version-stamped</p>
+    </div>
+  </div>
+
+  <p style="margin-top:var(--s3)">Version-stamping the rubric matters more than it looks: when you tune thresholds later, every historical revision stays interpretable because it records which rubric version produced it. Without that, a rubric change silently rewrites your own history.</p>
+</section>
+
+<section>
+  <div class="sechead">
+    <div class="secnum">12</div>
+    <div>
+      <h2>Build order</h2>
+      <p class="lede">Engine before interface, deliberately. If the scoring is wrong, a beautiful catalogue is a beautiful catalogue of wrong answers.</p>
+    </div>
+  </div>
+
+  <div class="stack">
+    <div class="phase"><div class="pnum">00<span>Calibrate</span></div><div><h4>Read your real repositories</h4><p>Pull the account, compute raw signals, look at the distribution, tune thresholds until the ladder discriminates. Nothing else can start until this is honest.</p></div></div>
+    <div class="phase"><div class="pnum">01<span>Engine</span></div><div><h4>Scoring as a library, no UI</h4><p>Five axes, deterministic, fully unit-tested. Runs as a CLI and prints a table. Reviewable and arguable before a single pixel exists.</p></div></div>
+    <div class="phase"><div class="pnum">02<span>Pipeline</span></div><div><h4>Actions, drafting, revisions</h4><p>Manual dispatch trigger with inputs, diff logic, Herald's template set and Plumb, the revisions log. At the end of this phase the automation is real even though the site is not.</p></div></div>
+    <div class="phase"><div class="pnum">03<span>System</span></div><div><h4>Design system and static plates</h4><p>Tokens, both themes, type scale, class ramp, contrast gate in CI. Then First Light, Parallax, the Log, Hailing.</p></div></div>
+    <div class="phase"><div class="pnum">04<span>Catalogue</span></div><div><h4>The catalogue and constellation</h4><p>Entries rendered from <code>catalogue.json</code>, class filters, score breakdowns, the radial skill view, the revisions feed.</p></div></div>
+    <div class="phase"><div class="pnum">05<span>Runtime</span></div><div><h4>The observing run</h4><p>Deterministic instruments, streamed over SSE with a call meter and disk cache. Last because it is the least load-bearing and the easiest to get wrong and depends on everything above.</p></div></div>
+    <div class="phase"><div class="pnum">06<span>Harden</span></div><div><h4>Ephemeris, a11y, performance</h4><p>Command line, reduced-motion paths, Lighthouse and axe budgets enforced, mobile density review, cost ceiling verified.</p></div></div>
+  </div>
+</section>
+
+<section>
+  <div class="sechead">
+    <div class="secnum">13</div>
+    <div>
+      <h2>Done means</h2>
+    </div>
+  </div>
+  <ul class="check">
+    <li>Pushing an improvement to a repo, then pressing <strong>Run workflow</strong> once, results in a re-classified entry and a revisions line — with no other manual step and nothing written by hand.</li>
+    <li>Creating a brand-new repo produces a drafted catalogue entry without anyone asking for one.</li>
+    <li><code>why &lt;repo&gt;</code> prints the five axis scores, the raw signals behind each, and the threshold arithmetic.</li>
+    <li>Every factual sentence in every entry points at a file that exists in that repository.</li>
+    <li>Class distribution is a real curve — not everything is legendary.</li>
+    <li>The console makes genuine parallel tool calls, and the page never claims otherwise.</li>
+    <li>A visitor with a network tab open sees requests matching every claim the console makes.</li>
+    <li>Displayed latencies are measured, never authored.</li>
+    <li>No section of the page is hidden until a visitor interacts with something.</li>
+    <li>Authorship share is computed and shown on every shared repository.</li>
+    <li>Contrast passes at every class colour on both grounds, enforced in CI.</li>
+    <li>Reduced-motion and keyboard paths are complete.</li>
+    <li>No section can be described by a sentence that also describes the reference.</li>
+  </ul>
+</section>
+
+<section>
+  <div class="sechead">
+    <div class="secnum">14</div>
+    <div>
+      <h2>Still open</h2>
+      <p class="lede">These block specific phases rather than the whole build, so work can start at phase 01 while they resolve.</p>
+    </div>
+  </div>
+  <div class="grid2">
+    <div class="plate"><h4><span class="chip crit">Blocks 00</span> GitHub account</h4><p>Thresholds cannot be calibrated without seeing your real repository distribution. This is the one genuine blocker.</p></div>
+    <div class="plate"><h4><span class="chip warn">Blocks 07</span> Solo versus shared</h4><p>Which repos are yours alone. The pipeline computes shares automatically, but the framing of the loudest cards depends on the answer.</p></div>
+    <div class="plate"><h4><span class="chip warn">Blocks 04</span> Thesis lines</h4><p>One sentence per project for <code>prose.json</code>. The machine writes everything else; this is the part only you can supply.</p></div>
+    <div class="plate"><h4><span class="chip warn">Blocks 03</span> The name</h4><p>Meridian is a working title. Alternates: Longitude, Aperture, Catalogue One, or a plain <em>Observatory</em> under your own name.</p></div>
+    <div class="plate"><h4><span class="chip warn">Blocks 02</span> Private repositories</h4><p>Whether to include them. A fine-grained token can read private repos and publish only the metrics, never the code.</p></div>
+    <div class="plate"><h4><span class="chip warn">Blocks 03</span> Concept lock</h4><p>Observatory, Assay Office, or Exchange. Everything downstream inherits the vocabulary chosen here.</p></div>
+  </div>
+</section>
+
+<section>
+  <div class="sechead">
+    <div class="secnum">15</div>
+    <div>
+      <h2>Master prompt</h2>
+      <p class="lede">Condensed and paste-ready, for handing to a build agent in a fresh session. It opens with a STATE block recording what is already built, so a new session continues the work rather than starting it again.</p>
+    </div>
+  </div>
+
+<pre>Build MERIDIAN — a self-classifying engineering portfolio for &lt;NAME&gt; (&lt;GITHUB&gt;).
+
+STATE — READ FIRST. Phases 00, 01 and 02 are ALREADY BUILT and PASSING.
+Do not rebuild them. Do not re-derive the scoring rubric.
+
+  meridian/phase00/    calibration tooling (Node, .mjs). Gate PASSED:
+                       3 of 6 bands, spread 49.9. Scale anchored against
+                       ossf/scorecard 78.2 and CODER7657/pramana 72.7.
+  meridian/engine/     @meridian/engine — TypeScript strict, 54 tests.
+                       Pure scoring: Signals in, ScoredRepo out. No I/O,
+                       no clock, no model. CLI: score | why | ladder.
+  meridian/pipeline/   @meridian/pipeline — TypeScript strict, 35 tests.
+                       Six stages, Herald templates, Plumb verification,
+                       hysteresis, revisions log. Manual workflow at
+                       .github/workflows/survey.yml (workflow_dispatch only).
+
+  Current catalogue (Hem60, 5 entries, forks and profile repo excluded):
+    vakil              EPIC      67.4   annotated
+    RAG-CHAT-BOT       UNCOMMON  39.9
+    IRIS-PREDICTOR     COMMON    33.0
+    MOVIE_RECOMMENDER  COMMON    22.3
+    webathon           COMMON    16.3
+
+  Three fixes already made that must not be undone:
+    - stability reads test/lint/type config from INSIDE pyproject.toml and
+      package.json, not only from standalone dotfiles. Worth 28 points on
+      vakil; without it the project reads RARE instead of EPIC.
+    - primary language comes from the languages map, not the nullable
+      `language` field, which is null for very small repositories.
+    - a promotion is explained against axesAtGrant / compositeAtGrant —
+      the snapshot taken when the class was granted — never against the
+      previous run. Hysteresis lands the improvement one run before the
+      class moves, so comparing to the last run reports no movement.
+
+  START AT PHASE 03 (design system and static plates). Consume the engine
+  and pipeline as packages; read pipeline/data/catalogue.json and
+  pipeline/data/revisions.json as the data source. Everything below
+  describes the whole build for context — only 03 onward is outstanding.
+
+CONCEPT. An observatory, not a portfolio. It points instruments at the owner's
+repositories, measures them on fixed axes, publishes a catalogue, and revises
+that catalogue when the readings change. Thesis: THE RECORD KEEPS ITSELF.
+Nothing is self-reported; every rank is computed and every claim is checked
+against a file that exists.
+
+HARD CONSTRAINT. Do not reproduce the structure, vocabulary or look of
+PAVAN//FOUNDRY. No foundry, missions, operatives, plates, vault, XP or levels.
+Cover the same subject matter, replace every mechanic.
+
+HONESTY RULES. The reference's console claims "tool calls are real; github.repo
+queries the public API live" — verified false: zero API requests, every tool
+returns in 0ms. Meridian must never be catchable the same way.
+  · Never describe a capability the page does not have.
+  · Show real latencies. Slowness is the proof; never fake a timing.
+  · Label a cached transcript as cached, in the panel, not a footnote.
+  · Every number traces to something a visitor can fetch themselves.
+  · Never gate real content behind interaction. Calibration sharpens data
+    already visible; it never hides a section.
+
+FONTS. Big Shoulders Display (display, 800, uppercase) · Newsreader (body
+serif) · JetBrains Mono (all data, tabular figures) · Handjet (pixel face,
+variable ELSHAPE/ELGRAD axes, class chips and eyebrows only, ~5% of type).
+All Google Fonts. ZERO overlap with the reference's Pixelify Sans /
+Silkscreen / Instrument Serif / IBM Plex Mono - do not use those four.
+
+THEME. Professional maximalism with light pixelism. Ink-navy sky against
+chart-paper plate insets. Industrial condensed display face, editorial serif
+body, technical mono for all data, pixel face for labels and class chips only
+(~5% of type). Signal amber for live state. Six semantic class colours used
+nowhere else. Coordinate grid as foreground, dithered gradients, registration
+marks, asymmetric multi-column plates, marginalia. Density must be earned by
+real data — never by ornament. Both themes designed. Contrast gated in CI.
+
+IMPACT. Arrival = PLATE DEVELOPMENT: page opens on bare sky; over 1400ms the
+graticule draws from the top-left origin, the survey plate resolves up through
+a dither mask in visible steps (never a smooth fade), the headline sets, then
+the live readout counts from zero to real figures and stops on verifiable
+values. Five signature moments: plate development (1400ms staged) · class
+field shift, dither ramp tilts with pointer, mythic gets one extra step
+(120ms, transform only) · promotion tick, any class change within 30 days
+animates onto the hero as a live line (600ms, once per visit) · the observing
+run, real API latencies settling out of order · chain ignition on the
+constellation (200ms, 30ms stagger per node). Weight is rhythmic, not uniform:
+heavy at First Light and the Catalogue, quiet in the prose passages. Uniform
+heaviness reads as noise and gets closed.
+
+BACKGROUND LAYERS, in order. 00 sky, flat, no image (#0B1220 / #E9E7E0) ·
+01 survey plate, one raster per theme, engraved all-sky chart · 02 veil,
+linear-gradient(sky, transparent 68%) · 03 minor graticule, 1px at 2.2rem,
+foreground not wash · 04 major graticule, 1px at 11rem with edge tick
+labels · 05 chart-paper plate, the second ground, 1px rule border ·
+06 plate grain, feTurbulence data URI, baseFrequency .8, alpha .025 ·
+07 registration marks, 8px corner crops · 08 margin rail, vertical-rl
+mono label · 09 dither ramp, 8 hard stops, never a smooth gradient ·
+10 class field, dither ramp tinted by class colour, 45deg · 11 resolution
+meter, 8 discrete cells 5px/2px, not a bar · 12 live rule, animated
+4px/4px dashes, transform only, halts under reduced-motion.
+Two rasters total, lazily loaded. Everything else is CSS.
+
+ENGINE. Deterministic five-axis score, no model involved:
+  stability .28 · mass .24 · anomaly .20 · luminosity .16 · cadence .12
+  MYTHIC 88+ · LEGENDARY 76-87 · EPIC 64-75 · RARE 50-63 · UNCOMMON 34-49
+  · COMMON &lt;34
+  Hysteresis: promote +2 held 2 runs; demote -3 held 3 runs; 30-day floor.
+  Calibrate thresholds against the real account before anything else.
+
+AGENTS. Five instruments — Sextant (measure), Prism (read code),
+Almanac (retrieve), Herald (write entries), Plumb (verify Herald).
+NO LANGUAGE MODEL ANYWHERE. No Anthropic SDK, no OpenAI, no API key, no
+billing. Instruments are deterministic programs making real GitHub API
+calls, streamed over SSE, concurrent, settling out of order because the
+network is genuinely concurrent. Prose comes from hard-coded templates
+bound to measured signals; a template fires only when its evidence is
+present. Thesis lines are hand-written by the author in prose.json.
+Budget is the GitHub rate limit; responses cached per commit SHA.
+Trace uses a dual register — machine line then plain-language line:
+  SEXTANT  → repo.score({"repo":"complylite","rubric":"v3"})
+  SEXTANT  ← stability=88 mass=71 anomaly=64 ... [1.34s]
+  SEXTANT  Stability moved 61 → 88. That crosses the legendary gate.
+Header shows the estimated API-call count; footer shows actual calls, cache hits and elapsed.
+
+AUTOMATION. GitHub Actions, workflow_dispatch ONLY - a manual Run workflow
+button with inputs (repo, dry_run). NO cron, NO push trigger. Collect repos
+and upstream contributions → measure → diff against catalogue.json → draft
+entries for new repos unprompted → apply class changes through hysteresis →
+append cause to revisions.json → commit → deploy. The revisions log is a
+headline feature: publish why a rank moved, dated, with evidence.
+
+ATTRIBUTION. Compute authorship share per repo (commits, files, PRs) and show
+it. Surface merged PRs and issues authored in other people's repositories as
+their own catalogue strand, each linked to the exact commit. Never imply sole
+authorship of shared work.
+
+SECTIONS. First Light (hero + live readout) · Parallax (three views of the
+person) · How to Read This Chart · The Instruments · The Observing Run ·
+The Catalogue · The Constellation (radial skill graph) · The Log + Revisions ·
+Ephemeris (command line, incl. `why &lt;repo&gt;` printing the score maths) ·
+Hailing · Calibration (exploring raises data resolution 1x-8x, not XP) ·
+The Reticle (persistent HUD: nav, instrument glyphs, resolution meter,
+day/night plate toggle, last-run stamp) · Colophon (states what is live
+and what is cached).
+
+STACK. Next.js App Router, TypeScript strict, Tailwind, Zod contracts,
+GitHub REST + GraphQL, Actions, Vercel, Vitest, Playwright, axe. No AI SDK.
+
+ORDER. 00 calibrate ✅ · 01 scoring engine as tested CLI ✅ · 02 pipeline ✅ ·
+03 design system + static sections · 04 catalogue + constellation ·
+05 instrument runtime · 06 ephemeris, a11y, performance.
+
+Build the engine before the interface. If the scoring is wrong, everything
+downstream is a well-designed lie.</pre>
+</section>
+
+<footer>
+  MERIDIAN BUILD PLAN · drafted from information.txt, 18 reference plates, a hands-on teardown of the live reference build (missions dispatched, shell run, network inspected), and two research sweeps across current design trend sources, OpenSSF Scorecard, CHAOSS metrics, loot-rarity, GitHub agentic workflows and the Anthropic SDK · thresholds unverified pending account calibration
+</footer>
+
+</div>

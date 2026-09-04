@@ -1,0 +1,33 @@
+# ── dependencies and build output ──────────────────────────────────────────
+node_modules/
+.next/
+dist/
+*.tsbuildinfo
+next-env.d.ts
+
+# ── secrets ────────────────────────────────────────────────────────────────
+# .env.example is committed; anything real is not. The survey's GitHub token
+# lives in .env.local and must never reach the repository.
+.env
+.env.local
+.env.*.local
+
+# ── caches ─────────────────────────────────────────────────────────────────
+.meridian-cache/
+
+# ── the reference animation frames ─────────────────────────────────────────
+# 300 PNGs, 62MB, at one fixed size. components/Lattice.tsx was measured off
+# them and records the measurements it took — pitch 33.5px, dot diameter
+# 9-10px, #dfdfdf on #000000 — so the reproduction is reviewable without
+# them. Keeping 62MB of source frames in the history to document four numbers
+# would be the most expensive comment in the repository.
+ezgif-frame-*.png
+*.zip
+
+# ── working screenshots ────────────────────────────────────────────────────
+photo/
+
+# ── editor / os ────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.swp

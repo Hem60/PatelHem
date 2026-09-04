@@ -1,0 +1,309 @@
+/*
+ * MERIDIAN · background layers 00–12
+ *
+ * Named layers with fixed values, so the ground is buildable rather than
+ * described. Two rasters in the whole system (layer 01, one per exposure);
+ * every other layer below is CSS. If a layer cannot justify itself on a plate
+ * showing real measurements, it does not ship.
+ */
+
+/* ── 00 · sky — flat ground, no image ─────────────────────────────────── */
+.sky {
+  background-color: var(--sky);
+  color: var(--ink);
+}
+
+/* ── 01 · the ground is flat ────────────────────────────────────────────
+   There is no raster anywhere in this system. The reference build's field is
+   a flat near-black and so is this one: every layer below is CSS, which is
+   also two fewer images to download. */
+
+/* ── 03/04 · graticule — the hero's ground, and only the hero's ─────────
+   This used to be `position: fixed` across the whole viewport, so every plate
+   on the page sat on grid paper. It reads as instrumentation for one screen
+   and as noise for the eleven after it, so it is now absolute inside the hero
+   and scrolls away with it. Everything below the hero sits on flat ground. */
+.graticule {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  /*
+   * Major lines only.
+   *
+   * There used to be a 2.2rem minor grid inside the 11rem major one. Two grids
+   * at different pitches read as moiré rather than as measurement — the fine
+   * one adds no scale a reader can use and it muddies the coarse one that
+   * does. One grid, one pitch.
+   */
+  background-image:
+    repeating-linear-gradient(to right, var(--graticule-major) 0 1px, transparent 1px var(--graticule-major-step)),
+    repeating-linear-gradient(to bottom, var(--graticule-major) 0 1px, transparent 1px var(--graticule-major-step));
+}
+
+.graticule-ticks {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.graticule-ticks span {
+  position: absolute;
+  font-family: var(--f-mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.16em;
+  color: var(--ink-faint);
+  opacity: 0.75;
+}
+
+/* ── 05 · chart-paper plate — the second ground ─────────────────────────── */
+.plate {
+  position: relative;
+  background-color: var(--plate);
+  border: 1px solid var(--rule);
+  border-radius: var(--plate-radius);
+  isolation: isolate;
+}
+
+.plate--raised {
+  background-color: var(--plate-raised);
+}
+
+/* ── 06 · plate grain — feTurbulence as a data URI, 180×180 tile ────────── */
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: var(--grain-alpha);
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23g)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+}
+
+.grain > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── 07 · registration marks — 8px corner crops ─────────────────────────── */
+.regmarks::before,
+.regmarks::after {
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  pointer-events: none;
+  z-index: 2;
+}
+.regmarks::before {
+  top: -1px;
+  left: -1px;
+  border-top: 1px solid var(--rule-hard);
+  border-left: 1px solid var(--rule-hard);
+}
+.regmarks::after {
+  bottom: -1px;
+  right: -1px;
+  border-bottom: 1px solid var(--rule-hard);
+  border-right: 1px solid var(--rule-hard);
+}
+
+/* the other two corners, for plates that carry all four */
+.regmark {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  pointer-events: none;
+  z-index: 2;
+}
+.regmark[data-corner="tr"] {
+  top: -1px;
+  right: -1px;
+  border-top: 1px solid var(--rule-hard);
+  border-right: 1px solid var(--rule-hard);
+}
+.regmark[data-corner="bl"] {
+  bottom: -1px;
+  left: -1px;
+  border-bottom: 1px solid var(--rule-hard);
+  border-left: 1px solid var(--rule-hard);
+}
+
+/* ── 08 · margin rail — rotated mono label in the gutter ────────────────── */
+.rail {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  font-family: var(--f-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  white-space: nowrap;
+  user-select: none;
+}
+
+.rail-ticks {
+  width: 1px;
+  flex: 1;
+  background-image: repeating-linear-gradient(to bottom, var(--rule-hard) 0 4px, transparent 4px 14px);
+  opacity: 0.7;
+}
+
+/* ── 09 · dither ramp — eight hard stops, never an interpolation ────────── */
+.dither {
+  background-image: repeating-linear-gradient(
+    var(--dither-angle, 45deg),
+    var(--dither-a, var(--ink-faint)) 0 6px,
+    var(--dither-b, transparent) 6px 12px
+  );
+}
+
+/* ── 10 · class field — the rarity treatment, dither tinted by class ──────
+   Eight steps, colour stepping down to nothing, never interpolated. Mythic is
+   the only class that gets a ninth step, which is why it looks different
+   before you have read what it says. */
+.class-field {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: linear-gradient(
+    45deg,
+    color-mix(in srgb, var(--class) 20%, transparent) 0 12.5%,
+    color-mix(in srgb, var(--class) 16%, transparent) 12.5% 25%,
+    color-mix(in srgb, var(--class) 12.5%, transparent) 25% 37.5%,
+    color-mix(in srgb, var(--class) 9%, transparent) 37.5% 50%,
+    color-mix(in srgb, var(--class) 6%, transparent) 50% 62.5%,
+    color-mix(in srgb, var(--class) 3.5%, transparent) 62.5% 75%,
+    color-mix(in srgb, var(--class) 1.5%, transparent) 75% 87.5%,
+    transparent 87.5% 100%
+  );
+  transform: translate3d(var(--field-x, 0px), var(--field-y, 0px), 0);
+  transition: transform var(--t-field) linear;
+}
+
+[data-class="MYTHIC"] .class-field {
+  background-image: linear-gradient(
+    45deg,
+    color-mix(in srgb, var(--class) 24%, transparent) 0 11.1%,
+    color-mix(in srgb, var(--class) 20%, transparent) 11.1% 22.2%,
+    color-mix(in srgb, var(--class) 16%, transparent) 22.2% 33.3%,
+    color-mix(in srgb, var(--class) 12.5%, transparent) 33.3% 44.4%,
+    color-mix(in srgb, var(--class) 9%, transparent) 44.4% 55.5%,
+    color-mix(in srgb, var(--class) 6%, transparent) 55.5% 66.6%,
+    color-mix(in srgb, var(--class) 3.5%, transparent) 66.6% 77.7%,
+    color-mix(in srgb, var(--class) 1.5%, transparent) 77.7% 88.8%,
+    transparent 88.8% 100%
+  );
+}
+
+/* ── 11 · resolution meter — eight discrete cells, never a bar ──────────── */
+.meter {
+  position: relative;
+  --cell: 5px;
+  --gap: 2px;
+  width: calc(8 * var(--cell) + 7 * var(--gap));
+  height: 10px;
+  background-image: repeating-linear-gradient(
+    to right,
+    var(--rule-hard) 0 var(--cell),
+    transparent var(--cell) calc(var(--cell) + var(--gap))
+  );
+}
+
+.meter::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  width: calc(var(--filled, 0) * (var(--cell) + var(--gap)) - var(--gap));
+  background-image: repeating-linear-gradient(
+    to right,
+    var(--signal) 0 var(--cell),
+    transparent var(--cell) calc(var(--cell) + var(--gap))
+  );
+  transition: width 180ms steps(1, end);
+}
+
+/* ── 12 · live rule — animated dashes, marks something actually running ─── */
+.live-rule {
+  height: 1px;
+  overflow: hidden;
+  position: relative;
+}
+.live-rule::before {
+  content: "";
+  position: absolute;
+  inset: 0 -8px;
+  background-image: repeating-linear-gradient(to right, var(--signal) 0 4px, transparent 4px 8px);
+  animation: rule-run 900ms linear infinite;
+}
+.live-rule[data-live="false"]::before {
+  background-image: repeating-linear-gradient(to right, var(--rule-hard) 0 4px, transparent 4px 8px);
+  animation: none;
+}
+
+@keyframes rule-run {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(8px, 0, 0);
+  }
+}
+
+/* ── arrival · plate development ────────────────────────────────────────
+   The page opens on bare sky. The graticule draws from the top-left origin,
+   the plate resolves up through a dither mask in eight visible steps, the
+   headline sets, then the readout counts to values a visitor can verify. */
+@keyframes graticule-draw {
+  from {
+    clip-path: inset(0 100% 100% 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes set-line {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 0.4em, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+[data-develop="running"] .graticule {
+  animation: graticule-draw var(--t-develop) var(--ease-plate) both;
+}
+
+[data-develop="running"] .sets {
+  animation: set-line 520ms var(--ease-plate) both;
+  animation-delay: calc(var(--set-index, 0) * 90ms + 560ms);
+}
+
+/* ── reduced motion — the plate is simply present, the numbers simply right ── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+  .live-rule::before {
+    animation: none;
+  }
+  [data-develop="running"] .graticule,
+  [data-develop="running"] .sets {
+    animation: none;
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}

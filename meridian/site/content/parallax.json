@@ -1,0 +1,26 @@
+{
+  "_note": "Two of the three Parallax positions are written by the author and live here. The third is computed from catalogue.json at build time by lib/machine.ts and is not editable. Edit the prose below freely — but do not add a claim this site cannot point at a file for.",
+  "authored": true,
+  "positions": [
+    {
+      "id": "recruiter",
+      "label": "For a recruiter",
+      "gloss": "Plain language, no jargon, thirty seconds.",
+      "paragraphs": [
+        "Hem Patel builds software that measures itself. This page is the demonstration: it reads his own repositories through the GitHub API, scores each one on five fixed axes, and publishes the result as a catalogue. He did not type a single rank on it.",
+        "The strongest project in the catalogue is a dispute-evidence system for merchants. The rest range from machine-learning work to retrieval pipelines. Each entry states its own commit count, test count, and continuous-integration status, and each of those numbers is fetched rather than asserted.",
+        "If a claim on this site is wrong, it is wrong because the repository changed — and the next survey will correct it without anyone editing the page."
+      ]
+    },
+    {
+      "id": "engineer",
+      "label": "For an engineer",
+      "gloss": "The mechanism, stated without decoration.",
+      "paragraphs": [
+        "The scoring engine is a pure function: signals in, a scored repository out. No I/O, no clock — the current time is injected through a context object — which is what makes a published rank reproducible by anyone who clones the repository and runs the same command. Fifty-four unit tests hold that surface still.",
+        "Collection lives behind a separate contract and does the network work. The pipeline surveys, diffs against the last catalogue, applies hysteresis so a rank cannot flicker, drafts an entry for any repository it has not seen before, verifies every factual sentence against a path that resolves, and appends the reason for any class change to a revisions log.",
+        "There is no language model anywhere in it. Prose comes from hard-coded templates bound to measured signals, and a template does not fire unless its evidence is present. That is a deliberate constraint: a sentence that cannot be checked has no business on a page whose whole argument is that it checks itself."
+      ]
+    }
+  ]
+}

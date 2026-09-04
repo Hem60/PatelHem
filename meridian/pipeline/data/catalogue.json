@@ -1,0 +1,616 @@
+{
+  "user": "Hem60",
+  "generated": "2026-08-26T12:33:08.193Z",
+  "partMax": {
+    "stability": {
+      "tests": 26,
+      "ci": 18,
+      "ciGreen": 12,
+      "coverage": 10,
+      "lint": 10,
+      "typing": 8,
+      "license": 8,
+      "pinned": 8
+    },
+    "mass": {
+      "commits": 32,
+      "code": 22,
+      "modules": 16,
+      "lifespan": 20,
+      "languages": 10
+    },
+    "anomaly": {
+      "base": 50,
+      "rareDomain": 22,
+      "commonDomain": -20,
+      "evaluates": 8,
+      "onChain": 6,
+      "uncommonLanguages": 8,
+      "repeatedStack": -6
+    },
+    "luminosity": {
+      "deployed": 30,
+      "readme": 22,
+      "images": 8,
+      "description": 10,
+      "topics": 10,
+      "releases": 10,
+      "docs": 5,
+      "social": 5
+    },
+    "cadence": {
+      "recency": 30,
+      "activeDays": 26,
+      "activeMonths": 24,
+      "issueActivity": 10,
+      "sustained": 10
+    }
+  },
+  "entries": [
+    {
+      "name": "vakil",
+      "classification": "EPIC",
+      "composite": 67.4,
+      "axes": {
+        "stability": 89.3,
+        "mass": 55.2,
+        "anomaly": 80,
+        "luminosity": 47,
+        "cadence": 46.6
+      },
+      "parts": {
+        "stability": {
+          "tests": 23.3,
+          "ci": 18,
+          "ciGreen": 12,
+          "coverage": 10,
+          "lint": 10,
+          "typing": 8,
+          "license": 0,
+          "pinned": 8
+        },
+        "mass": {
+          "commits": 19.3,
+          "code": 18.7,
+          "modules": 5.7,
+          "lifespan": 2.3,
+          "languages": 9.2
+        },
+        "anomaly": {
+          "base": 50,
+          "rareDomain": 22,
+          "commonDomain": 0,
+          "evaluates": 8,
+          "onChain": 0,
+          "uncommonLanguages": 0,
+          "repeatedStack": 0
+        },
+        "luminosity": {
+          "deployed": 0,
+          "readme": 22,
+          "images": 0,
+          "description": 10,
+          "topics": 10,
+          "releases": 0,
+          "docs": 5,
+          "social": 0
+        },
+        "cadence": {
+          "recency": 30,
+          "activeDays": 9.7,
+          "activeMonths": 6.9,
+          "issueActivity": 0,
+          "sustained": 0
+        }
+      },
+      "thesis": "Most merchants lose chargebacks by default rather than by argument — nobody assembled the evidence pack before the window closed. That gap is the product.",
+      "annotated": true,
+      "summary": [
+        "13 test files under `tests/`.",
+        "Continuous integration runs on every push, green on the last run.",
+        "Type checking is enforced in strict mode.",
+        "Linting is configured and part of the build.",
+        "Containerised, with a Compose stack for local runs.",
+        "Ships an evaluation harness, so its own behaviour is measured rather than asserted.",
+        "6 documents under `docs/`.",
+        "27 commits.",
+        "Written in Python, PowerShell and Shell."
+      ],
+      "facts": [
+        {
+          "label": "Commits",
+          "value": "27"
+        },
+        {
+          "label": "Tests",
+          "value": "13"
+        },
+        {
+          "label": "CI",
+          "value": "success"
+        },
+        {
+          "label": "Code",
+          "value": "326 KB"
+        },
+        {
+          "label": "Score",
+          "value": "67.4"
+        }
+      ],
+      "stack": [
+        "Python",
+        "PowerShell",
+        "Shell"
+      ],
+      "authorship": {
+        "share": 100,
+        "mine": 27,
+        "total": 27
+      },
+      "links": {
+        "code": "https://github.com/Hem60/vakil",
+        "live": null
+      },
+      "updated": "2026-08-26T12:33:08.193Z"
+    },
+    {
+      "name": "RAG-CHAT-BOT",
+      "classification": "UNCOMMON",
+      "composite": 39.9,
+      "axes": {
+        "stability": 12.9,
+        "mass": 37.5,
+        "anomaly": 72,
+        "luminosity": 41.4,
+        "cadence": 52.7
+      },
+      "parts": {
+        "stability": {
+          "tests": 4.9,
+          "ci": 0,
+          "ciGreen": 0,
+          "coverage": 0,
+          "lint": 0,
+          "typing": 0,
+          "license": 0,
+          "pinned": 8
+        },
+        "mass": {
+          "commits": 6.4,
+          "code": 12.8,
+          "modules": 0,
+          "lifespan": 11.2,
+          "languages": 7.1
+        },
+        "anomaly": {
+          "base": 50,
+          "rareDomain": 22,
+          "commonDomain": 0,
+          "evaluates": 0,
+          "onChain": 0,
+          "uncommonLanguages": 0,
+          "repeatedStack": 0
+        },
+        "luminosity": {
+          "deployed": 0,
+          "readme": 21.4,
+          "images": 0,
+          "description": 10,
+          "topics": 10,
+          "releases": 0,
+          "docs": 0,
+          "social": 0
+        },
+        "cadence": {
+          "recency": 24,
+          "activeDays": 7.7,
+          "activeMonths": 11,
+          "issueActivity": 0,
+          "sustained": 10
+        }
+      },
+      "thesis": null,
+      "annotated": false,
+      "summary": [
+        "Containerised, with a Compose stack for local runs.",
+        "2 commits across 2 months.",
+        "Written in Python and Shell."
+      ],
+      "facts": [
+        {
+          "label": "Commits",
+          "value": "2"
+        },
+        {
+          "label": "Code",
+          "value": "51 KB"
+        },
+        {
+          "label": "Score",
+          "value": "39.9"
+        }
+      ],
+      "stack": [
+        "Python",
+        "Shell"
+      ],
+      "authorship": {
+        "share": 100,
+        "mine": 2,
+        "total": 2
+      },
+      "links": {
+        "code": "https://github.com/Hem60/RAG-CHAT-BOT",
+        "live": null
+      },
+      "updated": "2026-08-26T12:33:08.193Z"
+    },
+    {
+      "name": "IRIS-PREDICTOR",
+      "classification": "COMMON",
+      "composite": 33,
+      "axes": {
+        "stability": 42.9,
+        "mass": 27,
+        "anomaly": 24,
+        "luminosity": 40.7,
+        "cadence": 26.8
+      },
+      "parts": {
+        "stability": {
+          "tests": 4.9,
+          "ci": 18,
+          "ciGreen": 12,
+          "coverage": 0,
+          "lint": 0,
+          "typing": 0,
+          "license": 0,
+          "pinned": 8
+        },
+        "mass": {
+          "commits": 9.3,
+          "code": 10.6,
+          "modules": 0,
+          "lifespan": 0,
+          "languages": 7.1
+        },
+        "anomaly": {
+          "base": 50,
+          "rareDomain": 0,
+          "commonDomain": -20,
+          "evaluates": 0,
+          "onChain": 0,
+          "uncommonLanguages": 0,
+          "repeatedStack": -6
+        },
+        "luminosity": {
+          "deployed": 0,
+          "readme": 20.7,
+          "images": 0,
+          "description": 10,
+          "topics": 10,
+          "releases": 0,
+          "docs": 0,
+          "social": 0
+        },
+        "cadence": {
+          "recency": 15,
+          "activeDays": 4.9,
+          "activeMonths": 6.9,
+          "issueActivity": 0,
+          "sustained": 0
+        }
+      },
+      "thesis": null,
+      "annotated": false,
+      "summary": [
+        "Continuous integration runs on every push, green on the last run.",
+        "Containerised.",
+        "4 commits.",
+        "Written in HTML and Python."
+      ],
+      "facts": [
+        {
+          "label": "Commits",
+          "value": "4"
+        },
+        {
+          "label": "CI",
+          "value": "success"
+        },
+        {
+          "label": "Code",
+          "value": "25 KB"
+        },
+        {
+          "label": "Score",
+          "value": "33.0"
+        }
+      ],
+      "stack": [
+        "HTML",
+        "Python"
+      ],
+      "authorship": {
+        "share": 0,
+        "mine": 0,
+        "total": 4
+      },
+      "links": {
+        "code": "https://github.com/Hem60/IRIS-PREDICTOR",
+        "live": null
+      },
+      "updated": "2026-08-26T12:33:08.193Z"
+    },
+    {
+      "name": "MOVIE_RECOMMENDER",
+      "classification": "COMMON",
+      "composite": 22.3,
+      "axes": {
+        "stability": 8,
+        "mass": 23.2,
+        "anomaly": 24,
+        "luminosity": 40.6,
+        "cadence": 26.8
+      },
+      "parts": {
+        "stability": {
+          "tests": 0,
+          "ci": 0,
+          "ciGreen": 0,
+          "coverage": 0,
+          "lint": 0,
+          "typing": 0,
+          "license": 0,
+          "pinned": 8
+        },
+        "mass": {
+          "commits": 4,
+          "code": 12.1,
+          "modules": 0,
+          "lifespan": 0,
+          "languages": 7.1
+        },
+        "anomaly": {
+          "base": 50,
+          "rareDomain": 0,
+          "commonDomain": -20,
+          "evaluates": 0,
+          "onChain": 0,
+          "uncommonLanguages": 0,
+          "repeatedStack": -6
+        },
+        "luminosity": {
+          "deployed": 0,
+          "readme": 20.6,
+          "images": 0,
+          "description": 10,
+          "topics": 10,
+          "releases": 0,
+          "docs": 0,
+          "social": 0
+        },
+        "cadence": {
+          "recency": 15,
+          "activeDays": 4.9,
+          "activeMonths": 6.9,
+          "issueActivity": 0,
+          "sustained": 0
+        }
+      },
+      "thesis": null,
+      "annotated": false,
+      "summary": [
+        "Containerised.",
+        "1 commit.",
+        "Written in HTML and Python."
+      ],
+      "facts": [
+        {
+          "label": "Commits",
+          "value": "1"
+        },
+        {
+          "label": "Code",
+          "value": "41 KB"
+        },
+        {
+          "label": "Score",
+          "value": "22.3"
+        }
+      ],
+      "stack": [
+        "HTML",
+        "Python"
+      ],
+      "authorship": {
+        "share": null,
+        "mine": 0,
+        "total": 0
+      },
+      "links": {
+        "code": "https://github.com/Hem60/MOVIE_RECOMMENDER",
+        "live": null
+      },
+      "updated": "2026-08-26T12:33:08.193Z"
+    },
+    {
+      "name": "webathon",
+      "classification": "COMMON",
+      "composite": 16.3,
+      "axes": {
+        "stability": 0,
+        "mass": 21.3,
+        "anomaly": 44,
+        "luminosity": 5.9,
+        "cadence": 11.8
+      },
+      "parts": {
+        "stability": {
+          "tests": 0,
+          "ci": 0,
+          "ciGreen": 0,
+          "coverage": 0,
+          "lint": 0,
+          "typing": 0,
+          "license": 0,
+          "pinned": 0
+        },
+        "mass": {
+          "commits": 10.4,
+          "code": 7.3,
+          "modules": 0,
+          "lifespan": 0,
+          "languages": 3.6
+        },
+        "anomaly": {
+          "base": 50,
+          "rareDomain": 0,
+          "commonDomain": 0,
+          "evaluates": 0,
+          "onChain": 0,
+          "uncommonLanguages": 0,
+          "repeatedStack": -6
+        },
+        "luminosity": {
+          "deployed": 0,
+          "readme": 5.9,
+          "images": 0,
+          "description": 0,
+          "topics": 0,
+          "releases": 0,
+          "docs": 0,
+          "social": 0
+        },
+        "cadence": {
+          "recency": 0,
+          "activeDays": 4.9,
+          "activeMonths": 6.9,
+          "issueActivity": 0,
+          "sustained": 0
+        }
+      },
+      "thesis": null,
+      "annotated": false,
+      "summary": [
+        "5 commits.",
+        "Written in HTML."
+      ],
+      "facts": [
+        {
+          "label": "Commits",
+          "value": "5"
+        },
+        {
+          "label": "Code",
+          "value": "9 KB"
+        },
+        {
+          "label": "Score",
+          "value": "16.3"
+        }
+      ],
+      "stack": [
+        "HTML"
+      ],
+      "authorship": {
+        "share": 0,
+        "mine": 0,
+        "total": 5
+      },
+      "links": {
+        "code": "https://github.com/Hem60/webathon",
+        "live": null
+      },
+      "updated": "2026-08-26T12:33:08.193Z"
+    }
+  ],
+  "state": {
+    "MOVIE_RECOMMENDER": {
+      "current": "COMMON",
+      "since": "2026-08-26T12:33:08.193Z",
+      "history": [
+        22.3,
+        22.3,
+        22.3
+      ],
+      "axesAtGrant": {
+        "stability": 8,
+        "mass": 23.2,
+        "anomaly": 24,
+        "luminosity": 40.6,
+        "cadence": 26.8
+      },
+      "compositeAtGrant": 22.3
+    },
+    "IRIS-PREDICTOR": {
+      "current": "COMMON",
+      "since": "2026-08-26T12:33:08.193Z",
+      "history": [
+        33,
+        33,
+        33
+      ],
+      "axesAtGrant": {
+        "stability": 42.9,
+        "mass": 27,
+        "anomaly": 24,
+        "luminosity": 40.7,
+        "cadence": 26.8
+      },
+      "compositeAtGrant": 33
+    },
+    "RAG-CHAT-BOT": {
+      "current": "UNCOMMON",
+      "since": "2026-08-26T12:33:08.193Z",
+      "history": [
+        39.9,
+        39.9,
+        39.9
+      ],
+      "axesAtGrant": {
+        "stability": 12.9,
+        "mass": 37.5,
+        "anomaly": 72,
+        "luminosity": 41.4,
+        "cadence": 52.7
+      },
+      "compositeAtGrant": 39.9
+    },
+    "vakil": {
+      "current": "EPIC",
+      "since": "2026-08-26T12:33:08.193Z",
+      "history": [
+        67.4,
+        67.4,
+        67.4
+      ],
+      "axesAtGrant": {
+        "stability": 89.3,
+        "mass": 55.2,
+        "anomaly": 80,
+        "luminosity": 47,
+        "cadence": 46.6
+      },
+      "compositeAtGrant": 67.4
+    },
+    "webathon": {
+      "current": "COMMON",
+      "since": "2026-08-26T12:33:08.193Z",
+      "history": [
+        16.3,
+        16.3,
+        16.3
+      ],
+      "axesAtGrant": {
+        "stability": 0,
+        "mass": 21.3,
+        "anomaly": 44,
+        "luminosity": 5.9,
+        "cadence": 11.8
+      },
+      "compositeAtGrant": 16.3
+    }
+  }
+}

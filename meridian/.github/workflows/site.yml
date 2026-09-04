@@ -1,0 +1,52 @@
+name: Site
+
+# The design system's gate. Density fails fastest on contrast, so contrast is a
+# build step here rather than a review note: if any class colour drops below its
+# floor on either plate, this job goes red and the page does not ship.
+on:
+  push:
+    paths:
+      - "site/**"
+      - "engine/**"
+      - "pipeline/data/**"
+      - ".github/workflows/site.yml"
+  pull_request:
+    paths:
+      - "site/**"
+      - "engine/**"
+      - "pipeline/data/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "22"
+
+      - name: Install the engine the site consumes
+        run: npm ci --prefix engine
+
+      - name: Build the engine
+        run: npm run build --prefix engine
+
+      - name: Install
+        run: npm ci --prefix site
+
+      - name: Contrast gate — six class colours, two plates, every ground
+        run: npm run contrast --prefix site
+
+      - name: Typecheck
+        run: npm run typecheck --prefix site
+
+      - name: Test
+        run: npm test --prefix site
+
+      - name: Build
+        run: npm run build --prefix site

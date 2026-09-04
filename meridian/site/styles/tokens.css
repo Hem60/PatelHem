@@ -1,0 +1,212 @@
+/*
+ * MERIDIAN · tokens
+ *
+ * Matched to the reference build (myselfpavan.vercel.app), measured off its
+ * live stylesheet rather than eyeballed from screenshots. See
+ * meridian/FOUNDRY-MATCH.md for the direction and what is deliberately not
+ * copied.
+ *
+ * The ground is warm near-black paper with cream ink; the accent is an oxide
+ * coral used for plate numbers, primary buttons and XP. Five named hues carry
+ * both the operative colours and the rarity ramp, so colour on this page
+ * always means either "which instrument" or "which class".
+ *
+ * scripts/contrast.mjs parses this file directly and fails the build when any
+ * pair drops below its floor, so what CI checks is what ships.
+ */
+
+:root,
+[data-plate="night"] {
+  color-scheme: dark;
+
+  /*
+   * Ground — neutral, not warm.
+   *
+   * The old ground was a warm brown-black (#100e0c) carried over from the
+   * reference build. Brutalism wants the ink and the accent doing the talking
+   * and the ground doing none of it, so the cast is gone: these are true
+   * neutrals, and the linen ink is the only warmth left in the system.
+   */
+  --paper: #0a0a0a;
+  --paper-raised: #141414;
+  --paper-sunken: #050505;
+  --paper-inverse: #e8e4d9;
+
+  /* the site's older names, kept so nothing has to be renamed twice */
+  --sky: #0a0a0a;
+  --sky-deep: #050505;
+  --plate: #141414;
+  --plate-raised: #1c1c1c;
+
+  /* ink — linen */
+  --ink: #e8e4d9;
+  --ink-soft: #b8b4aa;
+  --ink-dim: #b8b4aa;
+  --ink-muted: #918d84;
+  --ink-faint: #918d84;
+  --ink-inverse: #0a0a0a;
+
+  /*
+   * Rules, harder than before. A brutalist surface is defined by its edges,
+   * so the hairlines are stronger and the strong rule is nearly solid — the
+   * borders are structure here, not a suggestion of one.
+   */
+  --rule: rgba(232, 228, 217, 0.24);
+  --rule-hard: rgba(232, 228, 217, 0.62);
+  --rule-strong: rgba(232, 228, 217, 0.62);
+  --rule-hair: rgba(232, 228, 217, 0.12);
+  --graticule-minor: rgba(232, 228, 217, 0.05);
+  --graticule-major: rgba(232, 228, 217, 0.14);
+
+  /* the five hues */
+  --oxide: #f2545b;
+  --oxide-soft: rgba(242, 84, 91, 0.18);
+  --verdigris: #4fb0a0;
+  --verdigris-soft: rgba(79, 176, 160, 0.16);
+  --indigo: #7d92e0;
+  --indigo-soft: rgba(125, 146, 224, 0.16);
+  --ochre: #dcae4e;
+  --ochre-soft: rgba(220, 174, 78, 0.18);
+  --plum: #c07aa2;
+  --plum-soft: rgba(192, 122, 162, 0.16);
+
+  --accent: var(--oxide);
+  --signal: #f2545b;
+  --signal-ink: #0a0a0a;
+
+  /* one instrument, one colour */
+  --agent-sextant: var(--oxide);
+  --agent-prism: var(--indigo);
+  --agent-almanac: var(--ochre);
+  --agent-herald: var(--plum);
+  --agent-plumb: var(--verdigris);
+
+  /* the rarity ramp: his five hues, across our six bands */
+  --c-common: #918d84;
+  --c-uncommon: #4fb0a0;
+  --c-rare: #7d92e0;
+  --c-epic: #c07aa2;
+  --c-legendary: #dcae4e;
+  --c-mythic: #f2545b;
+
+  --grain-alpha: 0.03;
+}
+
+/*
+ * The light exposure. The reference ships one theme; this keeps the second
+ * because the contrast gate already covers it and losing it would be a
+ * regression in the only place this build was ahead.
+ */
+[data-plate="day"] {
+  color-scheme: light;
+
+  /* the source frames' own ground: #dfdfdf, two colours, no mid-tones */
+  --paper: #dfdfdf;
+  --paper-raised: #eaeaea;
+  --paper-sunken: #cfcfcf;
+  --paper-inverse: #0a0a0a;
+
+  --sky: #dfdfdf;
+  --sky-deep: #cfcfcf;
+  --plate: #eaeaea;
+  --plate-raised: #f6f6f6;
+
+  --ink: #0a0a0a;
+  --ink-soft: #333333;
+  --ink-dim: #333333;
+  --ink-muted: #4f4f4f;
+  --ink-faint: #525252;
+  --ink-inverse: #dfdfdf;
+
+  --rule: rgba(10, 10, 10, 0.26);
+  --rule-hard: rgba(10, 10, 10, 0.68);
+  --rule-strong: rgba(10, 10, 10, 0.68);
+  --rule-hair: rgba(10, 10, 10, 0.13);
+  --graticule-minor: rgba(10, 10, 10, 0.06);
+  --graticule-major: rgba(10, 10, 10, 0.14);
+
+  --oxide: #a83b1e;
+  --oxide-soft: rgba(168, 59, 30, 0.14);
+  --verdigris: #1c6b5e;
+  --verdigris-soft: rgba(28, 107, 94, 0.14);
+  --indigo: #3a53ad;
+  --indigo-soft: rgba(58, 83, 173, 0.14);
+  --ochre: #7d5a06;
+  --ochre-soft: rgba(125, 90, 6, 0.16);
+  --plum: #8d3d68;
+  --plum-soft: rgba(141, 61, 104, 0.14);
+
+  --accent: var(--oxide);
+  --signal: #a83b1e;
+  --signal-ink: #dfdfdf;
+
+  --c-common: #525252;
+  --c-uncommon: #1c6b5e;
+  --c-rare: #3a53ad;
+  --c-epic: #8d3d68;
+  --c-legendary: #7d5a06;
+  --c-mythic: #a83b1e;
+
+  --grain-alpha: 0.035;
+}
+
+:root {
+  /*
+   * Geometry — nothing is rounded at all.
+   *
+   * Was 2px and 4px. Brutalism has no corner radius: a square corner is the
+   * cheapest way to say the surface is a surface and not a card pretending to
+   * be a physical object.
+   */
+  --radius-0: 0px;
+  --radius-1: 0px;
+  --radius-2: 0px;
+  --plate-radius: 0px;
+  /*
+   * The measure every plate is laid out in.
+   *
+   * 1400px was effectively full bleed: at a 1512px viewport the gutter clamps
+   * at 4rem, so content ran to within 64px of both edges. 70rem leaves a real
+   * margin down either side at desktop widths — and still clears the widest
+   * row on the page, the four-up vault grid at 65rem.
+   */
+  --column: 70rem;
+  --gutter: clamp(1rem, 4vw, 4rem);
+  --measure: 68ch;
+  --rail: 2.4rem;
+  --graticule-step: 2.2rem;
+  --graticule-major-step: 11rem;
+
+  /* spacing */
+  --s-1: 0.25rem;
+  --s-2: 0.5rem;
+  --s-3: 0.75rem;
+  --s-4: 1rem;
+  --s-5: 1.5rem;
+  --s-6: 2rem;
+  --s-7: 3rem;
+  --s-8: 4rem;
+  --s-9: 6rem;
+  --s-10: 9rem;
+
+  /* the hard cut. No blur — the shadow is a second, offset copy of the edge. */
+  --shadow-cut: 3px 3px 0 var(--ink);
+  --shadow-cut-lg: 6px 6px 0 var(--ink);
+  --shadow-plate: 0 1px 0 var(--rule), 0 18px 40px -22px rgba(0, 0, 0, 0.9);
+
+  /* motion */
+  --dur-fast: 140ms;
+  --dur: 260ms;
+  --dur-slow: 620ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-step: steps(6, end);
+  --ease-plate: cubic-bezier(0.16, 1, 0.3, 1);
+  --t-develop: 620ms;
+  --t-field: 140ms;
+  --t-tick: 620ms;
+  --t-chain: 260ms;
+
+  --z-hud: 60;
+  --z-modal: 80;
+  --z-boot: 100;
+}

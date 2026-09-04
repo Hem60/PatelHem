@@ -1,0 +1,929 @@
+{
+  "user": "Hem60",
+  "scored_at": "2026-08-26T12:33:08.193Z",
+  "thresholds": {
+    "MYTHIC": 88,
+    "LEGENDARY": 76,
+    "EPIC": 64,
+    "RARE": 50,
+    "UNCOMMON": 34
+  },
+  "weights": {
+    "stability": 0.28,
+    "mass": 0.24,
+    "anomaly": 0.2,
+    "luminosity": 0.16,
+    "cadence": 0.12
+  },
+  "repos": [
+    {
+      "name": "MOVIE_RECOMMENDER",
+      "fork": false,
+      "private": false,
+      "axes": {
+        "stability": {
+          "value": 8,
+          "parts": {
+            "tests": 0,
+            "ci": 0,
+            "ci_green": 0,
+            "coverage": 0,
+            "lint": 0,
+            "typing": 0,
+            "license": 0,
+            "pinned": 8
+          },
+          "evidence": {
+            "test_files": 0,
+            "ci_workflow": false,
+            "last_run": null,
+            "license": null,
+            "lint": false,
+            "types": false,
+            "strict": false,
+            "coverage_cfg": false
+          }
+        },
+        "mass": {
+          "value": 23.222679059667612,
+          "parts": {
+            "commits": 4.014279014274532,
+            "code": 12.079456442884219,
+            "modules": 0,
+            "lifespan": 0.004799860348419294,
+            "languages": 7.124143742160443
+          },
+          "evidence": {
+            "commits": 1,
+            "code_kb": 41,
+            "modules": 0,
+            "lifespan_days": 0
+          }
+        },
+        "anomaly": {
+          "value": 30,
+          "parts": {
+            "base": 50,
+            "rare_domain": 0,
+            "common_domain": -20
+          },
+          "evidence": {
+            "rare_domain": false,
+            "common_domain": true,
+            "uncommon_langs": 0
+          }
+        },
+        "luminosity": {
+          "value": 40.61885106099254,
+          "parts": {
+            "deployed": 0,
+            "readme": 20.618851060992537,
+            "images": 0,
+            "description": 10,
+            "topics": 10,
+            "releases": 0,
+            "docs": 0,
+            "social": 0
+          },
+          "evidence": {
+            "homepage": null,
+            "status": null,
+            "readme_len": 4550,
+            "topics": 8,
+            "releases": 0
+          }
+        },
+        "cadence": {
+          "value": 26.79051852384184,
+          "parts": {
+            "recency": 15,
+            "spread_days": 4.852962692212528,
+            "spread_months": 6.937555831629309,
+            "activity": 0,
+            "sustained": 0
+          },
+          "evidence": {
+            "days_since_push": 48,
+            "active_days": 1,
+            "active_months": 1
+          }
+        }
+      },
+      "composite": 23.5,
+      "class": "COMMON",
+      "authorship": {
+        "mine": 0,
+        "total": 0,
+        "share": null
+      }
+    },
+    {
+      "name": "IRIS-PREDICTOR",
+      "fork": false,
+      "private": false,
+      "axes": {
+        "stability": {
+          "value": 42.85296269221253,
+          "parts": {
+            "tests": 4.852962692212528,
+            "ci": 18,
+            "ci_green": 12,
+            "coverage": 0,
+            "lint": 0,
+            "typing": 0,
+            "license": 0,
+            "pinned": 8
+          },
+          "evidence": {
+            "test_files": 1,
+            "ci_workflow": true,
+            "last_run": "success",
+            "license": null,
+            "lint": false,
+            "types": false,
+            "strict": false,
+            "coverage_cfg": false
+          }
+        },
+        "mass": {
+          "value": 27.0033810856526,
+          "parts": {
+            "commits": 9.320867223960782,
+            "code": 10.555206616263233,
+            "modules": 0,
+            "lifespan": 0.00316350326814195,
+            "languages": 7.124143742160443
+          },
+          "evidence": {
+            "commits": 4,
+            "code_kb": 25,
+            "modules": 0,
+            "lifespan_days": 0
+          }
+        },
+        "anomaly": {
+          "value": 30,
+          "parts": {
+            "base": 50,
+            "rare_domain": 0,
+            "common_domain": -20
+          },
+          "evidence": {
+            "rare_domain": false,
+            "common_domain": true,
+            "uncommon_langs": 0
+          }
+        },
+        "luminosity": {
+          "value": 40.70706820058443,
+          "parts": {
+            "deployed": 0,
+            "readme": 20.707068200584434,
+            "images": 0,
+            "description": 10,
+            "topics": 10,
+            "releases": 0,
+            "docs": 0,
+            "social": 0
+          },
+          "evidence": {
+            "homepage": null,
+            "status": null,
+            "readme_len": 4717,
+            "topics": 9,
+            "releases": 0
+          }
+        },
+        "cadence": {
+          "value": 26.79051852384184,
+          "parts": {
+            "recency": 15,
+            "spread_days": 4.852962692212528,
+            "spread_months": 6.937555831629309,
+            "activity": 0,
+            "sustained": 0
+          },
+          "evidence": {
+            "days_since_push": 49,
+            "active_days": 1,
+            "active_months": 1
+          }
+        }
+      },
+      "composite": 34.2,
+      "class": "UNCOMMON",
+      "authorship": {
+        "mine": 0,
+        "total": 4,
+        "share": 0
+      }
+    },
+    {
+      "name": "RAG-CHAT-BOT",
+      "fork": false,
+      "private": false,
+      "axes": {
+        "stability": {
+          "value": 12.852962692212529,
+          "parts": {
+            "tests": 4.852962692212528,
+            "ci": 0,
+            "ci_green": 0,
+            "coverage": 0,
+            "lint": 0,
+            "typing": 0,
+            "license": 0,
+            "pinned": 8
+          },
+          "evidence": {
+            "test_files": 1,
+            "ci_workflow": false,
+            "last_run": null,
+            "license": null,
+            "lint": false,
+            "types": false,
+            "strict": false,
+            "coverage_cfg": false
+          }
+        },
+        "mass": {
+          "value": 37.50389346531256,
+          "parts": {
+            "commits": 6.36248170505702,
+            "code": 12.794593795455246,
+            "modules": 0,
+            "lifespan": 11.222674222639855,
+            "languages": 7.124143742160443
+          },
+          "evidence": {
+            "commits": 2,
+            "code_kb": 51,
+            "modules": 0,
+            "lifespan_days": 32
+          }
+        },
+        "anomaly": {
+          "value": 72,
+          "parts": {
+            "base": 50,
+            "rare_domain": 22,
+            "common_domain": 0
+          },
+          "evidence": {
+            "rare_domain": true,
+            "common_domain": false,
+            "uncommon_langs": 0
+          }
+        },
+        "luminosity": {
+          "value": 41.40985583372658,
+          "parts": {
+            "deployed": 0,
+            "readme": 21.409855833726578,
+            "images": 0,
+            "description": 10,
+            "topics": 10,
+            "releases": 0,
+            "docs": 0,
+            "social": 0
+          },
+          "evidence": {
+            "homepage": null,
+            "status": null,
+            "readme_len": 6286,
+            "topics": 10,
+            "releases": 0
+          }
+        },
+        "cadence": {
+          "value": 52.68752972434747,
+          "parts": {
+            "recency": 24,
+            "spread_days": 7.691763884555643,
+            "spread_months": 10.995765839791831,
+            "activity": 0,
+            "sustained": 10
+          },
+          "evidence": {
+            "days_since_push": 17,
+            "active_days": 2,
+            "active_months": 2
+          }
+        }
+      },
+      "composite": 39.9,
+      "class": "UNCOMMON",
+      "authorship": {
+        "mine": 2,
+        "total": 2,
+        "share": 100
+      }
+    },
+    {
+      "name": "vakil",
+      "fork": false,
+      "private": false,
+      "axes": {
+        "stability": {
+          "value": 89.32991408496981,
+          "parts": {
+            "tests": 23.329914084969815,
+            "ci": 18,
+            "ci_green": 12,
+            "coverage": 10,
+            "lint": 10,
+            "typing": 8,
+            "license": 0,
+            "pinned": 8
+          },
+          "evidence": {
+            "test_files": 27,
+            "ci_workflow": true,
+            "last_run": "success",
+            "license": null,
+            "lint": true,
+            "types": true,
+            "strict": true,
+            "coverage_cfg": true
+          }
+        },
+        "mass": {
+          "value": 55.23833019634089,
+          "parts": {
+            "commits": 19.298063977785215,
+            "code": 18.721124113391397,
+            "modules": 5.699314993728355,
+            "lifespan": 2.3120048998199,
+            "languages": 9.207822211616017
+          },
+          "evidence": {
+            "commits": 27,
+            "code_kb": 326,
+            "modules": 1,
+            "lifespan_days": 1
+          }
+        },
+        "anomaly": {
+          "value": 80,
+          "parts": {
+            "base": 50,
+            "rare_domain": 22,
+            "common_domain": 0
+          },
+          "evidence": {
+            "rare_domain": true,
+            "common_domain": false,
+            "uncommon_langs": 0
+          }
+        },
+        "luminosity": {
+          "value": 47,
+          "parts": {
+            "deployed": 0,
+            "readme": 22,
+            "images": 0,
+            "description": 10,
+            "topics": 10,
+            "releases": 0,
+            "docs": 5,
+            "social": 0
+          },
+          "evidence": {
+            "homepage": null,
+            "status": null,
+            "readme_len": 10000,
+            "topics": 10,
+            "releases": 0
+          }
+        },
+        "cadence": {
+          "value": 46.64348121605437,
+          "parts": {
+            "recency": 30,
+            "spread_days": 9.705925384425056,
+            "spread_months": 6.937555831629309,
+            "activity": 0,
+            "sustained": 0
+          },
+          "evidence": {
+            "days_since_push": 0,
+            "active_days": 3,
+            "active_months": 1
+          }
+        }
+      },
+      "composite": 67.4,
+      "class": "EPIC",
+      "authorship": {
+        "mine": 27,
+        "total": 27,
+        "share": 100
+      }
+    },
+    {
+      "name": "Hem60",
+      "fork": false,
+      "private": false,
+      "axes": {
+        "stability": {
+          "value": 0,
+          "parts": {
+            "tests": 0,
+            "ci": 0,
+            "ci_green": 0,
+            "coverage": 0,
+            "lint": 0,
+            "typing": 0,
+            "license": 0,
+            "pinned": 0
+          },
+          "evidence": {
+            "test_files": 0,
+            "ci_workflow": false,
+            "last_run": null,
+            "license": null,
+            "lint": false,
+            "types": false,
+            "strict": false,
+            "coverage_cfg": false
+          }
+        },
+        "mass": {
+          "value": 23.56228494803797,
+          "parts": {
+            "commits": 13.335146238235314,
+            "code": 0,
+            "modules": 0,
+            "lifespan": 10.227138709802656,
+            "languages": 0
+          },
+          "evidence": {
+            "commits": 9,
+            "code_kb": 0,
+            "modules": 0,
+            "lifespan_days": 23
+          }
+        },
+        "anomaly": {
+          "value": 50,
+          "parts": {
+            "base": 50,
+            "rare_domain": 0,
+            "common_domain": 0
+          },
+          "evidence": {
+            "rare_domain": false,
+            "common_domain": false,
+            "uncommon_langs": 0
+          }
+        },
+        "luminosity": {
+          "value": 25.432062324437492,
+          "parts": {
+            "deployed": 0,
+            "readme": 17.432062324437492,
+            "images": 8,
+            "description": 0,
+            "topics": 0,
+            "releases": 0,
+            "docs": 0,
+            "social": 0
+          },
+          "evidence": {
+            "homepage": null,
+            "status": null,
+            "readme_len": 1237,
+            "topics": 0,
+            "releases": 0
+          }
+        },
+        "cadence": {
+          "value": 44.62931971618495,
+          "parts": {
+            "recency": 30,
+            "spread_days": 7.691763884555643,
+            "spread_months": 6.937555831629309,
+            "activity": 0,
+            "sustained": 0
+          },
+          "evidence": {
+            "days_since_push": 2,
+            "active_days": 2,
+            "active_months": 1
+          }
+        }
+      },
+      "composite": 25.1,
+      "class": "COMMON",
+      "authorship": {
+        "mine": 9,
+        "total": 9,
+        "share": 100
+      }
+    },
+    {
+      "name": "WEBATHON2",
+      "fork": true,
+      "private": false,
+      "axes": {
+        "stability": {
+          "value": 23,
+          "parts": {
+            "tests": 0,
+            "ci": 0,
+            "ci_green": 0,
+            "coverage": 0,
+            "lint": 10,
+            "typing": 5,
+            "license": 0,
+            "pinned": 8
+          },
+          "evidence": {
+            "test_files": 0,
+            "ci_workflow": false,
+            "last_run": null,
+            "license": null,
+            "lint": true,
+            "types": true,
+            "strict": false,
+            "coverage_cfg": false
+          }
+        },
+        "mass": {
+          "value": 60.46650791419911,
+          "parts": {
+            "commits": 21.782540730698173,
+            "code": 16.20549383652737,
+            "modules": 11.39862998745671,
+            "lifespan": 2.8089686060477077,
+            "languages": 8.270874753469162
+          },
+          "evidence": {
+            "commits": 42,
+            "code_kb": 149,
+            "modules": 3,
+            "lifespan_days": 1
+          }
+        },
+        "anomaly": {
+          "value": 50,
+          "parts": {
+            "base": 50,
+            "rare_domain": 0,
+            "common_domain": 0
+          },
+          "evidence": {
+            "rare_domain": false,
+            "common_domain": false,
+            "uncommon_langs": 0
+          }
+        },
+        "luminosity": {
+          "value": 0,
+          "parts": {
+            "deployed": 0,
+            "readme": 0,
+            "images": 0,
+            "description": 0,
+            "topics": 0,
+            "releases": 0,
+            "docs": 0,
+            "social": 0
+          },
+          "evidence": {
+            "homepage": null,
+            "status": null,
+            "readme_len": 0,
+            "topics": 0,
+            "releases": 0
+          }
+        },
+        "cadence": {
+          "value": 26.48228240839748,
+          "parts": {
+            "recency": 7,
+            "spread_days": 12.54472657676817,
+            "spread_months": 6.937555831629309,
+            "activity": 0,
+            "sustained": 0
+          },
+          "evidence": {
+            "days_since_push": 365,
+            "active_days": 5,
+            "active_months": 1
+          }
+        }
+      },
+      "composite": 34.1,
+      "class": "UNCOMMON",
+      "authorship": {
+        "mine": 12,
+        "total": 42,
+        "share": 29
+      }
+    },
+    {
+      "name": "hashhawks-3d-showcase",
+      "fork": true,
+      "private": false,
+      "axes": {
+        "stability": {
+          "value": 23,
+          "parts": {
+            "tests": 0,
+            "ci": 0,
+            "ci_green": 0,
+            "coverage": 0,
+            "lint": 10,
+            "typing": 5,
+            "license": 0,
+            "pinned": 8
+          },
+          "evidence": {
+            "test_files": 0,
+            "ci_workflow": false,
+            "last_run": null,
+            "license": null,
+            "lint": true,
+            "types": true,
+            "strict": false,
+            "coverage_cfg": false
+          }
+        },
+        "mass": {
+          "value": 45.20676872377133,
+          "parts": {
+            "commits": 13.335146238235314,
+            "code": 17.901432738338496,
+            "modules": 5.699314993728355,
+            "lifespan": 0,
+            "languages": 8.270874753469162
+          },
+          "evidence": {
+            "commits": 9,
+            "code_kb": 253,
+            "modules": 1,
+            "lifespan_days": 0
+          }
+        },
+        "anomaly": {
+          "value": 50,
+          "parts": {
+            "base": 50,
+            "rare_domain": 0,
+            "common_domain": 0
+          },
+          "evidence": {
+            "rare_domain": false,
+            "common_domain": false,
+            "uncommon_langs": 0
+          }
+        },
+        "luminosity": {
+          "value": 31.696749965102548,
+          "parts": {
+            "deployed": 30,
+            "readme": 1.696749965102546,
+            "images": 0,
+            "description": 0,
+            "topics": 0,
+            "releases": 0,
+            "docs": 0,
+            "social": 0
+          },
+          "evidence": {
+            "homepage": "https://hashhawks-3d-showcase.vercel.app",
+            "status": 200,
+            "readme_len": 1,
+            "topics": 0,
+            "releases": 0
+          }
+        },
+        "cadence": {
+          "value": 14.629319716184952,
+          "parts": {
+            "recency": 0,
+            "spread_days": 7.691763884555643,
+            "spread_months": 6.937555831629309,
+            "activity": 0,
+            "sustained": 0
+          },
+          "evidence": {
+            "days_since_push": 377,
+            "active_days": 2,
+            "active_months": 1
+          }
+        }
+      },
+      "composite": 34.1,
+      "class": "UNCOMMON",
+      "authorship": {
+        "mine": 0,
+        "total": 9,
+        "share": 0
+      }
+    },
+    {
+      "name": "webathon",
+      "fork": false,
+      "private": false,
+      "axes": {
+        "stability": {
+          "value": 0,
+          "parts": {
+            "tests": 0,
+            "ci": 0,
+            "ci_green": 0,
+            "coverage": 0,
+            "lint": 0,
+            "typing": 0,
+            "license": 0,
+            "pinned": 0
+          },
+          "evidence": {
+            "test_files": 0,
+            "ci_workflow": false,
+            "last_run": null,
+            "license": null,
+            "lint": false,
+            "types": false,
+            "strict": false,
+            "coverage_cfg": false
+          }
+        },
+        "mass": {
+          "value": 21.280892978334,
+          "parts": {
+            "commits": 10.376760719331552,
+            "code": 7.342060387922227,
+            "modules": 0,
+            "lifespan": 0,
+            "languages": 3.5620718710802217
+          },
+          "evidence": {
+            "commits": 5,
+            "code_kb": 9,
+            "modules": 0,
+            "lifespan_days": 0
+          }
+        },
+        "anomaly": {
+          "value": 50,
+          "parts": {
+            "base": 50,
+            "rare_domain": 0,
+            "common_domain": 0
+          },
+          "evidence": {
+            "rare_domain": false,
+            "common_domain": false,
+            "uncommon_langs": 0
+          }
+        },
+        "luminosity": {
+          "value": 5.869790478197478,
+          "parts": {
+            "deployed": 0,
+            "readme": 5.869790478197478,
+            "images": 0,
+            "description": 0,
+            "topics": 0,
+            "releases": 0,
+            "docs": 0,
+            "social": 0
+          },
+          "evidence": {
+            "homepage": null,
+            "status": null,
+            "readme_len": 10,
+            "topics": 0,
+            "releases": 0
+          }
+        },
+        "cadence": {
+          "value": 11.790518523841836,
+          "parts": {
+            "recency": 0,
+            "spread_days": 4.852962692212528,
+            "spread_months": 6.937555831629309,
+            "activity": 0,
+            "sustained": 0
+          },
+          "evidence": {
+            "days_since_push": 372,
+            "active_days": 1,
+            "active_months": 1
+          }
+        }
+      },
+      "composite": 17.5,
+      "class": "COMMON",
+      "authorship": {
+        "mine": 0,
+        "total": 5,
+        "share": 0
+      }
+    },
+    {
+      "name": "VortiFi",
+      "fork": true,
+      "private": false,
+      "axes": {
+        "stability": {
+          "value": 15.691763884555643,
+          "parts": {
+            "tests": 7.691763884555643,
+            "ci": 0,
+            "ci_green": 0,
+            "coverage": 0,
+            "lint": 0,
+            "typing": 0,
+            "license": 0,
+            "pinned": 8
+          },
+          "evidence": {
+            "test_files": 2,
+            "ci_workflow": false,
+            "last_run": null,
+            "license": null,
+            "lint": false,
+            "types": false,
+            "strict": false,
+            "coverage_cfg": false
+          }
+        },
+        "mass": {
+          "value": 46.401052554164494,
+          "parts": {
+            "commits": 17.052366271375977,
+            "code": 12.044610984462075,
+            "modules": 9.033200544857275,
+            "lifespan": 0,
+            "languages": 8.270874753469162
+          },
+          "evidence": {
+            "commits": 18,
+            "code_kb": 40,
+            "modules": 2,
+            "lifespan_days": 0
+          }
+        },
+        "anomaly": {
+          "value": 60,
+          "parts": {
+            "base": 50,
+            "rare_domain": 0,
+            "common_domain": 0
+          },
+          "evidence": {
+            "rare_domain": false,
+            "common_domain": false,
+            "uncommon_langs": 1
+          }
+        },
+        "luminosity": {
+          "value": 22,
+          "parts": {
+            "deployed": 0,
+            "readme": 22,
+            "images": 0,
+            "description": 0,
+            "topics": 0,
+            "releases": 0,
+            "docs": 0,
+            "social": 0
+          },
+          "evidence": {
+            "homepage": null,
+            "status": null,
+            "readme_len": 10942,
+            "topics": 0,
+            "releases": 0
+          }
+        },
+        "cadence": {
+          "value": 32.263996258280315,
+          "parts": {
+            "recency": 0,
+            "spread_days": 11.268230418488482,
+            "spread_months": 10.995765839791831,
+            "activity": 0,
+            "sustained": 10
+          },
+          "evidence": {
+            "days_since_push": 377,
+            "active_days": 4,
+            "active_months": 2
+          }
+        }
+      },
+      "composite": 34.9,
+      "class": "UNCOMMON",
+      "authorship": {
+        "mine": 0,
+        "total": 18,
+        "share": 0
+      }
+    }
+  ]
+}

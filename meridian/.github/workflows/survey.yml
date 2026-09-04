@@ -1,0 +1,77 @@
+name: Survey
+
+# Manual trigger only. No schedule, no push trigger.
+# The workflow appears in the Actions tab with a "Run workflow" button and
+# nothing happens until it is pressed. That keeps the repository history
+# clean instead of accumulating a commit every night saying nothing changed.
+on:
+  workflow_dispatch:
+    inputs:
+      repo:
+        description: "Survey one repository. Leave blank to survey everything."
+        required: false
+        type: string
+      dry_run:
+        description: "Report the diff without committing anything."
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+
+concurrency:
+  group: survey
+  cancel-in-progress: false
+
+jobs:
+  survey:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "22"
+
+      - name: Install
+        run: |
+          npm ci --prefix engine
+          npm ci --prefix pipeline
+
+      - name: Build
+        run: |
+          npm run build --prefix engine
+          npm run build --prefix pipeline
+
+      - name: Verify the engine before trusting its numbers
+        run: npm test --prefix engine
+
+      - name: Collect
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node phase00/collect.mjs "${{ github.repository_owner }}"
+
+      - name: Survey
+        run: |
+          node pipeline/dist/run.js \
+            ${{ inputs.repo && format('--repo {0}', inputs.repo) || '' }} \
+            ${{ inputs.dry_run && '--dry-run' || '' }}
+
+      - name: Commit what changed
+        if: ${{ !inputs.dry_run }}
+        run: |
+          if git diff --quiet -- pipeline/data; then
+            echo "nothing moved — no commit"
+            exit 0
+          fi
+          git config user.name  "meridian[bot]"
+          git config user.email "meridian@users.noreply.github.com"
+          git add pipeline/data
+          git commit -m "survey: $(node -e "
+            const c=require('./pipeline/data/catalogue.json');
+            const r=require('./pipeline/data/revisions.json');
+            const fresh=r.revisions.filter(x=>x.date===c.generated.slice(0,10));
+            console.log(fresh.length ? fresh[0].headline : c.entries.length+' entries rescored');
+          ")"
+          git push

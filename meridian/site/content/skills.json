@@ -1,0 +1,350 @@
+{
+  "_note": "Two strands. `source: catalogue` entries are evidenced by a repository the survey reads — their evidence line must name one, and a language must appear in some repository's stack. `source: resume` entries are stated by the author and the catalogue cannot corroborate them; their evidence line cites the resume section, they carry no level, and the dossier marks them. Both rules are enforced in test/console.test.ts.",
+  "skills": [
+    {
+      "name": "Python",
+      "kind": "language",
+      "level": 88,
+      "evidence": "Primary language in 4 of 5 catalogued repositories",
+      "source": "catalogue"
+    },
+    {
+      "name": "Shell",
+      "kind": "language",
+      "level": 58,
+      "evidence": "Tooling and automation in vakil and RAG-CHAT-BOT",
+      "source": "catalogue"
+    },
+    {
+      "name": "PowerShell",
+      "kind": "language",
+      "level": 54,
+      "evidence": "vakil — Windows-side tooling, in the language map",
+      "source": "catalogue"
+    },
+    {
+      "name": "HTML",
+      "kind": "language",
+      "level": 50,
+      "evidence": "IRIS-PREDICTOR, MOVIE_RECOMMENDER and webathon",
+      "source": "catalogue"
+    },
+    {
+      "name": "Claude Code",
+      "kind": "agentic",
+      "level": 76,
+      "evidence": "Meridian was built through it — the plan, engine, pipeline and site",
+      "source": "catalogue"
+    },
+    {
+      "name": "Spec-first prompting",
+      "kind": "agentic",
+      "level": 72,
+      "evidence": "meridianplan.html — the whole build specified before it was written",
+      "source": "catalogue"
+    },
+    {
+      "name": "Deterministic tooling over model calls",
+      "kind": "agentic",
+      "level": 80,
+      "evidence": "Meridian's instruments make GitHub calls and run templates — no model in the pipeline",
+      "source": "catalogue"
+    },
+    {
+      "name": "Agent-checked claims",
+      "kind": "agentic",
+      "level": 74,
+      "evidence": "pipeline Plumb — every factual clause verified against a real path before it ships",
+      "source": "catalogue"
+    },
+    {
+      "name": "Retrieval & RAG",
+      "kind": "ai",
+      "level": 78,
+      "evidence": "RAG-CHAT-BOT — retrieval pipeline over an embedding store",
+      "source": "catalogue"
+    },
+    {
+      "name": "Embedding stores",
+      "kind": "ai",
+      "level": 66,
+      "evidence": "RAG-CHAT-BOT — vector lookup behind the chat surface",
+      "source": "catalogue"
+    },
+    {
+      "name": "Classification",
+      "kind": "ml",
+      "level": 70,
+      "evidence": "IRIS-PREDICTOR — a trained classifier served behind a page",
+      "source": "catalogue"
+    },
+    {
+      "name": "Recommender systems",
+      "kind": "ml",
+      "level": 64,
+      "evidence": "MOVIE_RECOMMENDER — similarity-based recommendation",
+      "source": "catalogue"
+    },
+    {
+      "name": "Evaluation harnesses",
+      "kind": "evaluation",
+      "level": 74,
+      "evidence": "vakil — ships a harness, so its behaviour is measured rather than asserted",
+      "source": "catalogue"
+    },
+    {
+      "name": "Evidence & verification",
+      "kind": "evaluation",
+      "level": 76,
+      "evidence": "vakil — dispute evidence packs; Meridian's Plumb verifies every published clause",
+      "source": "catalogue"
+    },
+    {
+      "name": "pytest",
+      "kind": "quality",
+      "level": 72,
+      "evidence": "vakil — 13 test files under tests/",
+      "source": "catalogue"
+    },
+    {
+      "name": "Strict type checking",
+      "kind": "quality",
+      "level": 70,
+      "evidence": "vakil — mypy strict, configured in pyproject.toml",
+      "source": "catalogue"
+    },
+    {
+      "name": "Linting in the build",
+      "kind": "quality",
+      "level": 68,
+      "evidence": "vakil — ruff configured and part of the build",
+      "source": "catalogue"
+    },
+    {
+      "name": "Contract validation",
+      "kind": "quality",
+      "level": 66,
+      "evidence": "Meridian — Zod schemas validate every file read at build time",
+      "source": "catalogue"
+    },
+    {
+      "name": "Docker & Compose",
+      "kind": "ops",
+      "level": 84,
+      "evidence": "Containerised in 4 of 5, with a Compose stack in vakil and RAG-CHAT-BOT",
+      "source": "catalogue"
+    },
+    {
+      "name": "GitHub Actions",
+      "kind": "ops",
+      "level": 72,
+      "evidence": "Green on the last run in vakil and IRIS-PREDICTOR",
+      "source": "catalogue"
+    },
+    {
+      "name": "Technical documentation",
+      "kind": "ops",
+      "level": 60,
+      "evidence": "vakil — 6 documents under docs/",
+      "source": "catalogue"
+    },
+    {
+      "name": "TypeScript",
+      "kind": "language",
+      "source": "resume",
+      "evidence": "Resume — Technical Skills, Languages"
+    },
+    {
+      "name": "JavaScript",
+      "kind": "language",
+      "source": "resume",
+      "evidence": "Resume — Technical Skills, Languages"
+    },
+    {
+      "name": "SQL",
+      "kind": "language",
+      "source": "resume",
+      "evidence": "Resume — Technical Skills, Languages"
+    },
+    {
+      "name": "Solidity",
+      "kind": "language",
+      "source": "resume",
+      "evidence": "Resume — Technical Skills, Languages"
+    },
+    {
+      "name": "OpenAI Whisper",
+      "kind": "ai",
+      "source": "resume",
+      "evidence": "Resume — Technical Skills, AI / Machine Learning — voice queries in Kisan Mitra AI"
+    },
+    {
+      "name": "Prompt engineering",
+      "kind": "ai",
+      "source": "resume",
+      "evidence": "Resume — Technical Skills, AI / Machine Learning"
+    },
+    {
+      "name": "TensorFlow",
+      "kind": "ml",
+      "source": "resume",
+      "evidence": "Resume — Technical Skills, AI / Machine Learning"
+    },
+    {
+      "name": "PyTorch",
+      "kind": "ml",
+      "source": "resume",
+      "evidence": "Resume — Technical Skills, AI / Machine Learning"
+    },
+    {
+      "name": "scikit-learn",
+      "kind": "ml",
+      "source": "resume",
+      "evidence": "Resume — Technical Skills, AI / Machine Learning — RandomForest classifier in the Iris pipeline"
+    },
+    {
+      "name": "Pandas",
+      "kind": "ml",
+      "source": "resume",
+      "evidence": "Resume — Technical Skills, AI / Machine Learning"
+    },
+    {
+      "name": "NumPy",
+      "kind": "ml",
+      "source": "resume",
+      "evidence": "Resume — Technical Skills, AI / Machine Learning"
+    },
+    {
+      "name": "Computer vision",
+      "kind": "ml",
+      "source": "resume",
+      "evidence": "Resume — Technical Skills, AI / Machine Learning — plant disease detection in Kisan Mitra AI"
+    },
+    {
+      "name": "NLP",
+      "kind": "ml",
+      "source": "resume",
+      "evidence": "Resume — Technical Skills, AI / Machine Learning"
+    },
+    {
+      "name": "ChatGPT / GPT-4",
+      "kind": "agentic",
+      "source": "resume",
+      "evidence": "Resume — Technical Skills, Generative AI Tools"
+    },
+    {
+      "name": "Google Gemini",
+      "kind": "agentic",
+      "source": "resume",
+      "evidence": "Resume — Technical Skills, Generative AI Tools"
+    },
+    {
+      "name": "React",
+      "kind": "frontend",
+      "source": "resume",
+      "evidence": "Resume — Technical Skills, Frontend"
+    },
+    {
+      "name": "React Native",
+      "kind": "frontend",
+      "source": "resume",
+      "evidence": "Resume — Technical Skills, Frontend"
+    },
+    {
+      "name": "SvelteKit",
+      "kind": "frontend",
+      "source": "resume",
+      "evidence": "Resume — Technical Skills, Frontend — Kisan Mitra AI front end"
+    },
+    {
+      "name": "Tailwind CSS",
+      "kind": "frontend",
+      "source": "resume",
+      "evidence": "Resume — Technical Skills, Frontend"
+    },
+    {
+      "name": "HTML/CSS",
+      "kind": "frontend",
+      "source": "resume",
+      "evidence": "Resume — Technical Skills, Frontend"
+    },
+    {
+      "name": "FastAPI",
+      "kind": "backend",
+      "source": "resume",
+      "evidence": "Resume — Technical Skills, Backend — serves the movie recommender"
+    },
+    {
+      "name": "Node.js",
+      "kind": "backend",
+      "source": "resume",
+      "evidence": "Resume — Technical Skills, Backend"
+    },
+    {
+      "name": "Express.js",
+      "kind": "backend",
+      "source": "resume",
+      "evidence": "Resume — Technical Skills, Backend"
+    },
+    {
+      "name": "REST APIs",
+      "kind": "backend",
+      "source": "resume",
+      "evidence": "Resume — Technical Skills, Backend"
+    },
+    {
+      "name": "Socket.IO",
+      "kind": "backend",
+      "source": "resume",
+      "evidence": "Resume — Technical Skills, Backend"
+    },
+    {
+      "name": "JWT authentication",
+      "kind": "backend",
+      "source": "resume",
+      "evidence": "Resume — Technical Skills, Backend"
+    },
+    {
+      "name": "SQLite",
+      "kind": "data",
+      "source": "resume",
+      "evidence": "Resume — Technical Skills, Tools & Platforms"
+    },
+    {
+      "name": "MongoDB",
+      "kind": "data",
+      "source": "resume",
+      "evidence": "Resume — Technical Skills, Tools & Platforms"
+    },
+    {
+      "name": "FAISS",
+      "kind": "data",
+      "source": "resume",
+      "evidence": "Resume — Technical Skills, Projects — vector store in the RAG QA chatbot"
+    },
+    {
+      "name": "Vercel",
+      "kind": "ops",
+      "source": "resume",
+      "evidence": "Resume — Technical Skills, Tools & Platforms"
+    },
+    {
+      "name": "Git / GitHub",
+      "kind": "ops",
+      "source": "resume",
+      "evidence": "Resume — Technical Skills, Tools & Platforms"
+    },
+    {
+      "name": "ethers.js",
+      "kind": "tool",
+      "source": "resume",
+      "evidence": "Resume — Technical Skills, Tools & Platforms"
+    },
+    {
+      "name": "VS Code",
+      "kind": "tool",
+      "source": "resume",
+      "evidence": "Resume — Technical Skills, Tools & Platforms"
+    }
+  ]
+}

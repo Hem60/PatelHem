@@ -1,0 +1,2661 @@
+@import "tailwindcss";
+
+@import "../styles/tokens.css";
+@import "../styles/type.css";
+@import "../styles/layers.css";
+
+/* Tailwind's utilities are used for layout only. Colour, type and texture all
+   come from the token files above, so a utility can never quietly introduce a
+   value the contrast gate has not seen. */
+@theme {
+  --color-ink: var(--ink);
+  --color-ink-dim: var(--ink-dim);
+  --color-ink-faint: var(--ink-faint);
+  --color-sky: var(--sky);
+  --color-plate: var(--plate);
+  --color-signal: var(--signal);
+  --font-sans: var(--f-display);
+  --font-serif: var(--f-body);
+  --font-mono: var(--f-mono);
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  /* mono by default: the page is a console, and the body face says so */
+  font-family: var(--f-mono);
+  font-size: var(--t-base);
+  color: var(--ink);
+  background-color: var(--paper);
+  overflow-x: hidden;
+}
+
+/* content sits above every fixed layer */
+.above {
+  position: relative;
+  z-index: 3;
+}
+
+/*
+ * Section rhythm.
+ *
+ * Every plate gets the same generous block padding and a hairline at its top
+ * edge, so each one reads as a separate sheet rather than as prose that
+ * happens to have headings in it. The rule runs the full width of the field,
+ * not just the column, which is what makes the break register.
+ *
+ * The scroll margin clears the fixed HUD — an anchor jump that lands a plate
+ * head underneath the chrome looks like a bug even though nothing overlaps.
+ */
+.above > section,
+.above > footer {
+  position: relative;
+  scroll-margin-top: 5rem;
+  padding-block: clamp(3.5rem, 7vw, 6rem);
+}
+
+/*
+ * The divider spans the column, not the viewport. A 100vw rule counts the
+ * scrollbar in its width and pushes the document eight pixels wider than the
+ * window, which is a horizontal scroll nobody asked for.
+ */
+.above > section::before,
+.above > footer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--rule);
+}
+
+/* the hero opens the page: it needs the HUD's clearance, not a divider */
+.above > section:first-child {
+  padding-top: clamp(5rem, 9vw, 7rem);
+}
+
+.above > section:first-child::before {
+  display: none;
+}
+
+.shell {
+  width: min(100% - 2 * var(--gutter), var(--column));
+  margin-inline: auto;
+}
+
+@media (max-width: 48rem) {
+  .shell {
+    width: min(100% - 2rem, 82rem);
+  }
+}
+
+/* a skip link that is genuinely reachable, not visually hidden and forgotten */
+.skip {
+  position: fixed;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 60;
+  transform: translateY(-200%);
+  background: var(--signal);
+  color: var(--signal-ink);
+  padding: 0.5rem 0.9rem;
+  font-family: var(--f-mono);
+  font-size: var(--t-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+.skip:focus-visible {
+  transform: none;
+}
+
+/* the rarity chip, matched to the reference's band label */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+  font-family: var(--f-micro);
+  font-size: var(--t-2xs);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  line-height: 1;
+  padding: 0.45em 0.6em 0.4em;
+  border: 1px solid currentColor;
+  color: var(--class, var(--ink-muted));
+  background: color-mix(in srgb, var(--class, var(--ink-muted)) 14%, transparent);
+}
+
+.chip::before {
+  content: "";
+  width: 0.4em;
+  height: 0.4em;
+  background: currentColor;
+}
+
+/*
+ * The rarity band across the head of a vault card.
+ *
+ * Solid fill, dark ink — the class is read at a glance from across the page,
+ * which a translucent tint does not achieve. The ink flips with the exposure
+ * so the band stays legible on either ground, and both directions are checked
+ * by the contrast gate.
+ */
+.band {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  padding: 0.6em 0.85em 0.5em;
+  font-family: var(--f-micro);
+  font-size: var(--t-2xs);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--ink-inverse);
+  background: var(--class, var(--ink-muted));
+}
+
+/* buttons: square, hard offset shadow, no blur */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  font-family: var(--f-micro);
+  font-size: var(--t-2xs);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  padding: 0.85em 1.1em 0.75em;
+  border: 1px solid var(--ink);
+  background: transparent;
+  color: var(--ink);
+  box-shadow: var(--shadow-cut);
+  transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out);
+  cursor: pointer;
+}
+
+.btn:hover {
+  transform: translate3d(1px, 1px, 0);
+  box-shadow: 2px 2px 0 var(--ink);
+}
+
+.btn:active {
+  transform: translate3d(3px, 3px, 0);
+  box-shadow: 0 0 0 var(--ink);
+}
+
+.btn--primary {
+  background: var(--oxide);
+  border-color: var(--oxide);
+  color: var(--ink-inverse);
+}
+
+.btn[disabled] {
+  opacity: 0.45;
+  box-shadow: none;
+  cursor: default;
+  transform: none;
+}
+
+/* a hairline that carries a label, used to head every plate */
+.header-rule {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.header-rule::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--rule);
+}
+
+/* tabular data blocks — the page's second most common object after prose */
+.readout-grid {
+  display: grid;
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+}
+.readout-grid > * {
+  background: var(--plate);
+  padding: 0.85rem 1rem;
+}
+
+/*
+ * The spread.
+ *
+ * Twelve columns with no column gap, so plates butt against each other and
+ * share a rule instead of floating apart as cards. Widths are deliberately
+ * unequal section to section: a page where every block is the same width is a
+ * page with no composition, only stacking.
+ *
+ * Below 64rem the whole thing collapses to a single column, because asymmetry
+ * on a phone is just a narrow column with wasted margins.
+ */
+.spread {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 64rem) {
+  .spread {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: 0;
+    row-gap: 1.25rem;
+    align-items: start;
+  }
+
+  /* the plate to the right overlaps its neighbour's hairline, so the join is
+     one rule rather than two sitting a pixel apart */
+  .butt {
+    margin-left: -1px;
+  }
+
+  /* a notes column: small, mono, ragged, never wider than a footnote wants */
+  .gutter {
+    padding-left: 1.25rem;
+    border-left: 1px solid var(--rule);
+  }
+}
+
+/* marginalia: a numbered note keyed to a marker in the text beside it */
+.note {
+  display: grid;
+  grid-template-columns: 1.25rem minmax(0, 1fr);
+  gap: 0.4rem;
+  margin-bottom: 0.9rem;
+}
+
+.note-index {
+  font-family: var(--f-mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.1em;
+  color: var(--signal);
+  padding-top: 0.15em;
+}
+
+.note-body {
+  font-family: var(--f-mono);
+  font-size: 0.625rem;
+  line-height: 1.55;
+  letter-spacing: 0.04em;
+  color: var(--ink-faint);
+}
+
+/* the marker that sits in the prose and points at the note */
+.marker {
+  font-family: var(--f-mono);
+  font-size: 0.6em;
+  vertical-align: super;
+  letter-spacing: 0.08em;
+  color: var(--signal);
+  margin-left: 0.15em;
+}
+
+/*
+ * The plate head.
+ *
+ *   PLATE 05 · · · · · · · · · · · · · · · · · · · · · · · ·
+ *   THE VAULT
+ *
+ * Number in Silkscreen at oxide, a dashed rule running to the right edge, and
+ * the title beneath in the pixel face.
+ */
+.plate-head {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+  margin-bottom: var(--s-4);
+}
+
+.plate-head__number {
+  font-family: var(--f-micro);
+  font-size: var(--t-2xs);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--oxide);
+  white-space: nowrap;
+}
+
+.plate-head__rule {
+  flex: 1;
+  height: 1px;
+  background-image: repeating-linear-gradient(
+    to right,
+    var(--rule-strong) 0 4px,
+    transparent 4px 12px
+  );
+}
+
+/* marginalia: footnote ticks in the gutter */
+.margin-note {
+  font-family: var(--f-mono);
+  font-size: 0.625rem;
+  line-height: 1.5;
+  letter-spacing: 0.06em;
+  color: var(--ink-faint);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/*
+ * The vault card.
+ *
+ * Two faces on one footprint: the front carries the summary, the back the
+ * score arithmetic. The foil is a single repeating gradient tracked to the
+ * pointer through --mx and --my — one gradient doing the work of an image,
+ * which is the trick worth taking from the reference build.
+ */
+.vault {
+  position: relative;
+  perspective: 1400px;
+}
+
+.vault__inner {
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform var(--dur-slow) var(--ease-out);
+}
+
+.vault[data-flipped="true"] .vault__inner {
+  transform: rotateY(180deg);
+}
+
+.vault__face {
+  border: 1px solid var(--rule-strong);
+  background: var(--paper-raised);
+  backface-visibility: hidden;
+  box-shadow: var(--shadow-plate);
+}
+
+.vault__face--back {
+  position: absolute;
+  inset: 0;
+  transform: rotateY(180deg);
+}
+
+/* the foil: a hard-stop sheen that follows the pointer across the card */
+.vault__foil {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--dur) var(--ease-out);
+  background: radial-gradient(
+    circle at var(--mx, 50%) var(--my, 50%),
+    color-mix(in srgb, var(--class, var(--ink)) 22%, transparent) 0%,
+    color-mix(in srgb, var(--class, var(--ink)) 8%, transparent) 26%,
+    transparent 58%
+  );
+}
+
+.vault:hover .vault__foil,
+.vault:focus-within .vault__foil {
+  opacity: 1;
+}
+
+/* the inspect strip along the foot of a card */
+.vault__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  border-top: 1px solid var(--rule);
+  padding: 0.7em 0.9em 0.6em;
+  font-family: var(--f-micro);
+  font-size: var(--t-2xs);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--ink-faint);
+}
+
+/* the label/value grid the reference puts on every card */
+.spec {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border: 1px solid var(--rule);
+}
+
+.spec > div {
+  padding: 0.6rem 0.75rem;
+  border-right: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+
+.spec > div:nth-child(2n) {
+  border-right: 0;
+}
+
+.spec > div:nth-last-child(-n + 2) {
+  border-bottom: 0;
+}
+
+.spec dt {
+  font-family: var(--f-micro);
+  font-size: var(--t-2xs);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ink-faint);
+  margin-bottom: 0.35rem;
+}
+
+.spec dd {
+  font-family: var(--f-mono);
+  font-size: var(--t-sm);
+  color: var(--ink);
+}
+
+/* bordered tech chips */
+.tag {
+  display: inline-block;
+  border: 1px solid var(--rule);
+  padding: 0.3em 0.5em 0.24em;
+  font-family: var(--f-mono);
+  font-size: var(--t-2xs);
+  color: var(--ink-soft);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vault__inner {
+    transition: none;
+  }
+}
+
+/*
+ * The vault grid.
+ *
+ * Portrait cards on a fixed height, matched to the reference build's
+ * proportions: narrow enough that four sit across a wide screen, tall enough
+ * that the front holds its summary without scrolling. A fixed height is what
+ * keeps a row aligned when one entry has a thesis line and another does not.
+ */
+.vault-grid {
+  display: grid;
+  gap: var(--s-4);
+  grid-template-columns: 1fr;
+  align-items: stretch;
+}
+
+/*
+ * Two across once there is room, three on a laptop, four on a wide screen.
+ *
+ * The columns are the card's own width, not a share of the container: a
+ * `1fr` column stretches a 15.5rem portrait card past 26rem on a wide screen
+ * and it stops being a card. Fixed columns, centred, keep the proportions the
+ * reference build uses at every width — and because the row is narrower than
+ * the container, the centring is what leaves the margin down either side.
+ *
+ * Four only from 80rem: 4 x 15.5rem plus three gaps is 65rem of row, which
+ * does not fit inside the gutter at a laptop width.
+ */
+@media (min-width: 48rem) {
+  .vault-grid {
+    grid-template-columns: repeat(2, 15.5rem);
+    justify-content: center;
+  }
+}
+
+@media (min-width: 64rem) {
+  .vault-grid {
+    grid-template-columns: repeat(3, 15.5rem);
+  }
+}
+
+@media (min-width: 80rem) {
+  .vault-grid {
+    grid-template-columns: repeat(4, 15.5rem);
+  }
+}
+
+.vault {
+  height: 30rem;
+}
+
+.vault__inner {
+  height: 100%;
+}
+
+.vault__face {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+/*
+ * The face turned away takes no clicks.
+ *
+ * `backface-visibility` stops the hidden face painting but not, reliably, from
+ * being hit-tested — so the front's flip surface was swallowing clicks meant
+ * for the back's close band and its code link. Whichever face is showing is
+ * the only one that can be touched.
+ */
+.vault[data-flipped="false"] .vault__face--back,
+.vault:not([data-flipped="true"]) .vault__face--back {
+  pointer-events: none;
+}
+
+.vault[data-flipped="true"] .vault__face:not(.vault__face--back) {
+  pointer-events: none;
+}
+
+/*
+ * Restated after the rule above, and it has to be: `.vault__face--back` is
+ * also a `.vault__face`, so the relative positioning declared there wins on
+ * source order and drops the back face into normal flow — where it renders a
+ * card-height below the card, invisible but taking up space.
+ */
+.vault__face--back {
+  position: absolute;
+  inset: 0;
+}
+
+/*
+ * The flip surface.
+ *
+ * A transparent button over the whole front face, above the content, so a
+ * click anywhere turns the card — including on the name, which is text rather
+ * than a link for exactly this reason. Only the repository link on the back
+ * sits above it.
+ */
+.vault__flip {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.vault__flip:focus-visible {
+  outline: 2px solid var(--oxide);
+  outline-offset: -3px;
+}
+
+/* the body grows so the foot sits on the floor of every card */
+.vault__body {
+  flex: 1;
+  min-height: 0;
+  padding: 0.85rem 0.8rem 0.9rem;
+  overflow: hidden;
+}
+
+/* the back scrolls: the assay is longer than the face and that is fine */
+.vault__scroll {
+  overflow-y: auto;
+  scrollbar-width: thin;
+  position: relative;
+  z-index: 2;
+}
+
+/* keep the front's prose from pushing the spec grid off the card */
+.vault__thesis {
+  font-size: var(--t-base);
+  line-height: 1.2;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/*
+ * Three lines, not four. The card height is fixed and its body is clipped, so
+ * a fourth line pushes the stack tags out of the card on the one entry that
+ * has both a thesis and a long claim list. Shorten the text, not the card.
+ */
+.vault__claims {
+  font-size: var(--t-2xs);
+  line-height: 1.55;
+  color: var(--ink-soft);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.vault__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.vault__foot {
+  margin-top: auto;
+}
+
+/*
+ * The front's foot is a label, not a control.
+ *
+ * It sat above the flip surface and swallowed the click, so "tap to inspect"
+ * was the one part of the card that did not inspect. The back's foot stays
+ * live — it carries the close control and the code link.
+ */
+.vault__face:not(.vault__face--back) .vault__foot {
+  pointer-events: none;
+}
+
+.vault__face--back .vault__foot {
+  position: relative;
+  z-index: 4;
+}
+
+/* head row: sigil and instrument, tight on a narrow card */
+.vault__head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* the band doubles as the close control on the back face */
+.vault__close {
+  width: 100%;
+  border: 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--ink-inverse) 25%, transparent);
+  cursor: pointer;
+  position: relative;
+  z-index: 4;
+  font-family: var(--f-micro);
+}
+
+.vault__closeText,
+.vault__code {
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font-family: var(--f-micro);
+  font-size: var(--t-2xs);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--ink-faint);
+}
+
+/* the one link on the card, and it is only reachable once turned over */
+.vault__code {
+  color: var(--oxide);
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+}
+
+.vault__code:hover {
+  color: var(--ink);
+}
+
+
+/* ───────────────────────────────────────────────────────────────────────────
+ * The console.
+ *
+ * A framed terminal: a cream title bar, a sunken body that scrolls, a prompt
+ * pinned to the last line, and a rail of one-click commands under a rule.
+ *
+ * The body is a fixed height on purpose. Output length varies enormously —
+ * `whoami` prints four rows, `skills` prints a dozen — and a box that grew to
+ * fit would shove the rest of the page down every time somebody typed. Fixed
+ * height, scrolled to the bottom, is what a shell does.
+ * ───────────────────────────────────────────────────────────────────────── */
+.term {
+  border: 1px solid var(--rule-strong);
+  background: var(--paper-sunken);
+}
+
+/* the title bar is the one inverted surface on the page: cream ground, dark ink */
+.term__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-4);
+  padding: 0.55em 0.85em 0.45em;
+  font-family: var(--f-micro);
+  font-size: var(--t-2xs);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--ink-inverse);
+  background: var(--ink);
+}
+
+.term__body {
+  height: 17rem;
+  overflow-y: auto;
+  padding: var(--s-4);
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  line-height: 1.7;
+  color: var(--ink-soft);
+  /* the whole body focuses the input, so it should read as a text field */
+  cursor: text;
+}
+
+.term__line {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/*
+ * Output rows are a grid, not spaces, so columns line up whatever the font
+ * does with digits. The lead column is sized to what actually goes in it: a
+ * two-digit skill level does not want the same width as a date span.
+ */
+.term__row {
+  display: grid;
+  gap: 0 var(--s-4);
+  align-items: baseline;
+}
+
+/*
+ * A grid cell will not shrink below its content by default, so one long value
+ * — a LinkedIn URL, say — pushes the row wider than the box and the whole
+ * table starts scrolling sideways. `min-width: 0` lets the cell shrink;
+ * `overflow-wrap` lets the value break rather than clip.
+ */
+.term__row > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.term__row[data-cols="2"] {
+  grid-template-columns: 12rem minmax(0, 1fr);
+}
+
+.term__row[data-cols="4"] {
+  grid-template-columns: 4rem 7rem 12rem minmax(0, 1fr);
+}
+
+.term__row[data-cols="5"] {
+  grid-template-columns: 13rem 7rem 5rem 7rem minmax(0, 1fr);
+}
+
+.term__row[data-lead="num"] {
+  grid-template-columns: 2.5rem minmax(0, 1fr);
+}
+
+.term__row[data-lead="label"] {
+  grid-template-columns: 8rem minmax(0, 1fr);
+}
+
+.term__row[data-lead="date"] {
+  grid-template-columns: 11rem minmax(0, 1fr);
+}
+
+.term__prompt {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5em;
+}
+
+.term__prompt > span {
+  color: var(--oxide);
+}
+
+.term__input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  font: inherit;
+  outline: none;
+}
+
+.term__input::placeholder {
+  color: var(--ink-faint);
+}
+
+.term__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  border-top: 1px solid var(--rule);
+  padding: var(--s-3) var(--s-4);
+}
+
+.term__chips .tag {
+  cursor: pointer;
+}
+
+.term__chips .tag:hover,
+.term__chips .tag:focus-visible {
+  border-color: var(--oxide);
+  color: var(--ink);
+}
+
+@media (max-width: 48rem) {
+  /*
+   * On a phone every template collapses to a single column and the row reads
+   * as a stack. A 11rem lead plus a value has nowhere to go inside a 343px
+   * box, and a table that scrolls sideways is worse than one that stacks.
+   */
+  .term__row {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  .term__row > span:first-child:not(:only-child) {
+    color: var(--ink-faint);
+  }
+}
+
+/* ───────────────────────────────────────────────────────────────────────────
+ * The career log.
+ *
+ * A ruled timeline for the things with a duration, then a card grid for the
+ * things without one. The rule is a real border on the list, not a pseudo
+ * element, so it ends exactly where the last entry ends rather than needing a
+ * height guessed in advance.
+ * ───────────────────────────────────────────────────────────────────────── */
+.log {
+  display: grid;
+  gap: var(--s-7);
+  border-left: 1px solid var(--rule);
+  padding-left: var(--s-5);
+}
+
+.log__row {
+  position: relative;
+}
+
+/*
+ * The marker straddles the rule: 9px wide, pulled left by the padding plus
+ * half its own width, so its centre sits on the line at any gutter.
+ */
+.log__marker {
+  position: absolute;
+  top: 0.3em;
+  left: calc(-1 * var(--s-5) - 5px);
+  width: 9px;
+  height: 9px;
+  background: currentColor;
+}
+
+/* a degree is a solid square, a build is an outline — filled means conferred */
+.log__marker--hollow {
+  background: none;
+  border: 1px solid currentColor;
+}
+
+.creds-block {
+  margin-top: var(--s-9);
+  border-top: 1px solid var(--rule-strong);
+  padding-top: var(--s-6);
+}
+
+/*
+ * The cards share hairlines rather than each carrying its own border, so the
+ * grid reads as one ruled block instead of four floating boxes. A 1px gap over
+ * a ruled ground is the whole trick.
+ */
+.creds {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1px;
+  border: 1px solid var(--rule-strong);
+  background: var(--rule);
+}
+
+@media (min-width: 48rem) {
+  .creds {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.creds__card {
+  background: var(--paper);
+  padding: var(--s-5);
+}
+
+/* ───────────────────────────────────────────────────────────────────────────
+ * The observing run: the runtime frame and its mission list.
+ *
+ * Same anatomy as the console — a titled frame over a sunken ground — but the
+ * rows are buttons that dispatch a real request, so they carry a pressed state
+ * and a disabled state that the console's chips do not need.
+ * ───────────────────────────────────────────────────────────────────────── */
+.runtime {
+  border: 1px solid var(--rule-strong);
+  background: var(--paper-sunken);
+}
+
+.runtime__bar {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  border-bottom: 1px solid var(--rule);
+  padding: 0.55em 0.85em 0.45em;
+  background: var(--paper-raised);
+}
+
+/* three squares, the window furniture of the frame — decoration, not status */
+.runtime__pips {
+  display: flex;
+  gap: 4px;
+}
+
+.runtime__pips i {
+  width: 7px;
+  height: 7px;
+  background: var(--rule-hard);
+}
+
+.runtime__title {
+  font-family: var(--f-micro);
+  font-size: var(--t-2xs);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--ink-soft);
+}
+
+.runtime__state {
+  margin-left: auto;
+  font-family: var(--f-micro);
+  font-size: var(--t-2xs);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+}
+
+.mission {
+  display: grid;
+  grid-template-columns: 3.5rem minmax(0, 1fr) auto;
+  gap: var(--s-4);
+  align-items: center;
+  width: 100%;
+  border-bottom: 1px solid var(--rule-hair);
+  padding: var(--s-3) var(--s-4);
+  text-align: left;
+  cursor: pointer;
+}
+
+.mission:hover:not(:disabled),
+.mission:focus-visible {
+  background: var(--paper-raised);
+}
+
+/* the dispatched target stays marked while its run streams */
+.mission[data-active="true"] {
+  background: var(--paper-raised);
+  box-shadow: inset 2px 0 0 var(--oxide);
+}
+
+/*
+ * Disabled means a run is already streaming. The rows stay legible rather than
+ * greying out — a reader mid-run should still be able to read what else is
+ * dispatchable, they just cannot start a second one.
+ */
+.mission:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.mission__id {
+  font-family: var(--f-micro);
+  font-size: var(--t-2xs);
+  letter-spacing: 0.14em;
+  color: var(--ink-faint);
+}
+
+.mission__body {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.mission__title {
+  font-size: var(--t-md);
+  color: var(--ink);
+}
+
+.mission__effect {
+  font-size: var(--t-2xs);
+  color: var(--ink-soft);
+}
+
+.mission__xp {
+  font-family: var(--f-micro);
+  font-size: var(--t-2xs);
+  letter-spacing: 0.12em;
+  color: var(--oxide);
+  white-space: nowrap;
+}
+
+@media (max-width: 48rem) {
+  .mission {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .mission__id {
+    display: none;
+  }
+}
+
+/*
+ * The entry write-up.
+ *
+ * Held to a measure rather than the full column: at 70rem the log runs the
+ * width of the page, and a mono paragraph set that wide is genuinely hard to
+ * track back to the next line.
+ */
+.log__summary {
+  max-width: 52ch;
+  font-size: var(--t-xs);
+  line-height: 1.75;
+  color: var(--ink-soft);
+}
+
+/*
+ * Log and award labels are set in the micro face, uppercase — they name an
+ * institution or a subject, not a value, so they read as index terms rather
+ * than as the data they sit under.
+ */
+.log .tag,
+.creds .tag {
+  font-family: var(--f-micro);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  padding: 0.45em 0.6em 0.35em;
+}
+
+/* ───────────────────────────────────────────────────────────────────────────
+ * The lattice field.
+ *
+ * A reproduction of the frame sequence in the project root — see
+ * components/Lattice.tsx for the geometry it was measured from. It appears
+ * twice: full-bleed under the hero, where the removed raster left a gap, and
+ * quieter behind the colophon so the page closes the way it opens.
+ *
+ * Both are full width because their SECTION is full width: the copy inside
+ * carries the shell instead. The earlier version kept the shell on the section
+ * and escaped it with `margin-left: calc(50% - 50vw); width: 100vw`, which is
+ * wrong whenever a scrollbar exists — `vw` counts the scrollbar and the layout
+ * box does not, so the layer came out 15px over and 8px off centre.
+ * ───────────────────────────────────────────────────────────────────────── */
+/*
+ * `isolation` so the graticule's negative z-index stays inside the hero
+ * instead of dropping behind the page, and `overflow-x: clip` so the
+ * full-bleed field below can use 100vw without the scrollbar's width turning
+ * into a horizontal scroll. `clip` rather than `hidden`: it does not create a
+ * scroll container, so nothing sticky inside breaks.
+ */
+.hero,
+.colophon {
+  position: relative;
+  isolation: isolate;
+  overflow-x: clip;
+}
+
+/*
+ * The grid paper goes behind the copy. Doing it this way — one rule on the
+ * layer — rather than `position: relative; z-index: 1` on every child, which
+ * outranked `.graticule`'s own `position: absolute` and dropped it back into
+ * the flow as a full-height empty block.
+ */
+/*
+ * The grid paper goes behind the copy, and it goes edge to edge — which it now
+ * does for free, because the hero itself is full width and this is `inset: 0`.
+ *
+ * It confined itself to the shell before, stopping ~190px short of both edges
+ * on a laptop and reading as a stray rectangle rather than as the page's
+ * ground. Making the section full width also moves the edge ticks off the
+ * text: at `left: 0.35rem` inside a shell-width layer they landed on the
+ * headline's first letters.
+ */
+.hero .graticule,
+.hero .graticule-ticks {
+  z-index: -1;
+}
+
+.hero__field,
+.colophon__field {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  /*
+   * The source loop is two colours. This is three: the resting lattice in ink,
+   * the blooms in the page's accent. The accent is the only saturated colour
+   * in the system, so putting it on the one moving element ties the ground to
+   * the headline rather than leaving it as grey noise behind it.
+   */
+  --lattice-ground: var(--paper);
+  --lattice-ink: var(--ink);
+  --lattice-accent: var(--oxide);
+  background: var(--lattice-ground);
+}
+
+/*
+ * The field closes the hero, so the section's bottom padding goes.
+ *
+ * With it there, the graticule carried on for another ~110px below the field
+ * as an empty ruled strip: the live design stopped, the grid did not, and the
+ * hero read as having run out rather than ended. Zero bottom padding puts the
+ * field's own bottom rule at the bottom of the grid, so the animation runs to
+ * exactly where the ground does.
+ */
+/* `.above > section` sets the section rhythm and outranks a bare `.hero`, so
+   this has to match its specificity to win */
+.above > .hero {
+  padding-bottom: 0;
+}
+
+.hero__field {
+  margin-top: clamp(2.5rem, 6vw, 5rem);
+  height: clamp(16rem, 34vh, 24rem);
+  border-top: 1px solid var(--rule-strong);
+}
+
+/*
+ * The same band as the hero's, and for the same reason: it was running at a
+ * smaller pitch and half the density, which made the page open and close on
+ * two different materials. Same height, same rule, same weight — the only
+ * difference left is which end of the page it is on.
+ */
+.above > .colophon {
+  padding-bottom: 0;
+}
+
+.colophon__field {
+  margin-top: clamp(2.5rem, 6vw, 5rem);
+  height: clamp(16rem, 34vh, 24rem);
+  border-top: 1px solid var(--rule-strong);
+}
+
+.hero__lattice,
+.colophon__lattice {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/*
+ * The field is ground, not content: it sits under the copy at a weight that
+ * reads as texture. Full strength it competes with the headline.
+ */
+.hero__lattice {
+  opacity: 0.5;
+}
+
+.colophon__lattice {
+  opacity: 0.5;
+}
+
+/* ───────────────────────────────────────────────────────────────────────────
+ * The capability tree's box.
+ *
+ * The page-wide graticule is gone — grid paper under eleven plates of prose is
+ * noise. This is the exception, and it earns it: the chart's positions carry
+ * meaning (column = depth in the computed graph), so ruled ground is a scale,
+ * not decoration. Same anatomy as the console frame so the two read as the
+ * same kind of instrument.
+ * ───────────────────────────────────────────────────────────────────────── */
+.tree-box {
+  border: 1px solid var(--rule-strong);
+  background: var(--paper-sunken);
+}
+
+.tree-box__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-4);
+  border-bottom: 1px solid var(--rule);
+  padding: 0.55em 0.85em 0.45em;
+  background: var(--paper-raised);
+  font-family: var(--f-micro);
+  font-size: var(--t-2xs);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--ink-soft);
+}
+
+.tree-box__hint {
+  color: var(--ink-faint);
+}
+
+/*
+ * The ruled field. Minor lines only and no major ones: the chart draws its own
+ * column headings, so a second heavier grid would compete with the thing it is
+ * supposed to be measuring.
+ */
+.tree-box__field {
+  overflow-x: auto;
+  padding: var(--s-5) var(--s-4);
+  background-image:
+    repeating-linear-gradient(to right, var(--graticule-minor) 0 1px, transparent 1px var(--graticule-step)),
+    repeating-linear-gradient(to bottom, var(--graticule-minor) 0 1px, transparent 1px var(--graticule-step));
+}
+
+@media (max-width: 48rem) {
+  /* the hint is the one thing that will not fit beside the count on a phone */
+  .tree-box__hint {
+    display: none;
+  }
+}
+
+/* ───────────────────────────────────────────────────────────────────────────
+ * The dossier — plate 02's identity table and skill set.
+ *
+ * A ruled key/value table over grouped tag rows, matched to the reference
+ * build's panel. Two columns on a wide screen so the table and the groups sit
+ * side by side; stacked below that.
+ * ───────────────────────────────────────────────────────────────────────── */
+.dossier {
+  border: 1px solid var(--rule-strong);
+  padding: var(--s-5);
+}
+
+.dossier__table {
+  margin-bottom: var(--s-6);
+}
+
+.dossier__row {
+  display: grid;
+  grid-template-columns: 8rem minmax(0, 1fr);
+  gap: var(--s-4);
+  align-items: baseline;
+  border-bottom: 1px solid var(--rule);
+  padding: 0.6rem 0;
+}
+
+.dossier__row:first-child {
+  border-top: 1px solid var(--rule);
+}
+
+.dossier__row dd {
+  font-size: var(--t-sm);
+  color: var(--ink);
+}
+
+/* a reading says so, in the quietest voice on the panel */
+.dossier__mark {
+  font-family: var(--f-micro);
+  font-size: var(--t-2xs);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--verdigris);
+}
+
+.dossier__head {
+  margin-bottom: var(--s-3);
+  font-family: var(--f-micro);
+  font-size: var(--t-2xs);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--oxide);
+}
+
+.dossier__head:not(:first-of-type) {
+  margin-top: var(--s-6);
+}
+
+.dossier__group {
+  display: grid;
+  grid-template-columns: 8rem minmax(0, 1fr);
+  gap: var(--s-4);
+  align-items: start;
+  border-bottom: 1px solid var(--rule);
+  padding: 0.6rem 0;
+}
+
+.dossier__key {
+  color: var(--ink-faint);
+  padding-top: 0.35em;
+}
+
+.dossier__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
+
+/* the repository count rides inside the tag, so the tag is the whole reading */
+.dossier__count {
+  margin-left: 0.5em;
+  padding-left: 0.5em;
+  border-left: 1px solid var(--rule);
+  color: var(--verdigris);
+}
+
+.dossier__foot {
+  margin-top: var(--s-5);
+}
+
+@media (max-width: 48rem) {
+  /* the 8rem key column is wider than half a phone: stack instead */
+  .dossier__row,
+  .dossier__group {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--s-2);
+  }
+}
+
+/* ───────────────────────────────────────────────────────────────────────────
+ * HUD controls.
+ *
+ * One size for every button in the bar. They were each styling themselves —
+ * the two text buttons off `.label`, the glyph button off nothing — so the
+ * glyph inherited a 16.5px font, its `em` padding scaled with it, and it came
+ * out 41x38 next to two 25px neighbours, sitting 6px proud of them.
+ *
+ * A fixed height with a flex centre means the content no longer decides the
+ * box: a word, a note or a bitmap all produce the same button on the same
+ * baseline.
+ * ───────────────────────────────────────────────────────────────────────── */
+.hud-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 1.625rem;
+  border: 1px solid var(--rule-strong);
+  padding-inline: 0.6em;
+  font-family: var(--f-micro);
+  font-size: var(--t-2xs);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+
+.hud-btn:hover,
+.hud-btn:focus-visible {
+  color: var(--ink);
+  border-color: var(--ink-soft);
+}
+
+/* square, so an icon button is not narrower than a worded one is tall */
+.hud-btn--icon {
+  width: 1.625rem;
+  padding-inline: 0;
+}
+
+
+
+/* ───────────────────────────────────────────────────────────────────────────
+ * Contributions — a strip inside the vault.
+ *
+ * These do NOT reuse `.vault`. That card is 15.5rem wide and a fixed 30rem
+ * tall, sized for a thesis line and four facts; a contribution carries a
+ * commit list, so the content ran straight out through the bottom of the card
+ * and collided with the note underneath it. A date span even wrapped onto
+ * three lines inside a 248px column.
+ *
+ * So: wider cells, height driven by content, nothing clipped. They still read
+ * as part of the vault — same border weight, same band position — but the
+ * border is dashed and there is no rarity band, because the engine is never
+ * run against work that is mostly somebody else's.
+ * ───────────────────────────────────────────────────────────────────────── */
+.contrib-strip {
+  margin-top: var(--s-9);
+  border-top: 1px solid var(--rule-strong);
+  padding-top: var(--s-6);
+}
+
+.contrib-grid {
+  display: grid;
+  gap: var(--s-4);
+  grid-template-columns: 1fr;
+  align-items: start;
+}
+
+/* two across only when each still gets a readable measure */
+@media (min-width: 64rem) {
+  .contrib-grid {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 26rem), 1fr));
+  }
+}
+
+.contrib-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px dashed var(--rule-hard);
+  /* no height: the commit list decides how tall this is */
+}
+
+/* the share sits where a vault card's rarity band sits, so the difference
+   between ranked and shared work is visible before either is read */
+.contrib-card__band {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  padding: 0.6em 0.85em 0.5em;
+  font-family: var(--f-micro);
+  font-size: var(--t-2xs);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--ink-inverse);
+  background: var(--oxide);
+}
+
+.contrib-card__body {
+  flex: 1;
+  padding: var(--s-5);
+}
+
+.contrib-card__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  border-top: 1px solid var(--rule);
+  padding: 0.6em 0.85em 0.5em;
+  font-family: var(--f-micro);
+  font-size: var(--t-2xs);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ink-faint);
+}
+
+.contrib-card__graph {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+}
+
+.contrib-card__graph span {
+  width: 8px;
+  height: 12px;
+  background: var(--rule);
+}
+
+.contrib-card__graph span[data-mine="true"] {
+  background: var(--oxide);
+}
+
+.contrib-card__count {
+  margin-top: 0.6rem;
+  font-size: var(--t-sm);
+  color: var(--ink-soft);
+}
+
+.contrib-card__count strong {
+  color: var(--ink);
+}
+
+.contrib-card__work {
+  display: grid;
+  gap: 0;
+  margin-top: 0.35rem;
+}
+
+.contrib-card__work li {
+  border-bottom: 1px solid var(--rule-hair);
+  padding: 0.35rem 0;
+  font-family: var(--f-mono);
+  font-size: var(--t-xs);
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+.contrib-card__link {
+  color: var(--oxide);
+}
+
+/*
+ * Measured versus stated.
+ *
+ * A tag the survey can corroborate is solid; one taken from the resume is
+ * dashed and slightly dimmer. Rendering both the same would be the panel
+ * quietly claiming they are the same kind of fact — which is the one thing
+ * this page is built not to do.
+ */
+.tag[data-source="resume"] {
+  border-style: dashed;
+  color: var(--ink-faint);
+}
+
+/* ───────────────────────────────────────────────────────────────────────────
+ * Plate 02 — written on the left, computed on the right.
+ *
+ * The split is the section's argument, not a layout convenience: a parallax
+ * needs two positions held side by side, so the authored reading and the
+ * measured one have to be visible at the same time rather than stacked.
+ * ───────────────────────────────────────────────────────────────────────── */
+.parallax {
+  display: grid;
+  gap: var(--s-7);
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 64rem) {
+  .parallax {
+    /*
+     * Written column wider than the dossier, ~1.35:1. The prose needs a
+     * reading measure and the dossier is a table of short values, so an even
+     * split starves the half that is actually being read.
+     */
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    gap: var(--s-8);
+    align-items: start;
+  }
+}
+
+/*
+ * Type inside the written column.
+ *
+ * `.t-lead` ships with `max-width: 22ch`, which is right in the hero — a short
+ * headline-adjacent sentence wants a narrow measure — and badly wrong here,
+ * where it squeezed a full paragraph into nine lines about four words wide.
+ * The column is the measure on this plate, so the cap comes off and the size
+ * comes down a little to land the lead in three or four lines.
+ */
+.parallax .t-lead {
+  max-width: none;
+  font-size: clamp(1.35rem, 1.05rem + 1vw, 1.8rem);
+  line-height: 1.32;
+}
+
+/* airier than the default 1.68: this is the one place on the page with long
+   uninterrupted prose, and mono at a tight leading is hard to track */
+.parallax .t-body {
+  max-width: none;
+  line-height: 1.78;
+}
+
+.parallax__written > * {
+  min-width: 0;
+}
+
+/*
+ * The toggle. Two buttons welded into one control with a shared border, so it
+ * reads as a switch with a position rather than as two things to press. The
+ * selected side inverts — ink ground, paper text — which is the strongest
+ * signal available in a system with no shadows and no rounded corners.
+ */
+.segmented {
+  display: inline-flex;
+  border: 1px solid var(--rule-strong);
+}
+
+.segmented__btn {
+  padding: 0.6em 0.9em 0.5em;
+  font-family: var(--f-micro);
+  font-size: var(--t-2xs);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+
+.segmented__btn + .segmented__btn {
+  border-left: 1px solid var(--rule-strong);
+}
+
+.segmented__btn[aria-selected="true"] {
+  color: var(--ink-inverse);
+  background: var(--ink);
+}
+
+.segmented__btn:not([aria-selected="true"]):hover {
+  color: var(--ink);
+}
+
+/* the areas grid: two across, sharing hairlines inside one ruled block */
+.areas {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1px;
+  border: 1px solid var(--rule-strong);
+  background: var(--rule);
+}
+
+@media (min-width: 40rem) {
+  .areas {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.areas__card {
+  background: var(--paper);
+  padding: var(--s-5);
+}
+
+.areas__gloss {
+  margin-top: 0.4rem;
+  font-size: var(--t-xs);
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+
+.areas__machine {
+  margin-top: var(--s-7);
+  border-top: 1px solid var(--rule-strong);
+  padding-top: var(--s-5);
+}
+
+.areas__line + .areas__line {
+  margin-top: var(--s-4);
+}
+
+/* ───────────────────────────────────────────────────────────────────────────
+ * The assay table — plate 08.
+ *
+ * A ruled list of every catalogued entry, each row opening onto the arithmetic
+ * behind its class. The row is a button across its whole width: the `+` marks
+ * the affordance but the target is the row, because a 16px hit area at the far
+ * right of a 1120px line is a target most people miss.
+ * ───────────────────────────────────────────────────────────────────────── */
+.assay {
+  border-top: 1px solid var(--rule-strong);
+}
+
+.assay__row {
+  border-bottom: 1px solid var(--rule);
+}
+
+.assay__row[data-open="true"] {
+  background: var(--paper-raised);
+}
+
+.assay__head {
+  display: grid;
+  grid-template-columns: 4rem minmax(0, 1fr) auto 1.5rem;
+  gap: var(--s-4);
+  align-items: center;
+  width: 100%;
+  padding: var(--s-4) var(--s-2);
+  text-align: left;
+  cursor: pointer;
+}
+
+.assay__head:hover,
+.assay__head:focus-visible {
+  background: var(--paper-raised);
+}
+
+.assay__score {
+  font-size: var(--t-xl);
+  color: var(--verdigris);
+  font-variant-numeric: tabular-nums;
+}
+
+.assay__id {
+  display: grid;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.assay__name {
+  font-family: var(--f-mono);
+  font-size: var(--t-base);
+  color: var(--ink);
+}
+
+.assay__desc {
+  font-family: var(--f-mono);
+  font-size: var(--t-2xs);
+  line-height: 1.5;
+  color: var(--ink-faint);
+}
+
+.assay__class {
+  display: grid;
+  gap: 0.15rem;
+  justify-items: end;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.assay__commits {
+  font-family: var(--f-mono);
+  font-size: var(--t-2xs);
+  color: var(--ink-faint);
+}
+
+.assay__toggle {
+  font-family: var(--f-mono);
+  font-size: var(--t-lg);
+  color: var(--ink-soft);
+  text-align: center;
+}
+
+/* ── the opened breakdown ────────────────────────────────────────────────── */
+.assay__open {
+  border-top: 1px dashed var(--rule);
+  padding: var(--s-5) var(--s-2) var(--s-5);
+}
+
+.assay__axes {
+  display: grid;
+  gap: var(--s-6) var(--s-6);
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 48rem) {
+  .assay__axes {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 72rem) {
+  /* five axes: three then two, rather than a ragged four-up */
+  .assay__axes {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.assay__axisHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-3);
+  margin-bottom: 0.4rem;
+}
+
+.assay__axisScore {
+  font-size: var(--t-xs);
+  color: var(--ink);
+}
+
+/*
+ * The meter is the reading, not a picture of it: twenty cells, one per five
+ * points, so counting the lit cells gives the number printed beside it.
+ */
+.meter {
+  display: flex;
+  gap: 2px;
+}
+
+.meter span {
+  flex: 1;
+  height: 10px;
+  background: var(--rule);
+}
+
+.meter span[data-on="true"] {
+  background: var(--verdigris);
+}
+
+.assay__gloss {
+  margin-top: 0.45rem;
+}
+
+.assay__math {
+  margin-top: 0.35rem;
+  font-size: var(--t-2xs);
+  color: var(--ink-soft);
+}
+
+.assay__math strong {
+  color: var(--ink);
+}
+
+.assay__evidence {
+  display: grid;
+  gap: 0.2rem;
+  margin-top: 0.5rem;
+}
+
+.assay__evidence li {
+  font-family: var(--f-mono);
+  font-size: var(--t-2xs);
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+.assay__none {
+  margin-top: 0.5rem;
+  font-family: var(--f-mono);
+  font-size: var(--t-2xs);
+  color: var(--ink-faint);
+}
+
+.assay__sum {
+  margin-top: var(--s-6);
+  border-left: 2px solid var(--oxide);
+  padding-left: var(--s-4);
+}
+
+.assay__sum p {
+  font-size: var(--t-xs);
+  line-height: 1.7;
+}
+
+.assay__sum strong {
+  color: var(--ink);
+}
+
+.assay__foot {
+  margin-top: var(--s-4);
+}
+
+@media (max-width: 48rem) {
+  .assay__head {
+    grid-template-columns: 3rem minmax(0, 1fr) 1.25rem;
+    row-gap: var(--s-2);
+  }
+
+  /* the class chip drops under the name rather than squeezing the title */
+  .assay__class {
+    grid-column: 2 / 4;
+    justify-items: start;
+    text-align: left;
+  }
+}
+
+/*
+ * The itemised criteria inside an opened axis.
+ *
+ * Three columns: a diamond, the name, the points. Earned rows are ink and
+ * filled; unearned rows are dimmed and hollow — deliberately still legible,
+ * because the components a repository did NOT earn are the ones that say what
+ * would move it, and greying them out of readability hides the useful half.
+ */
+.crit {
+  display: grid;
+  gap: 0;
+  margin-top: 0.55rem;
+}
+
+.crit__row {
+  display: grid;
+  grid-template-columns: 1rem minmax(0, 1fr) auto;
+  gap: 0.5rem;
+  align-items: baseline;
+  padding: 0.28rem 0;
+  font-family: var(--f-mono);
+  font-size: var(--t-2xs);
+  line-height: 1.45;
+}
+
+.crit__row[data-earned="true"] .crit__mark,
+.crit__row[data-earned="true"] .crit__pts {
+  color: var(--verdigris);
+}
+
+.crit__row[data-earned="true"] .crit__name {
+  color: var(--ink);
+}
+
+.crit__row[data-earned="false"] {
+  color: var(--ink-faint);
+}
+
+.crit__row[data-earned="false"] .crit__mark {
+  color: var(--rule-hard);
+}
+
+.crit__pts {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* the survey's own sentences, under the itemised list rather than instead */
+.assay__evidence {
+  margin-top: 0.6rem;
+  border-top: 1px solid var(--rule-hair);
+  padding-top: 0.5rem;
+}
+
+/* ───────────────────────────────────────────────────────────────────────────
+ * The boot plate.
+ *
+ * Full screen, above the HUD, lifting once the page has actually finished
+ * loading. Everything on it is CSS — four corner rules, a pixel wordmark and
+ * a bar whose width is a real percentage. No image, nothing to download, and
+ * nothing that would delay the very thing it is measuring.
+ * ───────────────────────────────────────────────────────────────────────── */
+/*
+ * Hidden unless the pre-paint script raised the flag. The markup is always
+ * server-rendered so the plate is up in the first frame; with JavaScript off
+ * the flag never appears and this stays hidden.
+ */
+.boot {
+  display: none;
+}
+
+[data-booting="1"] .boot {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  align-content: center;
+  overflow: hidden;
+  isolation: isolate;
+  align-items: center;
+  background: var(--paper);
+  cursor: pointer;
+  animation: boot-in var(--dur) var(--ease-out) both;
+}
+
+.boot[data-leaving="true"] {
+  animation: boot-out 460ms var(--ease-out) both;
+  pointer-events: none;
+}
+
+@keyframes boot-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/*
+ * The exit is a shutter closing.
+ *
+ * The entrance is an exposure sweep, so the exit is the other half of the same
+ * apparatus: the plate collapses to a horizontal line at the centre and goes,
+ * with a bright seam flashing along that line as it closes. An observatory
+ * page should open and close like an instrument, not cross-dissolve like a
+ * slideshow.
+ *
+ * `clip-path` rather than height, so nothing reflows on the way out — the page
+ * underneath is already laid out and simply becomes visible.
+ */
+@keyframes boot-out {
+  0% {
+    clip-path: inset(0 0 0 0);
+    opacity: 1;
+  }
+  55% {
+    opacity: 1;
+  }
+  100% {
+    clip-path: inset(50% 0 50% 0);
+    opacity: 0;
+  }
+}
+
+/* the copy leaves fractionally ahead of the shutter, so it is gone by the time
+   the seam closes over it rather than being sliced in half */
+.boot[data-leaving="true"] .boot__inner {
+  animation: boot-out-copy 260ms var(--ease-out) both;
+}
+
+@keyframes boot-out-copy {
+  to {
+    opacity: 0;
+    transform: translateY(-0.6rem);
+  }
+}
+
+/* the seam: a bright line riding the closing edge */
+.boot[data-leaving="true"]::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: 50%;
+  height: 2px;
+  background: linear-gradient(to right, transparent, var(--oxide), var(--ink), var(--oxide), transparent);
+  animation: boot-seam 460ms var(--ease-out) both;
+}
+
+@keyframes boot-seam {
+  0% {
+    opacity: 0;
+    transform: scaleX(0.2);
+  }
+  45% {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scaleX(1);
+  }
+}
+
+.boot__inner {
+  align-self: center;
+  width: min(100% - 2 * var(--gutter), var(--column));
+  margin-inline: auto;
+}
+
+/*
+ * The hero's ground, carried onto the plate: the same grid paper behind the
+ * copy and the same lattice band at the foot, so lifting the boot reveals the
+ * page rather than swapping one backdrop for another.
+ */
+.boot .graticule,
+.boot .graticule-ticks {
+  z-index: -1;
+}
+
+.boot__field {
+  align-self: end;
+  height: clamp(9rem, 24vh, 16rem);
+  border-top: 1px solid var(--rule-strong);
+  overflow: hidden;
+  --lattice-ground: var(--paper);
+  --lattice-ink: var(--ink);
+  --lattice-accent: var(--oxide);
+  background: var(--lattice-ground);
+}
+
+.boot__lattice {
+  display: block;
+  width: 100%;
+  height: 100%;
+  opacity: 0.5;
+}
+
+/* four brackets, drawn as two borders each */
+.boot__corner {
+  position: absolute;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 1px solid var(--rule-hard);
+}
+
+.boot__corner[data-at="tl"] {
+  top: 1.25rem;
+  left: 1.25rem;
+  border-right: 0;
+  border-bottom: 0;
+}
+
+.boot__corner[data-at="tr"] {
+  top: 1.25rem;
+  right: 1.25rem;
+  border-left: 0;
+  border-bottom: 0;
+}
+
+.boot__corner[data-at="bl"] {
+  bottom: 1.25rem;
+  left: 1.25rem;
+  border-right: 0;
+  border-top: 0;
+}
+
+.boot__corner[data-at="br"] {
+  bottom: 1.25rem;
+  right: 1.25rem;
+  border-left: 0;
+  border-top: 0;
+}
+
+.boot__eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--f-micro);
+  font-size: var(--t-2xs);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--ink-soft);
+}
+
+.boot__pip {
+  width: 0.5rem;
+  height: 0.5rem;
+  background: var(--oxide);
+}
+
+.boot__mark {
+  margin-top: var(--s-5);
+  font-size: clamp(2.4rem, 1.2rem + 5.6vw, 6rem);
+  line-height: 0.95;
+  color: var(--ink);
+}
+
+.boot__line {
+  margin-top: var(--s-5);
+  max-width: 34ch;
+  font-size: var(--t-lg);
+}
+
+.boot__meter {
+  margin-top: var(--s-8);
+  max-width: 34rem;
+}
+
+.boot__meterHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-4);
+  margin-bottom: 0.5rem;
+  font-family: var(--f-micro);
+  font-size: var(--t-2xs);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--ink-soft);
+}
+
+.boot__track {
+  height: 0.75rem;
+  border: 1px solid var(--rule-strong);
+  padding: 2px;
+}
+
+.boot__fill {
+  height: 100%;
+  background: var(--oxide);
+  /* the width IS the measurement; the transition only smooths the steps */
+  transition: width var(--dur) var(--ease-out);
+}
+
+.boot__steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-4);
+  margin-top: 0.6rem;
+  font-family: var(--f-mono);
+  font-size: var(--t-2xs);
+  color: var(--ink-faint);
+}
+
+.boot__steps li[data-done="true"] {
+  color: var(--verdigris);
+}
+
+.boot__skip {
+  margin-top: var(--s-7);
+  font-family: var(--f-micro);
+  font-size: var(--t-2xs);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--ink-faint);
+}
+
+.boot__skip strong {
+  color: var(--ink-soft);
+}
+
+/* a reader who asked for less motion never sees it — see Boot.tsx */
+@media (prefers-reduced-motion: reduce) {
+  .boot {
+    display: none;
+  }
+}
+
+/* ───────────────────────────────────────────────────────────────────────────
+ * The card back — the dossier.
+ *
+ * Statement, caveat, stack, readings. The band is gold rather than the class
+ * colour: the front carries the rank, so repeating it here would say the same
+ * thing twice, and a different colour makes it obvious at a glance which face
+ * you are looking at.
+ * ───────────────────────────────────────────────────────────────────────── */
+.dossier-band {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  width: 100%;
+  padding: 0.6em 0.85em 0.5em;
+  font-family: var(--f-micro);
+  font-size: var(--t-2xs);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--ink-inverse);
+  background: var(--ochre);
+  cursor: pointer;
+}
+
+.back__lede {
+  margin-top: 0.5rem;
+  font-size: var(--t-xs);
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+
+/* the survey's own sentences, set off by a rule so they read as quoted */
+.back__quote {
+  margin-top: 0.7rem;
+  border-left: 2px solid var(--ochre);
+  padding-left: 0.7rem;
+  font-size: var(--t-2xs);
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+
+/*
+ * Dashed, because the caveat is not part of the reading — it is the thing a
+ * reader needs in order to weigh it.
+ */
+.back__caveat {
+  margin-top: 0.8rem;
+  border: 1px dashed var(--rule-hard);
+  padding: 0.6rem 0.7rem;
+}
+
+.back__caveat p {
+  font-size: var(--t-2xs);
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+
+.back__caveat strong {
+  color: var(--ochre);
+}
+
+.back__tags {
+  margin-top: 0.8rem;
+}
+
+.back__axes {
+  display: grid;
+  gap: 0.3rem;
+  margin-top: 0.9rem;
+}
+
+.back__axis {
+  display: grid;
+  grid-template-columns: 5.5rem minmax(0, 1fr) 2.2rem;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.back__axisName {
+  color: var(--ink-soft);
+}
+
+.back__axisVal {
+  font-size: var(--t-2xs);
+  color: var(--ink);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* the same meter as the assay, in the dossier's gold */
+.meter--gold span[data-on="true"] {
+  background: var(--ochre);
+}
+
+.meter--gold span {
+  height: 9px;
+}
+
+.back__sum {
+  margin-top: 0.9rem;
+  border-top: 1px solid var(--rule);
+  padding-top: 0.5rem;
+  font-size: var(--t-2xs);
+  color: var(--ink);
+}
+
+/* ───────────────────────────────────────────────────────────────────────────
+ * The boot's exposure sweep.
+ *
+ * The site's vocabulary is photographic — plates, exposures, developing — so
+ * the boot develops rather than fading in. A single band crosses the screen
+ * once and each block resolves behind it, in the order the eye reads them.
+ *
+ * The timings are hand-set rather than derived: the sweep is decoration and
+ * has nothing to do with the progress bar, which measures real work. Keeping
+ * them independent is deliberate — an animation tied to load time would stall
+ * on a slow connection and jump on a fast one.
+ * ───────────────────────────────────────────────────────────────────────── */
+.boot__scan {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 2px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--oxide) 15%,
+    var(--ink) 50%,
+    var(--oxide) 85%,
+    transparent
+  );
+  opacity: 0.9;
+  animation: boot-sweep 1250ms var(--ease-out) both;
+  pointer-events: none;
+}
+
+/* a faint wake under the line, so it reads as exposing rather than scrolling */
+.boot__scan::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: 2px;
+  height: 8rem;
+  background: linear-gradient(to bottom, color-mix(in srgb, var(--oxide) 12%, transparent), transparent);
+}
+
+@keyframes boot-sweep {
+  from {
+    transform: translateY(-2px);
+  }
+  to {
+    transform: translateY(100vh);
+    opacity: 0;
+  }
+}
+
+/*
+ * A block develops as the sweep passes it: up from below, out of the ground.
+ * `--dev` is its position in the reading order, not a pixel offset, so blocks
+ * can be reordered without retiming anything.
+ */
+.boot__dev {
+  animation: boot-develop 520ms var(--ease-out) both;
+  animation-delay: calc(100ms + var(--dev, 0) * 130ms);
+}
+
+@keyframes boot-develop {
+  from {
+    opacity: 0;
+    transform: translateY(0.7rem);
+    filter: blur(3px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+/* one glyph of the wordmark, resolving in place */
+.boot__ch {
+  display: inline-block;
+  animation: boot-char 360ms var(--ease-out) both;
+}
+
+@keyframes boot-char {
+  from {
+    opacity: 0;
+    transform: translateY(-0.35em) scaleY(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* the corner brackets draw themselves in from their own corner */
+.boot__corner {
+  animation: boot-corner 460ms var(--ease-out) both;
+}
+
+@keyframes boot-corner {
+  from {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.boot__corner[data-at="tl"] { transform-origin: top left; }
+.boot__corner[data-at="tr"] { transform-origin: top right; }
+.boot__corner[data-at="bl"] { transform-origin: bottom left; }
+.boot__corner[data-at="br"] { transform-origin: bottom right; }
+
+/*
+ * Nothing animates for a reader who asked for less motion. The boot is hidden
+ * from them entirely, but these are here so the rules cannot outlive that
+ * decision if the plate is ever shown another way.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .boot,
+  .boot__scan,
+  .boot__dev,
+  .boot__ch,
+  .boot__corner,
+  .boot[data-leaving="true"],
+  .boot[data-leaving="true"] .boot__inner,
+  .boot[data-leaving="true"]::after {
+    animation: none;
+  }
+}
+
+/* ───────────────────────────────────────────────────────────────────────────
+ * The observation log.
+ *
+ * Framed like the console and the assay so it reads as another instrument
+ * panel rather than a scoreboard — which is the point: it reports what was
+ * recorded, at the rate it was paid, and reconciles against the counter in
+ * the HUD.
+ * ───────────────────────────────────────────────────────────────────────── */
+.oplog {
+  border: 1px solid var(--rule-strong);
+  background: var(--paper-sunken);
+}
+
+.oplog__bar {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+  border-bottom: 1px solid var(--rule);
+  padding: 0.55em 0.6em 0.45em 0.85em;
+  background: var(--paper-raised);
+  font-family: var(--f-micro);
+  font-size: var(--t-2xs);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--ink-soft);
+}
+
+.oplog__level {
+  margin-left: auto;
+  color: var(--ink-faint);
+  text-transform: none;
+  letter-spacing: 0.1em;
+}
+
+.oplog__reset {
+  border: 1px solid var(--rule-strong);
+  padding: 0.5em 0.7em 0.4em;
+  font: inherit;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+
+.oplog__reset:hover,
+.oplog__reset:focus-visible {
+  border-color: var(--oxide);
+  color: var(--oxide);
+}
+
+.oplog__body {
+  padding: var(--s-5);
+}
+
+.oplog__row {
+  display: grid;
+  grid-template-columns: 1rem minmax(0, 1fr) auto auto;
+  gap: 0.2rem 0.75rem;
+  align-items: baseline;
+  border-bottom: 1px solid var(--rule-hair);
+  padding: 0.55rem 0;
+}
+
+/* a row with nothing on it yet is dimmed but never hidden */
+.oplog__row[data-any="false"] {
+  color: var(--ink-faint);
+}
+
+.oplog__row[data-any="true"] .oplog__mark {
+  color: var(--verdigris);
+}
+
+.oplog__row[data-any="true"] .oplog__label {
+  color: var(--ink);
+}
+
+.oplog__label {
+  font-family: var(--f-micro);
+  font-size: var(--t-2xs);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+
+.oplog__count,
+.oplog__rate {
+  font-size: var(--t-2xs);
+  white-space: nowrap;
+}
+
+.oplog__rate {
+  color: var(--ink-faint);
+}
+
+/* the gloss spans the whole row on its own line, under the figures */
+.oplog__gloss {
+  grid-column: 2 / -1;
+}
+
+.oplog__sigils {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+  margin-top: var(--s-5);
+  flex-wrap: wrap;
+}
+
+.oplog__sigils ul {
+  display: flex;
+  gap: var(--s-2);
+}
+
+.oplog__sigil {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--rule);
+  padding: 4px;
+  line-height: 0;
+}
+
+.oplog__sum {
+  margin-top: var(--s-5);
+  border-top: 1px solid var(--rule);
+  padding-top: 0.6rem;
+  font-size: var(--t-xs);
+  color: var(--ink);
+}
+
+.oplog__note {
+  margin-top: 0.5rem;
+  max-width: 72ch;
+}
+
+@media (max-width: 48rem) {
+  .oplog__row {
+    grid-template-columns: 1rem minmax(0, 1fr) auto;
+  }
+
+  /* the arithmetic drops under the label rather than squeezing it */
+  .oplog__rate {
+    grid-column: 2 / -1;
+  }
+}
+
+/* ───────────────────────────────────────────────────────────────────────────
+ * Signal — plate 10.
+ *
+ * The close: what to write about on the left, where to write on the right.
+ * Wider on the left because that side carries the argument and the right side
+ * carries four short rows.
+ * ───────────────────────────────────────────────────────────────────────── */
+.signal {
+  display: grid;
+  gap: var(--s-7);
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 64rem) {
+  .signal {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    gap: var(--s-8);
+    align-items: start;
+  }
+}
+
+/* the lead opens the plate now, so it takes the weight the headline had */
+.signal__lead {
+  max-width: 32ch;
+  font-size: var(--t-xl);
+}
+
+.signal__body {
+  margin-top: var(--s-5);
+}
+
+.signal__areas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  margin-top: var(--s-5);
+}
+
+.signal__cta {
+  margin-top: var(--s-6);
+}
+
+/*
+ * The contact table. A top rule and one per row, so it reads as a ruled index
+ * rather than a list of links — the same construction as the dossier panel on
+ * plate 02, which is the other place the page states a fact about a person.
+ */
+.signal__rows {
+  border-top: 1px solid var(--rule-strong);
+}
+
+.signal__row {
+  display: grid;
+  grid-template-columns: 7rem minmax(0, 1fr);
+  gap: var(--s-4);
+  align-items: baseline;
+  border-bottom: 1px solid var(--rule);
+  padding: 0.75rem 0;
+}
+
+.signal__row dd {
+  font-size: var(--t-base);
+  overflow-wrap: anywhere;
+}
+
+.signal__note {
+  margin-top: var(--s-4);
+}
+
+@media (max-width: 48rem) {
+  .signal__row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.15rem;
+  }
+}
+
+/* ───────────────────────────────────────────────────────────────────────────
+ * Touch targets.
+ *
+ * The type on this page is deliberately small, and several controls are set in
+ * the micro face — which makes them 14 to 22 pixels tall. That is fine under a
+ * mouse and genuinely hard to hit with a thumb: the roster's Recruit button,
+ * the busiest control in its section, measured 75x14.
+ *
+ * Keyed to `pointer: coarse` rather than to a width, because the thing that
+ * matters is how the page is being touched, not how wide the window is — a
+ * touchscreen laptop needs this and a narrow desktop window does not. The
+ * targets grow; the type does not, so nothing about the design shifts on a
+ * pointer device.
+ * ───────────────────────────────────────────────────────────────────────── */
+@media (pointer: coarse) {
+  .roster__recruit,
+  .vault__closeText,
+  .vault__code,
+  .contrib-card__link,
+  .term__chips .tag,
+  .oplog__reset,
+  .segmented__btn,
+  .signal__row a,
+  .assay__toggle,
+  /* the wordmark is the page's home link, and sat at 17px */
+  header a.t-display {
+    display: inline-flex;
+    align-items: center;
+    min-height: 32px;
+  }
+
+  /* the chips sit in a row, so they need width as well as height */
+  .term__chips .tag,
+  .segmented__btn {
+    padding-inline: 0.8em;
+  }
+
+  /* the card foot is a two-item row; give each end room without wrapping it */
+  .vault__foot {
+    padding-block: 0.35rem;
+  }
+}

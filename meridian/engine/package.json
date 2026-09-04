@@ -1,0 +1,21 @@
+{
+  "name": "@meridian/engine",
+  "version": "0.1.0",
+  "description": "Deterministic repository classification. Five axes, no model.",
+  "type": "module",
+  "bin": { "meridian": "./dist/cli.js" },
+  "exports": { ".": "./dist/index.js" },
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "score": "node dist/cli.js score",
+    "why": "node dist/cli.js why"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.2",
+    "vitest": "^3.2.4",
+    "@types/node": "^22.15.0"
+  }
+}
