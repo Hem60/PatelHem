@@ -8,8 +8,23 @@ import type { ScoreContext } from "../src/signals.js";
 /**
  * Pinned against the real account as collected on 2026-08-26. These numbers
  * are the contract: if a change moves them, it must move them on purpose.
+ *
+ * The fixture is a FROZEN COPY, and that is the point.
+ *
+ * This used to read `phase00/out/raw.json` — the file the survey overwrites
+ * with a fresh collection every run. So the moment the account changed, this
+ * suite compared today's repositories against August's expectations and
+ * failed: vakil gained a commit, a new repository appeared, and six assertions
+ * broke without a line of engine code moving. Worse, the failures blocked the
+ * survey from publishing, so a correct reading could not reach the site.
+ *
+ * A regression test pins CODE against KNOWN INPUT. If the input moves with the
+ * account, it is not a regression test — it is a diff against yesterday. The
+ * fixture is committed and never rewritten by the survey; to re-pin it
+ * deliberately, copy a new collection over it and update the numbers below in
+ * the same commit.
  */
-const DATA = fileURLToPath(new URL("../../phase00/out/raw.json", import.meta.url));
+const DATA = fileURLToPath(new URL("./fixtures/account-2026-08-26.json", import.meta.url));
 
 describe.skipIf(!existsSync(DATA))("regression — real catalogue", () => {
   const cat = loadCatalogue(DATA);
