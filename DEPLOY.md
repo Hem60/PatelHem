@@ -4,9 +4,9 @@ The site is `meridian/site`, a Next.js app. It is not standalone: it imports
 the scoring engine and the pipeline's Herald and Plumb from sibling packages,
 and it reads `meridian/pipeline/data/*.json` at build time.
 
-## Why there is a vercel.json at the root
+## Why the config lives in meridian/site
 
-Two things break a naive deploy, and both are handled by `vercel.json`:
+Two things break a naive deploy:
 
 1. **The site imports built output.** `lib/run/instruments.ts` imports
    `@meridian/pipeline/dist/herald.js` — a compiled file. `dist/` is
@@ -15,9 +15,19 @@ Two things break a naive deploy, and both are handled by `vercel.json`:
    site is, which is what `buildCommand` does, in that order.
 
 2. **`file:` dependencies point at siblings.** `@meridian/engine` resolves to
-   `file:../engine`, so the deploy has to run from the repository root with
-   all three packages present, not from `meridian/site` alone. Hence the root
-   `vercel.json` and `outputDirectory`.
+   `file:../engine`, so the build needs `meridian/engine` and
+   `meridian/pipeline` on disk beside it.
+
+The first attempt put `vercel.json` at the repository root and pointed
+`outputDirectory` at `meridian/site/.next`. That does not work, and the error
+is misleading: *"No Next.js version detected"*. Vercel does not locate a Next
+app through `outputDirectory` — it runs its Next builder inside the **Root
+Directory**, and a root holding no `app/` and no `next.config` is not a Next
+app no matter what its `package.json` lists.
+
+So the Root Directory is `meridian/site`, and `meridian/site/vercel.json`
+builds the two siblings first using `../` paths. The CLI still uploads the
+whole repository, so those siblings are present when it does.
 
 Runtime file reads are already handled in `meridian/site/next.config.mjs`:
 `outputFileTracingRoot` is set to `meridian/` and `pipeline/data/**` is traced
@@ -26,11 +36,9 @@ function.
 
 ## Vercel project settings
 
-Import `Hem60/PatelHem` and leave **Root Directory** as the repository root.
-Do not set it to `meridian/site` — that would hide `meridian/engine` and
-`meridian/pipeline` from the build and reintroduce problem 2.
-
-Everything else is read from `vercel.json`.
+**Root Directory must be `meridian/site`.** It is set on the existing project.
+A new project needs it set too, or the build fails with the misleading error
+above. Everything else comes from `meridian/site/vercel.json`.
 
 ## Environment variables
 
