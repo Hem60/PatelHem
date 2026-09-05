@@ -1,3 +1,43 @@
 {
-  "vakil": "Most merchants lose chargebacks by default rather than by argument — nobody assembled the evidence pack before the window closed. That gap is the product."
+  "IRIS-PREDICTOR": {
+    "thesis": "IRIS-PREDICTOR implements an end‑to‑end MLOps pipeline that trains a RandomForest classifier and serves it through a Flask API.",
+    "description": "The repository contains Python scripts for model training (train_model.py, model.py) and a Flask app (app.py) with a static HTML front‑end, a Dockerfile for containerisation, and a render.yaml for deployment to Render. CI is configured via GitHub Actions, runs on each push, and builds and pushes the container to GHCR. Dependencies are listed in requirements.txt and ignored files are specified in .dockerignore.",
+    "source": "groq",
+    "model": "openai/gpt-oss-120b",
+    "generated": "2026-09-05T16:55:49.519Z",
+    "factsHash": "a023a064d3956e01"
+  },
+  "MOVIE_RECOMMENDER": {
+    "thesis": "It provides an item‑based collaborative filtering recommender for MovieLens 100k, exposed through a FastAPI service.",
+    "description": "The repository includes a FastAPI application (app/main.py) with a model (app/model.py), a training script (app/train.py), and an HTML front‑end (app/templates/index.html). It is containerised using a Dockerfile and .dockerignore, with dependencies listed in requirements.txt, and is built with Python and HTML.",
+    "source": "groq",
+    "model": "openai/gpt-oss-120b",
+    "generated": "2026-09-05T16:55:50.088Z",
+    "factsHash": "0b120d4f04dd1d18"
+  },
+  "PatelHem": {
+    "thesis": "PatelHem is a self‑classifying engineering portfolio that reads repositories, scores them on five fixed axes, and publishes a self‑updating catalogue.",
+    "description": "The repository includes a TypeScript engine (src files such as adapter.ts, classify.ts, score.ts) with its package configuration, a test suite of 14 files, and CI workflows defined in .github. Supporting files provide deployment instructions, documentation, and cached data for repository analysis. The project is built with TypeScript, CSS, and HTML and is deployed for public access.",
+    "source": "groq",
+    "model": "openai/gpt-oss-120b",
+    "generated": "2026-09-05T16:55:48.143Z",
+    "factsHash": "0f571708a1914e1a"
+  },
+  "RAG-CHAT-BOT": {
+    "thesis": "RAG-CHAT-BOT enables fully local retrieval‑augmented QA over technical PDFs using CPU embeddings, FAISS indexing, and an LLM‑as‑judge evaluation harness.",
+    "description": "The repository includes Docker and docker‑compose files for containerised execution, a Python codebase (src/api.py, ingest.py, query.py, evaluate.py) and supporting scripts, plus example PDF and evaluation data directories. It is built with Python and Shell, installs dependencies via requirements.txt, and runs locally using CPU‑based sentence‑transformer embeddings and FAISS for similarity search.",
+    "source": "groq",
+    "model": "openai/gpt-oss-120b",
+    "generated": "2026-09-05T16:55:48.901Z",
+    "factsHash": "5dbf579f3b0a2d7f"
+  },
+  "vakil": "Most merchants lose chargebacks by default rather than by argument — nobody assembled the evidence pack before the window closed. That gap is the product.",
+  "webathon": {
+    "thesis": "webathon is an HTML repository that provides a single web page design.",
+    "description": "The repository includes a README and a 'design 1' folder containing an index.html file. It is built solely with HTML, totals 9 KB, and has five commits.",
+    "source": "groq",
+    "model": "openai/gpt-oss-120b",
+    "generated": "2026-09-05T16:55:50.675Z",
+    "factsHash": "f7e4e99d6006e8fe"
+  }
 }

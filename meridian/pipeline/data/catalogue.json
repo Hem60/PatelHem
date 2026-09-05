@@ -1,6 +1,6 @@
 {
   "user": "Hem60",
-  "generated": "2026-09-05T16:51:52.135Z",
+  "generated": "2026-09-05T16:55:42.168Z",
   "partMax": {
     "stability": {
       "tests": 26,
@@ -154,22 +154,22 @@
         "code": "https://github.com/Hem60/vakil",
         "live": null
       },
-      "updated": "2026-09-05T16:51:52.135Z"
+      "updated": "2026-09-05T16:55:42.168Z"
     },
     {
       "name": "PatelHem",
       "classification": "UNCOMMON",
-      "composite": 49.2,
+      "composite": 49.6,
       "axes": {
-        "stability": 64.6,
-        "mass": 60.9,
+        "stability": 65,
+        "mass": 61.6,
         "anomaly": 24,
         "luminosity": 40,
         "cadence": 44.6
       },
       "parts": {
         "stability": {
-          "tests": 23.6,
+          "tests": 24,
           "ci": 18,
           "ciGreen": 0,
           "coverage": 10,
@@ -179,7 +179,7 @@
           "pinned": 8
         },
         "mass": {
-          "commits": 15.7,
+          "commits": 16.4,
           "code": 20.9,
           "modules": 13.2,
           "lifespan": 2.8,
@@ -212,33 +212,33 @@
           "sustained": 0
         }
       },
-      "thesis": null,
-      "description": null,
-      "thesisSource": null,
+      "thesis": "PatelHem is a self‑classifying engineering portfolio that reads repositories, scores them on five fixed axes, and publishes a self‑updating catalogue.",
+      "description": "The repository includes a TypeScript engine (src files such as adapter.ts, classify.ts, score.ts) with its package configuration, a test suite of 14 files, and CI workflows defined in .github. Supporting files provide deployment instructions, documentation, and cached data for repository analysis. The project is built with TypeScript, CSS, and HTML and is deployed for public access.",
+      "thesisSource": "groq",
       "annotated": false,
       "summary": [
-        "13 test files under `tests/`.",
+        "14 test files under `tests/`.",
         "Continuous integration is configured.",
-        "14 commits.",
+        "16 commits.",
         "Written in TypeScript, CSS and HTML.",
         "Deployed and reachable."
       ],
       "facts": [
         {
           "label": "Commits",
-          "value": "14"
+          "value": "16"
         },
         {
           "label": "Tests",
-          "value": "13"
+          "value": "14"
         },
         {
           "label": "Code",
-          "value": "640 KB"
+          "value": "646 KB"
         },
         {
           "label": "Score",
-          "value": "49.2"
+          "value": "49.6"
         }
       ],
       "stack": [
@@ -249,14 +249,14 @@
       ],
       "authorship": {
         "share": 100,
-        "mine": 14,
-        "total": 14
+        "mine": 16,
+        "total": 16
       },
       "links": {
         "code": "https://github.com/Hem60/PatelHem",
         "live": "https://meridian-hem.vercel.app"
       },
-      "updated": "2026-09-05T16:51:52.135Z"
+      "updated": "2026-09-05T16:55:42.168Z"
     },
     {
       "name": "RAG-CHAT-BOT",
@@ -314,9 +314,9 @@
           "sustained": 10
         }
       },
-      "thesis": null,
-      "description": null,
-      "thesisSource": null,
+      "thesis": "RAG-CHAT-BOT enables fully local retrieval‑augmented QA over technical PDFs using CPU embeddings, FAISS indexing, and an LLM‑as‑judge evaluation harness.",
+      "description": "The repository includes Docker and docker‑compose files for containerised execution, a Python codebase (src/api.py, ingest.py, query.py, evaluate.py) and supporting scripts, plus example PDF and evaluation data directories. It is built with Python and Shell, installs dependencies via requirements.txt, and runs locally using CPU‑based sentence‑transformer embeddings and FAISS for similarity search.",
+      "thesisSource": "groq",
       "annotated": false,
       "summary": [
         "Containerised, with a Compose stack for local runs.",
@@ -350,7 +350,7 @@
         "code": "https://github.com/Hem60/RAG-CHAT-BOT",
         "live": null
       },
-      "updated": "2026-09-05T16:51:52.135Z"
+      "updated": "2026-09-05T16:55:42.168Z"
     },
     {
       "name": "IRIS-PREDICTOR",
@@ -408,9 +408,9 @@
           "sustained": 0
         }
       },
-      "thesis": null,
-      "description": null,
-      "thesisSource": null,
+      "thesis": "IRIS-PREDICTOR implements an end‑to‑end MLOps pipeline that trains a RandomForest classifier and serves it through a Flask API.",
+      "description": "The repository contains Python scripts for model training (train_model.py, model.py) and a Flask app (app.py) with a static HTML front‑end, a Dockerfile for containerisation, and a render.yaml for deployment to Render. CI is configured via GitHub Actions, runs on each push, and builds and pushes the container to GHCR. Dependencies are listed in requirements.txt and ignored files are specified in .dockerignore.",
+      "thesisSource": "groq",
       "annotated": false,
       "summary": [
         "Continuous integration runs on every push, green on the last run.",
@@ -449,7 +449,7 @@
         "code": "https://github.com/Hem60/IRIS-PREDICTOR",
         "live": null
       },
-      "updated": "2026-09-05T16:51:52.135Z"
+      "updated": "2026-09-05T16:55:42.168Z"
     },
     {
       "name": "MOVIE_RECOMMENDER",
@@ -507,9 +507,9 @@
           "sustained": 0
         }
       },
-      "thesis": null,
-      "description": null,
-      "thesisSource": null,
+      "thesis": "It provides an item‑based collaborative filtering recommender for MovieLens 100k, exposed through a FastAPI service.",
+      "description": "The repository includes a FastAPI application (app/main.py) with a model (app/model.py), a training script (app/train.py), and an HTML front‑end (app/templates/index.html). It is containerised using a Dockerfile and .dockerignore, with dependencies listed in requirements.txt, and is built with Python and HTML.",
+      "thesisSource": "groq",
       "annotated": false,
       "summary": [
         "Containerised.",
@@ -543,7 +543,7 @@
         "code": "https://github.com/Hem60/MOVIE_RECOMMENDER",
         "live": null
       },
-      "updated": "2026-09-05T16:51:52.135Z"
+      "updated": "2026-09-05T16:55:42.168Z"
     },
     {
       "name": "webathon",
@@ -601,9 +601,9 @@
           "sustained": 0
         }
       },
-      "thesis": null,
-      "description": null,
-      "thesisSource": null,
+      "thesis": "webathon is an HTML repository that provides a single web page design.",
+      "description": "The repository includes a README and a 'design 1' folder containing an index.html file. It is built solely with HTML, totals 9 KB, and has five commits.",
+      "thesisSource": "groq",
       "annotated": false,
       "summary": [
         "5 commits.",
@@ -635,7 +635,7 @@
         "code": "https://github.com/Hem60/webathon",
         "live": null
       },
-      "updated": "2026-09-05T16:51:52.135Z"
+      "updated": "2026-09-05T16:55:42.168Z"
     }
   ],
   "state": {
@@ -643,13 +643,14 @@
       "current": "UNCOMMON",
       "since": "2026-09-05T13:18:40.525Z",
       "history": [
-        48.3,
         51.8,
         51.8,
         51.8,
         48.8,
         49,
-        49.2
+        49.2,
+        49.6,
+        49.6
       ],
       "axesAtGrant": {
         "stability": 64.1,
@@ -664,7 +665,7 @@
       "current": "EPIC",
       "since": "2026-08-26T12:33:08.193Z",
       "history": [
-        67.4,
+        70.4,
         70.4,
         70.4,
         70.4,
