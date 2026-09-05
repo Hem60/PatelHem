@@ -228,7 +228,30 @@ const interesting = (paths) => {
   return (kept.length > 0 ? kept : paths).slice(0, MAX_PATHS);
 };
 
-const userPrompt = (entry, ctx) =>
+/** What a repository with no collected signals looks like: nothing to go on. */
+export const EMPTY = Object.freeze({ description: "", topics: [], paths: [], pathCount: 0 });
+
+/**
+ * Turn the collected account into per-repository context, keyed by name.
+ *
+ * Exported so a test can build it from the real raw.json and drive the prompt
+ * end to end without a network.
+ */
+export function contextFrom(raw) {
+  return new Map(
+    (raw?.repos ?? []).map((r) => [
+      r.name,
+      {
+        description: typeof r.description === "string" ? r.description.trim() : "",
+        topics: Array.isArray(r.topics) ? r.topics : [],
+        paths: interesting(Array.isArray(r.paths) ? r.paths : []),
+        pathCount: r.path_count ?? (Array.isArray(r.paths) ? r.paths.length : 0),
+      },
+    ]),
+  );
+}
+
+export const userPrompt = (entry, ctx) =>
   [
     "Repository name: " + entry.name,
     "Languages: " + (entry.stack.length > 0 ? entry.stack.join(", ") : "none detected"),
@@ -293,31 +316,48 @@ async function resolveModel() {
   return { id: ids[0], why: "no preferred model available; took the first the API listed" };
 }
 
+/**
+ * The request body, built and exported so it can be tested without a network.
+ *
+ * This is here because of a bug that reached the workflow: `draft` still had
+ * the signature `(entry, model)` after the prompt gained a context argument,
+ * so `userPrompt(entry)` was called with `ctx` undefined and every draft died
+ * on "Cannot read properties of undefined". Nothing caught it locally, because
+ * with no key `draft` never runs — the only path exercised at desk was the one
+ * that builds the prompt directly.
+ *
+ * Splitting the body out makes everything short of the `fetch` testable, which
+ * is the whole of the wiring.
+ */
+export function requestBody(entry, ctx, model) {
+  return {
+    model,
+    temperature: 0.2,
+    /*
+     * Generous, because several of the models on offer here reason before
+     * answering and that reasoning is charged against the same budget. At
+     * 400 the first run produced an empty completion and a
+     * `json_validate_failed` with `failed_generation: ""` — the model had
+     * nothing left to write the answer with. The draft itself is ~120
+     * tokens; the rest is headroom, and unused tokens cost nothing.
+     */
+    max_tokens: 1500,
+    /* keep the thinking short on models that expose the control */
+    ...(/gpt-oss|qwen3|reason/i.test(model) ? { reasoning_effort: "low" } : {}),
+    response_format: { type: "json_object" },
+    messages: [
+      { role: "system", content: SYSTEM },
+      { role: "user", content: userPrompt(entry, ctx) },
+    ],
+  };
+}
+
 /** One request. Returns the parsed object, or throws. */
-async function draft(entry, model) {
+async function draft(entry, ctx, model) {
   const res = await fetch(ENDPOINT, {
     method: "POST",
     headers: { "content-type": "application/json", authorization: "Bearer " + KEY },
-    body: JSON.stringify({
-      model,
-      temperature: 0.2,
-      /*
-       * Generous, because several of the models on offer here reason before
-       * answering and that reasoning is charged against the same budget. At
-       * 400 the first run produced an empty completion and a
-       * `json_validate_failed` with `failed_generation: ""` — the model had
-       * nothing left to write the answer with. The draft itself is ~120
-       * tokens; the rest is headroom, and unused tokens cost nothing.
-       */
-      max_tokens: 1500,
-      /* keep the thinking short on models that expose the control */
-      ...(/gpt-oss|qwen3|reason/i.test(model) ? { reasoning_effort: "low" } : {}),
-      response_format: { type: "json_object" },
-      messages: [
-        { role: "system", content: SYSTEM },
-        { role: "user", content: userPrompt(entry) },
-      ],
-    }),
+    body: JSON.stringify(requestBody(entry, ctx, model)),
   });
 
   if (!res.ok) {
@@ -406,19 +446,7 @@ if (INVOKED) {
    * drafter still works, just with far less to go on, and will refuse more
    * often. That is the correct degradation: fewer drafts, never worse ones.
    */
-  const raw = readJson(RAW, { repos: [] });
-  const context = new Map(
-    (raw.repos ?? []).map((r) => [
-      r.name,
-      {
-        description: typeof r.description === "string" ? r.description.trim() : "",
-        topics: Array.isArray(r.topics) ? r.topics : [],
-        paths: interesting(Array.isArray(r.paths) ? r.paths : []),
-        pathCount: r.path_count ?? (Array.isArray(r.paths) ? r.paths.length : 0),
-      },
-    ]),
-  );
-  const EMPTY = { description: "", topics: [], paths: [], pathCount: 0 };
+  const context = contextFrom(readJson(RAW, { repos: [] }));
 
   if (SHOW !== null) {
     /*
