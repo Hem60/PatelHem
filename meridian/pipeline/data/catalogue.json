@@ -1,6 +1,6 @@
 {
   "user": "Hem60",
-  "generated": "2026-08-26T12:33:08.193Z",
+  "generated": "2026-09-05T13:18:40.525Z",
   "partMax": {
     "stability": {
       "tests": 26,
@@ -50,13 +50,13 @@
     {
       "name": "vakil",
       "classification": "EPIC",
-      "composite": 67.4,
+      "composite": 70.4,
       "axes": {
         "stability": 89.3,
-        "mass": 55.2,
+        "mass": 60,
         "anomaly": 80,
         "luminosity": 47,
-        "cadence": 46.6
+        "cadence": 62.3
       },
       "parts": {
         "stability": {
@@ -70,10 +70,10 @@
           "pinned": 8
         },
         "mass": {
-          "commits": 19.3,
+          "commits": 19.5,
           "code": 18.7,
           "modules": 5.7,
-          "lifespan": 2.3,
+          "lifespan": 6.9,
           "languages": 9.2
         },
         "anomaly": {
@@ -97,10 +97,10 @@
         },
         "cadence": {
           "recency": 30,
-          "activeDays": 9.7,
-          "activeMonths": 6.9,
+          "activeDays": 11.3,
+          "activeMonths": 11,
           "issueActivity": 0,
-          "sustained": 0
+          "sustained": 10
         }
       },
       "thesis": "Most merchants lose chargebacks by default rather than by argument — nobody assembled the evidence pack before the window closed. That gap is the product.",
@@ -113,13 +113,13 @@
         "Containerised, with a Compose stack for local runs.",
         "Ships an evaluation harness, so its own behaviour is measured rather than asserted.",
         "6 documents under `docs/`.",
-        "27 commits.",
+        "28 commits across 2 months.",
         "Written in Python, PowerShell and Shell."
       ],
       "facts": [
         {
           "label": "Commits",
-          "value": "27"
+          "value": "28"
         },
         {
           "label": "Tests",
@@ -135,7 +135,7 @@
         },
         {
           "label": "Score",
-          "value": "67.4"
+          "value": "70.4"
         }
       ],
       "stack": [
@@ -145,14 +145,114 @@
       ],
       "authorship": {
         "share": 100,
-        "mine": 27,
-        "total": 27
+        "mine": 28,
+        "total": 28
       },
       "links": {
         "code": "https://github.com/Hem60/vakil",
         "live": null
       },
-      "updated": "2026-08-26T12:33:08.193Z"
+      "updated": "2026-09-05T13:18:40.525Z"
+    },
+    {
+      "name": "PatelHem",
+      "classification": "UNCOMMON",
+      "composite": 48.3,
+      "axes": {
+        "stability": 64.1,
+        "mass": 57.5,
+        "anomaly": 24,
+        "luminosity": 40,
+        "cadence": 44.6
+      },
+      "parts": {
+        "stability": {
+          "tests": 23.1,
+          "ci": 18,
+          "ciGreen": 0,
+          "coverage": 10,
+          "lint": 0,
+          "typing": 5,
+          "license": 0,
+          "pinned": 8
+        },
+        "mass": {
+          "commits": 12.7,
+          "code": 20.7,
+          "modules": 13.2,
+          "lifespan": 2.6,
+          "languages": 8.3
+        },
+        "anomaly": {
+          "base": 50,
+          "rareDomain": 0,
+          "commonDomain": -20,
+          "evaluates": 0,
+          "onChain": 0,
+          "uncommonLanguages": 0,
+          "repeatedStack": -6
+        },
+        "luminosity": {
+          "deployed": 30,
+          "readme": 0,
+          "images": 0,
+          "description": 10,
+          "topics": 0,
+          "releases": 0,
+          "docs": 0,
+          "social": 0
+        },
+        "cadence": {
+          "recency": 30,
+          "activeDays": 7.7,
+          "activeMonths": 6.9,
+          "issueActivity": 0,
+          "sustained": 0
+        }
+      },
+      "thesis": null,
+      "annotated": false,
+      "summary": [
+        "12 test files under `tests/`.",
+        "Continuous integration is configured.",
+        "8 commits.",
+        "Written in TypeScript, CSS and HTML.",
+        "Deployed and reachable."
+      ],
+      "facts": [
+        {
+          "label": "Commits",
+          "value": "8"
+        },
+        {
+          "label": "Tests",
+          "value": "12"
+        },
+        {
+          "label": "Code",
+          "value": "605 KB"
+        },
+        {
+          "label": "Score",
+          "value": "48.3"
+        }
+      ],
+      "stack": [
+        "TypeScript",
+        "CSS",
+        "HTML",
+        "JavaScript"
+      ],
+      "authorship": {
+        "share": 100,
+        "mine": 8,
+        "total": 8
+      },
+      "links": {
+        "code": "https://github.com/Hem60/PatelHem",
+        "live": "https://meridian-hem.vercel.app"
+      },
+      "updated": "2026-09-05T13:18:40.525Z"
     },
     {
       "name": "RAG-CHAT-BOT",
@@ -244,7 +344,7 @@
         "code": "https://github.com/Hem60/RAG-CHAT-BOT",
         "live": null
       },
-      "updated": "2026-08-26T12:33:08.193Z"
+      "updated": "2026-09-05T13:18:40.525Z"
     },
     {
       "name": "IRIS-PREDICTOR",
@@ -341,7 +441,7 @@
         "code": "https://github.com/Hem60/IRIS-PREDICTOR",
         "live": null
       },
-      "updated": "2026-08-26T12:33:08.193Z"
+      "updated": "2026-09-05T13:18:40.525Z"
     },
     {
       "name": "MOVIE_RECOMMENDER",
@@ -433,7 +533,7 @@
         "code": "https://github.com/Hem60/MOVIE_RECOMMENDER",
         "live": null
       },
-      "updated": "2026-08-26T12:33:08.193Z"
+      "updated": "2026-09-05T13:18:40.525Z"
     },
     {
       "name": "webathon",
@@ -523,14 +623,48 @@
         "code": "https://github.com/Hem60/webathon",
         "live": null
       },
-      "updated": "2026-08-26T12:33:08.193Z"
+      "updated": "2026-09-05T13:18:40.525Z"
     }
   ],
   "state": {
+    "PatelHem": {
+      "current": "UNCOMMON",
+      "since": "2026-09-05T13:18:40.525Z",
+      "history": [
+        48.3
+      ],
+      "axesAtGrant": {
+        "stability": 64.1,
+        "mass": 57.5,
+        "anomaly": 24,
+        "luminosity": 40,
+        "cadence": 44.6
+      },
+      "compositeAtGrant": 48.3
+    },
+    "vakil": {
+      "current": "EPIC",
+      "since": "2026-08-26T12:33:08.193Z",
+      "history": [
+        67.4,
+        67.4,
+        67.4,
+        70.4
+      ],
+      "axesAtGrant": {
+        "stability": 89.3,
+        "mass": 55.2,
+        "anomaly": 80,
+        "luminosity": 47,
+        "cadence": 46.6
+      },
+      "compositeAtGrant": 67.4
+    },
     "MOVIE_RECOMMENDER": {
       "current": "COMMON",
       "since": "2026-08-26T12:33:08.193Z",
       "history": [
+        22.3,
         22.3,
         22.3,
         22.3
@@ -550,6 +684,7 @@
       "history": [
         33,
         33,
+        33,
         33
       ],
       "axesAtGrant": {
@@ -567,6 +702,7 @@
       "history": [
         39.9,
         39.9,
+        39.9,
         39.9
       ],
       "axesAtGrant": {
@@ -578,27 +714,11 @@
       },
       "compositeAtGrant": 39.9
     },
-    "vakil": {
-      "current": "EPIC",
-      "since": "2026-08-26T12:33:08.193Z",
-      "history": [
-        67.4,
-        67.4,
-        67.4
-      ],
-      "axesAtGrant": {
-        "stability": 89.3,
-        "mass": 55.2,
-        "anomaly": 80,
-        "luminosity": 47,
-        "cadence": 46.6
-      },
-      "compositeAtGrant": 67.4
-    },
     "webathon": {
       "current": "COMMON",
       "since": "2026-08-26T12:33:08.193Z",
       "history": [
+        16.3,
         16.3,
         16.3,
         16.3
