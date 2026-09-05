@@ -54,6 +54,34 @@ jobs:
           cd meridian/pipeline
           node dist/run.js ${{ inputs.rebuild && '--rebuild' || '' }}
 
+      # ── the only place a model is involved ────────────────────────────────
+      # This runs AFTER the catalogue is published and cannot alter it. It
+      # reads catalogue.json, writes prose.json, and touches nothing else — no
+      # axis, no composite, no class, no rank. Delete this step and every
+      # number on the site is identical; some cards just have no words.
+      #
+      # It is change-gated twice over: it drafts only for entries with no
+      # hand-written line, and only when the measured sentences behind an
+      # existing draft have moved. A survey where nothing changed makes zero
+      # requests. Without the secret it reports and exits 0.
+      - name: Draft prose for repositories nobody has written about
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+        run: node meridian/pipeline/scripts/draft.mjs
+
+      # Fold any new prose into the catalogue. Only when prose actually moved:
+      # a republish rewrites `generated`, and doing that on every run would
+      # make the timestamp meaningless — the exact thing the no-cron rule was
+      # protecting.
+      - name: Republish if prose moved
+        run: |
+          if git diff --quiet -- meridian/pipeline/data/prose.json; then
+            echo "No new prose. Catalogue left as published."
+          else
+            echo "Prose moved. Republishing so the cards carry it."
+            cd meridian/pipeline && node dist/run.js --rebuild
+          fi
+
       - name: Survey shared work
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -89,7 +117,18 @@ jobs:
             const c = require('./meridian/pipeline/data/catalogue.json');
             console.log('generated ' + c.generated);
             for (const e of c.entries) {
-              console.log(e.name.padEnd(20) + String(e.classification).padEnd(11) + e.composite);
+              // who wrote the words, beside the rank the engine computed
+              const who = e.thesisSource === 'author' ? 'authored'
+                        : e.thesisSource === 'groq'   ? 'drafted'
+                        : '-';
+              console.log(
+                e.name.padEnd(20) +
+                String(e.classification).padEnd(11) +
+                String(e.composite).padEnd(8) +
+                who,
+              );
             }
+            console.log('');
+            console.log('shelf: the site shows the top 10 by composite');
           " >> "$GITHUB_STEP_SUMMARY"
           echo '```' >> "$GITHUB_STEP_SUMMARY"

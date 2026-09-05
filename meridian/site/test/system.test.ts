@@ -11,6 +11,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { BANDS, band, bandOf, classVar, nextClass, AXES } from "../lib/bands";
 import { catalogue, entriesByRank, revisions, prose } from "../lib/catalogue";
+import { SHELF, shelf } from "../lib/shelf";
 import { machineView, readout } from "../lib/machine";
 import { positions, record } from "../lib/content";
 import { figure, plateMark, stamp, daysBetween } from "../lib/format";
@@ -157,10 +158,75 @@ describe("authored content", () => {
     expect(Array.isArray(record())).toBe(true);
   });
 
+  it("shelves the top ten by composite, and no more", () => {
+    /*
+     * The catalogue has six entries today, so the cap does not bite yet. That
+     * is exactly why this is tested against a synthetic catalogue rather than
+     * only against the live one: the cut has to be right BEFORE the eleventh
+     * repository arrives, not after somebody notices a card is missing.
+     */
+    const many = {
+      ...cat,
+      entries: Array.from({ length: 25 }, (_, i) => ({
+        ...cat.entries[0]!,
+        name: "repo-" + String(i).padStart(2, "0"),
+        composite: i,
+      })),
+    };
+
+    const top = shelf(many, SHELF);
+    expect(top).toHaveLength(SHELF);
+    /* highest first, and it is the highest twenty-fifth, not the first ten */
+    expect(top[0]!.composite).toBe(24);
+    expect(top[SHELF - 1]!.composite).toBe(15);
+  });
+
+  it("breaks a tie by name, so the shelf order is stable across runs", () => {
+    const tied = {
+      ...cat,
+      entries: ["zulu", "alpha", "mike"].map((name) => ({ ...cat.entries[0]!, name, composite: 50 })),
+    };
+    expect(shelf(tied, SHELF).map((e) => e.name)).toEqual(["alpha", "mike", "zulu"]);
+  });
+
+  it("never shows fewer entries than exist when the catalogue is small", () => {
+    /* today's case: six entries, ten slots, all six on the shelf */
+    expect(shelf(cat, SHELF)).toHaveLength(cat.entries.length);
+    expect(cat.entries.length).toBeLessThanOrEqual(SHELF);
+  });
+
   it("only annotates entries that have a hand-written thesis", () => {
+    /*
+     * `annotated` means a PERSON wrote the line, and nothing else. Since the
+     * drafter also writes into prose.json, presence in that file is no longer
+     * the test — the source is. Several statements on the page count
+     * hand-written entries, and this is what keeps those counts honest.
+     */
     const written = prose();
     for (const entry of cat.entries) {
-      expect(entry.annotated, entry.name).toBe(entry.name in written);
+      expect(entry.annotated, entry.name).toBe(written[entry.name]?.source === "author");
+    }
+  });
+
+  it("labels every thesis line with who wrote it", () => {
+    const written = prose();
+    for (const entry of cat.entries) {
+      if (entry.thesis === null) {
+        expect(entry.thesisSource ?? null, entry.name).toBe(null);
+        continue;
+      }
+      /* a line on a card always names its writer — that is the whole point */
+      expect(entry.thesisSource, entry.name).toBe(written[entry.name]?.source);
+      expect(entry.thesis, entry.name).toBe(written[entry.name]?.thesis);
+    }
+  });
+
+  it("never lets a drafted line count as authored", () => {
+    const written = prose();
+    for (const entry of cat.entries) {
+      if (written[entry.name]?.source !== "groq") continue;
+      expect(entry.annotated, entry.name).toBe(false);
+      expect(entry.thesisSource, entry.name).toBe("groq");
     }
   });
 });

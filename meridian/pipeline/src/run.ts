@@ -106,8 +106,15 @@ for (const r of scored) {
   }
 }
 stage("04 compose", entries.length + " entries · " + upheldCount + " claims upheld · " + rejectedCount + " rejected");
-const unannotated = entries.filter(e => !e.annotated).map(e => e.name);
-if (unannotated.length > 0) stage("", "unannotated (no thesis yet): " + unannotated.join(", "));
+/*
+ * Three states now, not two. An entry can carry the author's line, carry a
+ * drafted one, or carry nothing — and reporting a drafted entry as having "no
+ * thesis yet" was wrong the moment the drafter started writing.
+ */
+const drafted = entries.filter(e => e.thesisSource === "groq").map(e => e.name);
+const blank = entries.filter(e => e.thesis === null).map(e => e.name);
+if (drafted.length > 0) stage("", "drafted (not hand-written): " + drafted.join(", "));
+if (blank.length > 0) stage("", "no thesis line at all: " + blank.join(", "));
 
 // ---- 05 revise ------------------------------------------------------------
 const priorEntries = new Map(previous.entries.map(e => [e.name, e]));

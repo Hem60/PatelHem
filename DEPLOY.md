@@ -46,6 +46,19 @@ above. Everything else comes from `meridian/site/vercel.json`.
 |---|---|---|
 | `GITHUB_TOKEN` | no | Raises the observing run's GitHub rate limit from 60 requests an hour to 5,000. Use a fine-grained token with **public repositories, read-only** and no write scopes. |
 
+Neither the site nor its build needs a Groq key. Drafting happens in the
+survey workflow only, and what reaches the site is a committed JSON file.
+
+## Actions secrets
+
+Set at **Settings → Secrets and variables → Actions** on the GitHub
+repository. These are not Vercel variables and must not be added there.
+
+| name | required | what it does |
+|---|---|---|
+| `GROQ_API_KEY` | no | Lets `scripts/draft.mjs` write a thesis line for a repository with no hand-written one. Without it the step reports what it would have drafted and exits 0; those entries publish on measurement alone. |
+| `GROQ_MODEL` | no | Overrides the model. Defaults to `llama-3.3-70b-versatile`. Set it as a **variable**, not a secret, if you want it visible in the log. |
+
 The site works without it. The run panel states which mode it is in —
 `anonymous` or `authenticated` — either way, and refuses to invent data when
 the limit is spent rather than faking a result.

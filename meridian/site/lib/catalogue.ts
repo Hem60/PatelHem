@@ -32,6 +32,16 @@ const entrySchema = z.object({
    */
   parts: z.record(z.string(), z.record(z.string(), z.number())).optional(),
   thesis: z.string().nullable(),
+  /*
+   * A longer paragraph, and who wrote the thesis above it.
+   *
+   * Optional so a catalogue published before drafting existed still loads.
+   * `thesisSource` is what lets a card mark a drafted line as drafted — the
+   * one thing that keeps a machine-written sentence from reading as the
+   * author's.
+   */
+  description: z.string().nullable().optional(),
+  thesisSource: z.enum(["author", "groq"]).nullable().optional(),
   annotated: z.boolean(),
   summary: z.array(z.string()),
   facts: z.array(factSchema),
@@ -97,9 +107,38 @@ export function revisions(): Revision[] {
   return [...parsed.revisions].sort((a, b) => b.date.localeCompare(a.date));
 }
 
-/** Hand-written thesis lines. The one part of the catalogue a person writes. */
-export function prose(): Record<string, string> {
-  return z.record(z.string(), z.string()).parse(read("prose.json"));
+/**
+ * The prose file, in either shape it is allowed to take.
+ *
+ * A bare string is an authored line — the shape the file had before drafting
+ * existed, and the shape a person still writes by hand. An object carries the
+ * same line plus its provenance. Both are normalised here so a caller never
+ * has to care which is on disk.
+ */
+const proseEntrySchema = z.object({
+  thesis: z.string(),
+  description: z.string().nullable().default(null),
+  source: z.enum(["author", "groq"]),
+  model: z.string().nullable().default(null),
+  generated: z.string().nullable().default(null),
+  factsHash: z.string().nullable().default(null),
+});
+
+export type ProseEntry = z.infer<typeof proseEntrySchema>;
+
+export function prose(): Record<string, ProseEntry> {
+  const raw = z
+    .record(z.string(), z.union([z.string(), proseEntrySchema]))
+    .parse(read("prose.json"));
+
+  return Object.fromEntries(
+    Object.entries(raw).map(([name, value]) => [
+      name,
+      typeof value === "string"
+        ? { thesis: value, description: null, source: "author" as const, model: null, generated: null, factsHash: null }
+        : value,
+    ]),
+  );
 }
 
 /** Entries, loudest first. Rank, then composite — the catalogue's own order. */

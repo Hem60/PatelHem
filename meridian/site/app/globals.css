@@ -2685,3 +2685,23 @@ body {
 .dispatch__go {
   flex-shrink: 0;
 }
+
+/*
+ * The drafted mark.
+ *
+ * A drafted thesis line carries ·D on the face of the card. Small, but never
+ * hidden and never the same colour as the sentence it follows — a reader
+ * scanning the vault should be able to see at a glance which words are the
+ * author's. The back of the card spells out what it means.
+ */
+.drafted-mark {
+  margin-left: 0.4ch;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.62em;
+  letter-spacing: 0.06em;
+  vertical-align: 0.35em;
+  color: var(--oxide);
+  border: 1px solid var(--rule);
+  padding: 0 0.25em;
+  white-space: nowrap;
+}

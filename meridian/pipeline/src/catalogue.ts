@@ -34,9 +34,19 @@ export interface Entry {
    * number into a receipt.
    */
   readonly parts: Readonly<Record<string, Readonly<Record<string, number>>>>;
-  /** Hand-written, from prose.json. Null until you write one. */
+  /** The thesis line shown on the card, whoever wrote it. Null until one exists. */
   readonly thesis: string | null;
-  /** True once a thesis exists. An unannotated card still publishes. */
+  /** A longer paragraph, written only by the drafter. Null otherwise. */
+  readonly description: string | null;
+  /** Who wrote the thesis. Null when there is none. */
+  readonly thesisSource: "author" | "groq" | null;
+  /**
+   * True only for a HAND-WRITTEN thesis.
+   *
+   * Deliberately not widened to cover drafted lines: several statements on the
+   * page and in the machine-readable summary count hand-written entries, and a
+   * drafted paragraph is not one. An unannotated card still publishes.
+   */
   readonly annotated: boolean;
   /** Herald's sentences, after Plumb. */
   readonly summary: readonly string[];

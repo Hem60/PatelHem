@@ -13,6 +13,9 @@
 import { useMemo, useState } from "react";
 import { AXES, BANDS, classVar } from "@/lib/bands";
 import type { Catalogue as CatalogueData } from "@/lib/catalogue";
+/* the cut lives in its own pure module: lib/catalogue.ts reads the filesystem
+   and this is a client component (CLAUDE.md, trap 3) */
+import { SHELF, shelf as shelfOf } from "@/lib/shelf";
 import { Observed } from "./Calibration";
 import { Marker, Note, Notes } from "./Marginalia";
 import type { Contributions as ContribData } from "@/lib/contributions";
@@ -24,20 +27,6 @@ type SortKey = "composite" | (typeof AXES)[number]["key"];
 
 const ALL = "ALL";
 
-/**
- * How many objects the vault shows.
- *
- * The survey scores every non-fork repository on the account and publishes all
- * of them; this cap governs the display only. `dossier.json` still carries the
- * full catalogue, and the line under the controls says how many were surveyed,
- * so the cut is stated rather than hidden.
- *
- * The cut is by composite, which means it is the same arithmetic that produces
- * the class on the band. A repository improves and it climbs into the ten on
- * the next survey; one that stagnates while others improve drops out of it.
- * Nobody chooses the ten.
- */
-const SHELF = 10;
 
 export function Catalogue({ cat, contrib }: { cat: CatalogueData; contrib: ContribData }) {
   const [klass, setKlass] = useState<string>(ALL);
@@ -45,14 +34,13 @@ export function Catalogue({ cat, contrib }: { cat: CatalogueData; contrib: Contr
   const [sort, setSort] = useState<SortKey>("composite");
 
   /*
-   * The shelf: the top SHELF entries by composite. Everything below — filters,
-   * counts, languages — reads off this, not off the full catalogue, so the
-   * numbers on the controls describe what is actually on the page.
+   * The shelf: the top entries by composite, cut in lib/catalogue.ts so the
+   * rule is a tested function rather than a line inside a component.
+   * Everything below — filters, counts, languages — reads off this, not off
+   * the full catalogue, so the numbers on the controls describe what is
+   * actually on the page.
    */
-  const shelf = useMemo(
-    () => [...cat.entries].sort((a, b) => b.composite - a.composite).slice(0, SHELF),
-    [cat.entries],
-  );
+  const shelf = useMemo(() => shelfOf(cat, SHELF), [cat]);
 
   const languages = useMemo(
     () => [...new Set(shelf.flatMap((e) => e.stack))].sort((a, b) => a.localeCompare(b)),

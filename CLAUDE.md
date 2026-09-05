@@ -51,15 +51,52 @@ directly — 80 pairs across both exposures, including the rarity bands — and 
 before typecheck, tests and build.
 
 The survey workflow is `.github/workflows/survey.yml` — `workflow_dispatch`
-only, no cron. It runs when a button is pressed, never on a schedule.
+only, no cron. It runs when a button is pressed, never on a schedule. It
+collects every public non-fork repository, scores it, publishes the catalogue,
+drafts prose for anything unwritten, runs all three test suites, and commits
+only when a reading moved. A new repository becomes a ranked card on the first
+run that sees it; no code change is needed, and nothing gates an entry but
+`!s.fork && s.name !== user`.
+
+The vault displays the **top ten by composite**. The cut is display only —
+`catalogue.json` and `/dossier.json` carry every entry, and the plate says how
+many are below the line.
 
 ## Rules
 
-**No language model anywhere.** No Anthropic SDK, no OpenAI, no API key, no
-billing. Instruments are deterministic programs making real GitHub API calls.
-Prose comes from hard-coded templates bound to measured signals; a template
-fires only when its evidence is present. Thesis lines are hand-written by the
-author in `prose.json`.
+**No language model in the measurement.** Every instrument is a deterministic
+program making real GitHub API calls. Scores, axes, classes and ranks are
+computed and reproducible: clone the repository, run the engine, get the same
+numbers. Herald's sentences come from hard-coded templates bound to measured
+signals, and a template fires only when its evidence is present. None of that
+is negotiable, and no model touches any of it.
+
+**One model, in one place, writing only words.** Changed 2026-09-05 at the
+owner's instruction. `pipeline/scripts/draft.mjs` calls Groq to write a thesis
+line and a short description for a repository nobody has written about yet.
+The constraints that make it safe:
+
+- It runs **after** the catalogue is published, reads `catalogue.json`, and
+  writes only `prose.json`. It cannot alter an axis, a composite, a class or a
+  rank. Delete the script and every number on the site is identical.
+- It is prompted with **measured facts only** — Herald's verified sentences
+  and the recorded values, nothing from the repository's contents.
+- It **never overwrites a hand-written line.** `source: "author"` is
+  untouchable.
+- Every drafted line is **labelled** `source: "groq"`, which reaches the
+  catalogue, the card (marked ·D), and `dossier.json`. `annotated` still means
+  hand-written and only hand-written, so the counts that say "hand-written"
+  stay true.
+- It is **change-gated** on a digest of the sentences behind it, so a survey
+  where nothing moved makes zero requests.
+- A draft containing an unverifiable claim — "production-ready", "widely
+  used", a superlative — is **rejected, not edited** (`test/draft.test.ts`).
+- The key lives in the `GROQ_API_KEY` Actions secret and is used **only inside
+  the survey workflow**. The site ships no key and calls no model at runtime
+  or at build time.
+
+Thesis lines are still hand-written by the author in `prose.json`, and a
+drafted line is a placeholder until one is.
 
 **Scoring is pure.** No I/O, no clock — `now` is injected through
 `ScoreContext`. This is what makes a published rank reproducible by anyone who

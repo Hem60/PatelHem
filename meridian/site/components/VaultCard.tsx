@@ -38,6 +38,8 @@ export function VaultCard({ entry }: { entry: Entry }) {
   const instrument = instrumentFor(entry);
   const gap = gapTo(entry);
   const share = entry.authorship.share;
+  /* whether the thesis line came out of the drafter rather than off a keyboard */
+  const drafted = entry.thesisSource === "groq";
 
   const onMove = useCallback((event: React.PointerEvent<HTMLLIElement>) => {
     const node = ref.current;
@@ -108,7 +110,17 @@ export function VaultCard({ entry }: { entry: Entry }) {
             </h3>
 
             {entry.thesis ? (
-              <p className="t-thesis vault__thesis mt-2">{entry.thesis}</p>
+              <p className="t-thesis vault__thesis mt-2">
+                {entry.thesis}
+                {/*
+                  * A drafted line is marked on the face of the card, not in a
+                  * footnote somebody has to flip to. The whole argument of
+                  * this page is that a reader can tell where a sentence came
+                  * from, and an unmarked machine line would be the one place
+                  * that stopped being true.
+                  */}
+                {drafted ? <span className="drafted-mark" title="Drafted from measured facts, not written by hand">·D</span> : null}
+              </p>
             ) : (
               <p className="t-thesis vault__thesis mt-2" style={{ color: "var(--ink-faint)" }}>
                 No thesis line yet — this entry publishes on measurement alone.
@@ -199,6 +211,14 @@ export function VaultCard({ entry }: { entry: Entry }) {
                   <>
                     <strong>No thesis line yet.</strong> This entry publishes on measurement alone;
                     the sentences above are the survey&rsquo;s, not mine.
+                  </>
+                ) : drafted ? (
+                  <>
+                    <strong>The thesis line here was drafted, not written.</strong> A model was
+                    given the measured sentences above and nothing else, and asked to describe
+                    the repository from them — so a repository I have not written about yet
+                    still arrives with words. Every figure on this card is still computed. The
+                    line is marked ·D until I replace it with my own.
                   </>
                 ) : (
                   <>
