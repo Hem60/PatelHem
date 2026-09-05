@@ -21,10 +21,17 @@
  * ── The three rules it works under ──────────────────────────────────────────
  * 1. It never overwrites a hand-written line. `source: "author"` is
  *    untouchable; a person's argument is not a draft to be improved on.
- * 2. It writes only from measured facts. The prompt carries Herald's verified
- *    sentences, the stack and the recorded values — nothing else. There is no
- *    repository content in it, so there is nothing to work from except what
- *    the survey already checked against a real path.
+ * 2. It writes only from collected, checkable material: the owner's own
+ *    repository description, the topics they tagged it with, the file paths
+ *    in the default branch, Herald's verified sentences, and the recorded
+ *    values. It is never given the CONTENTS of a file.
+ *
+ *    An earlier cut withheld the first three and passed only the measured
+ *    sentences. It drafted nothing, five times out of five, and it was right
+ *    to: "5 commits. Written in HTML. 9 KB." cannot answer "what problem does
+ *    this address" without inventing one. The owner's own description can,
+ *    and the paths name the parts of the system. Withholding the evidence and
+ *    then asking for a conclusion is not caution — it is a request to guess.
  * 3. Every line it writes is labelled. `source: "groq"` reaches the catalogue,
  *    the card, and dossier.json. A reader can always tell which words are the
  *    author's.
@@ -39,7 +46,12 @@
  * 0. The site builds, the catalogue publishes, the cards say "no thesis line
  * yet". Drafting is an enhancement to the pipeline, never a dependency of it.
  *
- * Usage: node scripts/draft.mjs [--force] [--dry-run]
+ * Usage:
+ *   node scripts/draft.mjs                  draft what needs drafting
+ *   node scripts/draft.mjs --dry-run        say what it would draft, call nothing
+ *   node scripts/draft.mjs --force          redraft even where the hash matches
+ *   node scripts/draft.mjs --models         what this key can reach, and the pick
+ *   node scripts/draft.mjs --prompt <repo>  print the exact prompt, call nothing
  */
 import { createHash } from "node:crypto";
 import { readFileSync, writeFileSync } from "node:fs";
@@ -50,6 +62,19 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const DATA = join(HERE, "..", "data");
 const CATALOGUE = join(DATA, "catalogue.json");
 const PROSE = join(DATA, "prose.json");
+/*
+ * The collected account.
+ *
+ * The catalogue publishes readings. This carries the three things that say
+ * what a project actually IS — the owner's own repository description, the
+ * topics they tagged it with, and every path in the default branch. All three
+ * are collected and checkable, and none of them is the contents of a file.
+ *
+ * Without them the drafter was being asked to write "what problem does this
+ * address" from "5 commits, written in HTML, 9 KB", which is a request to
+ * invent. It correctly refused, five times out of five.
+ */
+const RAW = join(HERE, "..", "..", "phase00", "out", "raw.json");
 
 const KEY = process.env.GROQ_API_KEY ?? "";
 const ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
@@ -58,6 +83,8 @@ const MODELS = "https://api.groq.com/openai/v1/models";
 const FORCE = process.argv.includes("--force");
 const DRY = process.argv.includes("--dry-run");
 const LIST = process.argv.includes("--models");
+/* Print the exact prompt one repository would be sent, and make no request. */
+const SHOW = (() => { const i = process.argv.indexOf("--prompt"); return i === -1 ? null : process.argv[i + 1] ?? ""; })();
 
 /**
  * Which model to draft with, when GROQ_MODEL does not name one.
@@ -110,10 +137,26 @@ const FORBIDDEN = [
 
 const log = (s = "") => console.log(s);
 
-/** The digest a draft is pinned to: the measured sentences, in order. */
-const hashOf = (entry) =>
+/**
+ * The digest a draft is pinned to: everything the draft was written from.
+ *
+ * It must cover the whole prompt, not just the measured sentences. An owner
+ * who rewrites their repository description has changed the best evidence in
+ * the prompt, and a draft still quoting the old one would be stale in exactly
+ * the way this hash exists to prevent.
+ */
+const hashOf = (entry, ctx) =>
   createHash("sha256")
-    .update(JSON.stringify([entry.summary, entry.stack, entry.classification]))
+    .update(
+      JSON.stringify([
+        entry.summary,
+        entry.stack,
+        entry.classification,
+        ctx.description,
+        ctx.topics,
+        ctx.paths,
+      ]),
+    )
     .digest("hex")
     .slice(0, 16);
 
@@ -144,7 +187,7 @@ const normalise = (raw) => {
  * against. Making refusal a correct answer is what stops that.
  */
 const SYSTEM = [
-  "You write two things about a software repository, from measured facts only.",
+  "You write two things about a software repository, from supplied facts only.",
   "",
   "thesis: ONE sentence, under 200 characters, saying what the project is and",
   "what problem it addresses. Plain and specific. No marketing adjectives.",
@@ -153,10 +196,13 @@ const SYSTEM = [
   "the repository contains and how it is built, using only the facts given.",
   "",
   "Rules you must not break:",
-  "- Use ONLY the facts provided. Invent nothing: no users, no performance",
-  "  numbers, no adoption, no dates, no features that are not listed.",
-  "- If the facts are too thin to say anything specific, return the string",
-  "  INSUFFICIENT for both fields. That is a correct answer, not a failure.",
+  "- Use ONLY what you are given. Invent nothing: no users, no performance",
+  "  numbers, no adoption, no dates, no features that are not evidenced.",
+  "- The owner's own description and the file paths are your best evidence of",
+  "  what the project does. Read the paths: they name the parts of the system.",
+  "- Return INSUFFICIENT for both fields ONLY when there is genuinely nothing",
+  "  to go on: no owner description, no topics, and too few paths to tell what",
+  "  the code does. If you have any of those, write both fields.",
   "- No superlatives and no praise. Do not rate the project or call it good.",
   "- Do not mention any score, class, or ranking.",
   "- Write in the third person about the repository. Never say I or we.",
@@ -164,19 +210,54 @@ const SYSTEM = [
   "Reply with JSON only, shaped {\"thesis\": \"...\", \"description\": \"...\"}",
 ].join("\n");
 
-const userPrompt = (entry) =>
+/**
+ * How many paths to show.
+ *
+ * Enough to convey the shape of a project without turning the prompt into a
+ * directory listing. Data files, images and lockfiles are dropped first
+ * because they say the least about what the code does.
+ */
+const MAX_PATHS = 45;
+const NOISE = new RegExp(
+  "^(\.git|node_modules/|dist/|build/|.*\.(lock|png|jpe?g|gif|svg|ico|pdf|csv|ipynb)$)",
+  "i",
+);
+
+const interesting = (paths) => {
+  const kept = paths.filter((p) => !NOISE.test(p));
+  return (kept.length > 0 ? kept : paths).slice(0, MAX_PATHS);
+};
+
+const userPrompt = (entry, ctx) =>
   [
     "Repository name: " + entry.name,
     "Languages: " + (entry.stack.length > 0 ? entry.stack.join(", ") : "none detected"),
     "",
+    /*
+     * The owner's own sentence about the project, when there is one. The most
+     * useful line in the prompt, and not a guess: it is what the author wrote
+     * on the repository itself.
+     */
+    ctx.description
+      ? "The owner describes it as: " + ctx.description
+      : "The owner has written no description for this repository.",
+    ctx.topics.length > 0 ? "Topics the owner tagged it with: " + ctx.topics.join(", ") : "",
+    "",
+    "Files in the default branch" +
+      (ctx.paths.length < ctx.pathCount ? " (" + ctx.paths.length + " of " + ctx.pathCount + ")" : "") +
+      ":",
+    ...(ctx.paths.length > 0 ? ctx.paths.map((x) => "- " + x) : ["- (none listed)"]),
+    "",
     "Measured facts, each already verified against a file that exists:",
     ...(entry.summary.length > 0
-      ? entry.summary.map((s) => "- " + s)
+      ? entry.summary.map((x) => "- " + x)
       : ["- (none: the survey found nothing beyond the repository itself)"]),
     "",
     "Recorded values:",
     ...entry.facts.map((f) => "- " + f.label + ": " + f.value),
-  ].join("\n");
+  ]
+    .filter((line) => line !== "")
+    .join("\n");
 
 /** Every model this key can reach, writers only, in the API's own order. */
 async function available() {
@@ -220,7 +301,17 @@ async function draft(entry, model) {
     body: JSON.stringify({
       model,
       temperature: 0.2,
-      max_tokens: 400,
+      /*
+       * Generous, because several of the models on offer here reason before
+       * answering and that reasoning is charged against the same budget. At
+       * 400 the first run produced an empty completion and a
+       * `json_validate_failed` with `failed_generation: ""` — the model had
+       * nothing left to write the answer with. The draft itself is ~120
+       * tokens; the rest is headroom, and unused tokens cost nothing.
+       */
+      max_tokens: 1500,
+      /* keep the thinking short on models that expose the control */
+      ...(/gpt-oss|qwen3|reason/i.test(model) ? { reasoning_effort: "low" } : {}),
       response_format: { type: "json_object" },
       messages: [
         { role: "system", content: SYSTEM },
@@ -235,9 +326,19 @@ async function draft(entry, model) {
   }
 
   const body = await res.json();
-  const text = body?.choices?.[0]?.message?.content;
-  if (typeof text !== "string") throw new Error("no content in response");
-  return JSON.parse(text);
+  const choice = body?.choices?.[0];
+  const text = choice?.message?.content;
+
+  if (typeof text !== "string" || text.trim() === "") {
+    /* say WHY there was nothing — `length` means the budget ran out */
+    throw new Error("no content in response (finish_reason: " + (choice?.finish_reason ?? "unknown") + ")");
+  }
+
+  try {
+    return JSON.parse(text);
+  } catch {
+    throw new Error("response was not JSON: " + text.slice(0, 160));
+  }
 }
 
 /** Reject anything that would put an unchecked claim on a card. */
@@ -245,7 +346,16 @@ export function reject(candidate) {
   const thesis = typeof candidate?.thesis === "string" ? candidate.thesis.trim() : "";
   const description = typeof candidate?.description === "string" ? candidate.description.trim() : "";
 
-  if (thesis === "" || thesis === "INSUFFICIENT") return "the model declined — facts too thin";
+  /*
+   * These two are not the same failure and must not share a message.
+   * "INSUFFICIENT" is the model taking the refusal path on offer; an empty
+   * string is the model producing nothing at all, which on a reasoning model
+   * usually means the token budget went on reasoning and left none for the
+   * answer. A single message for both sent the first round of debugging in
+   * the wrong direction.
+   */
+  if (thesis === "INSUFFICIENT") return "the model declined — it judged the facts too thin";
+  if (thesis === "") return "empty response — no thesis came back at all";
   if (thesis.length > MAX_THESIS) return "thesis is " + thesis.length + " characters, over " + MAX_THESIS;
   if (description.length > MAX_DESCRIPTION)
     return "description is " + description.length + " characters, over " + MAX_DESCRIPTION;
@@ -289,13 +399,53 @@ if (INVOKED) {
 
   const prose = readJson(PROSE, {});
 
+  /*
+   * The collected signals, keyed by name.
+   *
+   * If raw.json is missing — someone ran this without collecting first — the
+   * drafter still works, just with far less to go on, and will refuse more
+   * often. That is the correct degradation: fewer drafts, never worse ones.
+   */
+  const raw = readJson(RAW, { repos: [] });
+  const context = new Map(
+    (raw.repos ?? []).map((r) => [
+      r.name,
+      {
+        description: typeof r.description === "string" ? r.description.trim() : "",
+        topics: Array.isArray(r.topics) ? r.topics : [],
+        paths: interesting(Array.isArray(r.paths) ? r.paths : []),
+        pathCount: r.path_count ?? (Array.isArray(r.paths) ? r.paths.length : 0),
+      },
+    ]),
+  );
+  const EMPTY = { description: "", topics: [], paths: [], pathCount: 0 };
+
+  if (SHOW !== null) {
+    /*
+     * Exactly what a repository would be sent, and nothing sent. The first
+     * version of this script drafted nothing five times running and the log
+     * could not say why, because nobody could see the prompt.
+     */
+    const entry = cat.entries.find((e) => e.name.toLowerCase() === SHOW.toLowerCase());
+    if (entry === undefined) {
+      console.error('no entry named ' + SHOW + '. Have: ' + cat.entries.map((e) => e.name).join(', '));
+      process.exit(1);
+    }
+    log('----- system -----');
+    log(SYSTEM);
+    log('');
+    log('----- user -----');
+    log(userPrompt(entry, context.get(entry.name) ?? EMPTY));
+    process.exit(0);
+  }
+
   /* What needs words, and why. An authored line is never a candidate. */
   const candidates = [];
   for (const entry of cat.entries) {
     const existing = normalise(prose[entry.name]);
     if (existing?.source === "author") continue;
 
-    const hash = hashOf(entry);
+    const hash = hashOf(entry, context.get(entry.name) ?? EMPTY);
     if (existing === null) candidates.push({ entry, hash, why: "no thesis line" });
     else if (FORCE) candidates.push({ entry, hash, why: "forced" });
     else if (existing.factsHash !== hash) candidates.push({ entry, hash, why: "readings moved" });
@@ -346,7 +496,7 @@ if (INVOKED) {
 
   for (const { entry, hash } of candidates) {
     try {
-      const got = await draft(entry, model);
+      const got = await draft(entry, context.get(entry.name) ?? EMPTY, model);
       const bad = reject(got);
       if (bad !== null) {
         log("  ✗ " + entry.name + " — " + bad);

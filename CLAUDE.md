@@ -79,8 +79,12 @@ The constraints that make it safe:
 - It runs **after** the catalogue is published, reads `catalogue.json`, and
   writes only `prose.json`. It cannot alter an axis, a composite, a class or a
   rank. Delete the script and every number on the site is identical.
-- It is prompted with **measured facts only** — Herald's verified sentences
-  and the recorded values, nothing from the repository's contents.
+- It is prompted with **collected, checkable material only** — the owner's
+  own GitHub description, the topics they tagged, the file paths in the
+  default branch, Herald's verified sentences, and the recorded values. It is
+  never given the contents of a file. (The first cut withheld the first three
+  and the model refused every entry, correctly: `5 commits, written in HTML`
+  cannot answer "what problem does this address" without inventing one.)
 - It **never overwrites a hand-written line.** `source: "author"` is
   untouchable.
 - Every drafted line is **labelled** `source: "groq"`, which reaches the
