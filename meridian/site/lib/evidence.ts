@@ -51,7 +51,21 @@ export const DETECTORS: readonly Detector[] = [
     id: "ci",
     label: "Continuous integration",
     gloss: "A workflow runs on every push.",
-    pattern: /^Continuous integration runs on every push/,
+    /*
+     * Both of Herald's `ci` renderings, not just the green one.
+     *
+     * The template emits "…runs on every push, green on the last run." when
+     * the last workflow run succeeded and "Continuous integration is
+     * configured." when it did not. Every repository in the catalogue happened
+     * to be green until a new one arrived that was not, and the narrower
+     * pattern then failed `unmatchedClaims` and blocked the survey.
+     *
+     * The node is the practice, and both sentences evidence it: a workflow
+     * file exists. Whether its last run passed is a stability reading, and
+     * belongs to the score, not to the graph. So match on the shared prefix —
+     * the same shape `container` already uses for its two renderings.
+     */
+    pattern: /^Continuous integration /,
     path: ".github/workflows",
   },
   {

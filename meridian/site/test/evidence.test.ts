@@ -29,6 +29,31 @@ describe("claim detection", () => {
     expect(unmatchedClaims(cat)).toEqual([]);
   });
 
+  it("matches every rendering of a template, not just the common one", () => {
+    /*
+     * The bug this guards: a Herald template can render two ways, and a
+     * detector written against the sentence that happened to be in the
+     * catalogue misses the other one. `unmatchedClaims` then fails on the
+     * first repository that produces the unseen variant, which blocks a
+     * survey rather than failing at desk.
+     *
+     * These are Herald's literal alternates, copied from pipeline/src/herald.ts.
+     */
+    const alternates: Record<string, string[]> = {
+      ci: [
+        "Continuous integration runs on every push, green on the last run.",
+        "Continuous integration is configured.",
+      ],
+      container: ["Containerised, with a Compose stack for local runs.", "Containerised."],
+    };
+
+    for (const [id, texts] of Object.entries(alternates)) {
+      const d = DETECTORS.find((x) => x.id === id);
+      expect(d, id).toBeDefined();
+      for (const text of texts) expect(d!.pattern.test(text), `${id}: ${text}`).toBe(true);
+    }
+  });
+
   it("keys every detector to a Herald template id", () => {
     const ids = DETECTORS.map((d) => d.id);
     expect(new Set(ids).size).toBe(ids.length);
