@@ -94,6 +94,10 @@ The constraints that make it safe:
 - The key lives in the `GROQ_API_KEY` Actions secret and is used **only inside
   the survey workflow**. The site ships no key and calls no model at runtime
   or at build time.
+- The **model is discovered, not hard-coded** — Groq retires ids, and a stale
+  name meant every draft returned `404 model_not_found` while the survey still
+  reported success. `GROQ_MODEL` pins one; otherwise the script reads
+  `/v1/models` and prints which it chose and why.
 
 Thesis lines are still hand-written by the author in `prose.json`, and a
 drafted line is a placeholder until one is.

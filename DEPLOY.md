@@ -57,7 +57,17 @@ repository. These are not Vercel variables and must not be added there.
 | name | required | what it does |
 |---|---|---|
 | `GROQ_API_KEY` | no | Lets `scripts/draft.mjs` write a thesis line for a repository with no hand-written one. Without it the step reports what it would have drafted and exits 0; those entries publish on measurement alone. |
-| `GROQ_MODEL` | no | Overrides the model. Defaults to `llama-3.3-70b-versatile`. Set it as a **variable**, not a secret, if you want it visible in the log. |
+| `GROQ_MODEL` | no | Pins the model. Left unset, the script asks the account which models it can reach and picks the best available, printing the choice and the reason. Set it as a **variable**, not a secret, if you want it visible in the log. |
+
+The model is discovered rather than hard-coded because Groq retires model ids
+on its own schedule. The first cut named `llama-3.3-70b-versatile` and every
+request returned `404 model_not_found`; since a failed draft deliberately does
+not fail the survey, it failed quietly, which is the worst way for it to fail.
+To see what a key can reach:
+
+```bash
+GROQ_API_KEY=... node meridian/pipeline/scripts/draft.mjs --models
+```
 
 The site works without it. The run panel states which mode it is in —
 `anonymous` or `authenticated` — either way, and refuses to invent data when
