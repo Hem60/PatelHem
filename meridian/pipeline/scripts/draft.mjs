@@ -381,10 +381,32 @@ async function draft(entry, ctx, model) {
   }
 }
 
+/**
+ * Normalise the typography before the gate sees it.
+ *
+ * The first successful run came back full of U+2011 NON-BREAKING HYPHENs —
+ * "self‑classifying", "end‑to‑end", "docker‑compose". They render, but
+ * they are not the hyphen the rest of the page uses, they break text search on
+ * the card, and they are invisible in a diff, which is the worst kind of
+ * inconsistency to inherit.
+ *
+ * Only characters are touched, never words. The em dash is left alone: the
+ * site's own prose uses it.
+ */
+export function tidy(text) {
+  return text
+    .replace(/[‐‑]/g, "-")   /* hyphen, non-breaking hyphen */
+    .replace(/[  ]/g, " ") /* U+00A0 and U+202F: invisible here, pinned by test */
+    .replace(/[‘’]/g, "'")   /* curly single quotes */
+    .replace(/[“”]/g, '"')   /* curly double quotes */
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 /** Reject anything that would put an unchecked claim on a card. */
 export function reject(candidate) {
-  const thesis = typeof candidate?.thesis === "string" ? candidate.thesis.trim() : "";
-  const description = typeof candidate?.description === "string" ? candidate.description.trim() : "";
+  const thesis = typeof candidate?.thesis === "string" ? tidy(candidate.thesis) : "";
+  const description = typeof candidate?.description === "string" ? tidy(candidate.description) : "";
 
   /*
    * These two are not the same failure and must not share a message.
@@ -531,9 +553,9 @@ if (INVOKED) {
         failed += 1;
         continue;
       }
-      const description = got.description.trim();
+      const description = tidy(got.description ?? "");
       next[entry.name] = {
-        thesis: got.thesis.trim(),
+        thesis: tidy(got.thesis),
         description: description === "INSUFFICIENT" ? null : description,
         source: "groq",
         model,

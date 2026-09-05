@@ -16,13 +16,52 @@
  */
 import { describe, expect, it } from "vitest";
 // @ts-expect-error — a plain .mjs script, deliberately not part of the TS build
-import { GATE, reject } from "../scripts/draft.mjs";
+import { GATE, reject, tidy } from "../scripts/draft.mjs";
 
 /** A draft that should pass: specific, measured, no praise. */
 const good = {
   thesis: "A retrieval-augmented chat service that answers questions against a supplied document set.",
   description: "Written in Python, with a test suite under tests/ and continuous integration configured. The repository contains the retrieval pipeline and the service that fronts it.",
 };
+
+describe("typographic tidying", () => {
+  /*
+   * The first successful run came back full of U+2011 NON-BREAKING HYPHENs:
+   * "self‑classifying", "end‑to‑end", "docker‑compose". They render, but
+   * they are not the hyphen the rest of the page uses, they break text search
+   * on the card, and they are invisible in a diff.
+   *
+   * These characters are also invisible in the source of `tidy` itself, which
+   * is exactly why the behaviour is pinned here rather than trusted to a
+   * character class nobody can read.
+   */
+  it("replaces the hyphens a model reaches for with the one the page uses", () => {
+    expect(tidy("self‑classifying")).toBe("self-classifying");
+    expect(tidy("end‐to‐end")).toBe("end-to-end");
+  });
+
+  it("replaces non-breaking and narrow spaces with an ordinary space", () => {
+    expect(tidy("a b")).toBe("a b");
+    expect(tidy("a b")).toBe("a b");
+  });
+
+  it("straightens curly quotes", () => {
+    expect(tidy("it’s “quoted”")).toBe("it's \"quoted\"");
+  });
+
+  it("leaves the em dash alone, because the site's own prose uses it", () => {
+    expect(tidy("a — b")).toBe("a — b");
+  });
+
+  it("collapses runs of whitespace and trims", () => {
+    expect(tidy("  a   b\n c  ")).toBe("a b c");
+  });
+
+  it("changes nothing in text that is already plain", () => {
+    const plain = "A Flask API that serves a RandomForest classifier.";
+    expect(tidy(plain)).toBe(plain);
+  });
+});
 
 describe("the drafter's gate", () => {
   it("passes a plain, measured draft", () => {
