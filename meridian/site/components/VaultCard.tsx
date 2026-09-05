@@ -212,14 +212,6 @@ export function VaultCard({ entry }: { entry: Entry }) {
                     <strong>No thesis line yet.</strong> This entry publishes on measurement alone;
                     the sentences above are the survey&rsquo;s, not mine.
                   </>
-                ) : drafted ? (
-                  <>
-                    <strong>The thesis line here was drafted, not written.</strong> A model was
-                    given the measured sentences above and nothing else, and asked to describe
-                    the repository from them — so a repository I have not written about yet
-                    still arrives with words. Every figure on this card is still computed. The
-                    line is marked ·D until I replace it with my own.
-                  </>
                 ) : (
                   <>
                     <strong>Rank is computed.</strong> Nothing on this card was typed — re-run the
@@ -227,6 +219,26 @@ export function VaultCard({ entry }: { entry: Entry }) {
                   </>
                 )}
               </p>
+
+              {/*
+                * The drafted note is its own paragraph rather than another arm
+                * of the caveat above.
+                *
+                * As a branch it lost to the authorship caveat, so on a shared
+                * repository with a drafted line the ·D appeared on the card
+                * with nothing anywhere explaining it — a mark a reader cannot
+                * look up is worse than no mark. Both facts are true at once,
+                * so both are shown.
+                */}
+              {drafted && (
+                <p className="t-data mt-2">
+                  <strong>The thesis line was drafted, not written.</strong> A model was given the
+                  repository&rsquo;s own description, its file paths and the measured sentences
+                  above — never the contents of a file — and asked to describe it from those, so a
+                  repository I have not written about yet still arrives with words. Every figure on
+                  this card is still computed. The line is marked ·D until I replace it with mine.
+                </p>
+              )}
             </div>
 
             <div className="vault__tags back__tags">

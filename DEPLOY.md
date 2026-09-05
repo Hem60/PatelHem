@@ -88,3 +88,29 @@ cd meridian/pipeline
 node dist/run.js            # or --rebuild if the readings have not moved
 git add data && git commit -m "survey: refresh catalogue" && git push
 ```
+
+## How long a new repository takes to become a card
+
+Measured, not estimated. Five consecutive successful survey runs:
+
+| run | dispatch to completion |
+|---|---|
+| 33978786047 | 67s |
+| 33979333584 | 63s |
+| 33969645121 | 63s |
+| 33968501601 | 52s |
+| 33979145782 | 56s |
+
+The one 734s run was the first, and it was slow because it failed at the test
+gate after installing the site's dependencies from cold.
+
+Vercel then builds in **19–25s** warm (the first cold build was 759s), and the
+deploy is triggered by the survey's own commit — confirmed: the survey pushed
+at 16:56:07 UTC and a production deploy was created at 16:56:09.
+
+**So: press the button, and roughly ninety seconds later the new card is live.**
+
+A commit pushed by the Actions runner uses `GITHUB_TOKEN`, and GitHub does not
+emit workflow-triggering events for such pushes. That restriction does not
+apply here — Vercel's GitHub App sees the push regardless, so no deploy hook
+is needed.
