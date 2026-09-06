@@ -79,6 +79,26 @@ export function Boot({ catalogued }: { catalogued: number }) {
   const timer = useRef<number | null>(null);
 
   const dismiss = useCallback(() => {
+    /*
+     * Lift onto the hero, not onto wherever the page happens to be scrolled.
+     *
+     * layout.tsx sets history.scrollRestoration to "manual" before the browser
+     * can restore an old offset, which is the actual fix. This is the second
+     * line of defence, and it is the one that runs latest: a browser that
+     * restored anyway, an extension, or anything that scrolled while the plate
+     * was up would otherwise leave it wiping away to reveal plate 07 — the
+     * sequence plays perfectly and still looks broken.
+     *
+     * A hash is left alone. Someone who opened /#catalogue asked for that
+     * plate, and the boot is not a reason to overrule them.
+     */
+    /*
+     * `behavior: "instant"` is required, not tidiness. The document sets
+     * `scroll-behavior: smooth`, so a plain scrollTo animates — and a reader
+     * who had been 11,000px down would watch the whole page rush past after
+     * the plate lifted. The jump has to have already happened.
+     */
+    if (!window.location.hash) window.scrollTo({ top: 0, behavior: "instant" });
     setLeaving(true);
     /* must outlast the exit animation, or the plate vanishes mid-wipe */
     timer.current = window.setTimeout(() => {

@@ -71,6 +71,38 @@ export const viewport: Viewport = {
  */
 const PLATE_SCRIPT = `(function(){try{var s=localStorage.getItem("meridian.plate");var m=window.matchMedia("(prefers-color-scheme: light)").matches;document.documentElement.dataset.plate=(s==="day"||s==="night")?s:(m?"day":"night");}catch(e){document.documentElement.dataset.plate="night";}})();`;
 
+/*
+ * The page opens at the top, so a reload replays it from the beginning.
+ *
+ * Browsers default `history.scrollRestoration` to "auto", which puts you back
+ * at your old offset after a refresh. On an ordinary page that is right. Here
+ * it is not: the boot plate plays its whole sequence, lifts, and reveals plate
+ * 07. The page announces itself and then opens halfway down, which reads as a
+ * failure even though every part of it worked.
+ *
+ * It has to run before the browser restores, which is why it is inline and
+ * beforeInteractive rather than an effect. Setting the flag is what prevents
+ * the restore; the scroll only matters for a browser that restored anyway.
+ *
+ * ── What this costs, stated rather than glossed ─────────────────────────────
+ * "manual" is sticky for the whole tab: once set, it governs every later
+ * history traversal too, so pressing Back to return here also lands at the
+ * top rather than where you were. An earlier cut of this script tried to
+ * exempt back/forward by checking the navigation type — measured, that does
+ * nothing, because by the time a traversal happens the flag is already set
+ * from the load before it.
+ *
+ * That trade is worth it on a single page whose navigation is anchors: the
+ * Index menu, the skip link and every #hash still land exactly where they
+ * point, because a fragment navigation scrolls to its target and never
+ * consults scrollRestoration.
+ *
+ * The one exemption is a URL that carries a hash. Someone who opened
+ * /#catalogue asked for that plate by name, and the opening shot is not a
+ * reason to overrule them.
+ */
+const SCROLL_SCRIPT = `(function(){try{if(location.hash)return;if("scrollRestoration"in history)history.scrollRestoration="manual";window.scrollTo(0,0);}catch(e){}})();`;
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const cat = catalogue();
 
@@ -100,6 +132,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             rather than flashing the wrong ground and correcting itself */}
         <Script id="meridian-plate" strategy="beforeInteractive">
           {PLATE_SCRIPT}
+        </Script>
+        {/* before the browser can restore the old offset, so a refresh opens
+            on the hero rather than wherever the reader had scrolled to */}
+        <Script id="meridian-scroll" strategy="beforeInteractive">
+          {SCROLL_SCRIPT}
         </Script>
         {/* without JavaScript nothing can dismiss the plate, so never show it */}
         <noscript>
