@@ -1,6 +1,6 @@
 {
   "user": "Hem60",
-  "generated": "2026-09-05T13:34:46.703Z",
+  "generated": "2026-09-10T04:16:23.427Z",
   "partMax": {
     "stability": {
       "tests": 26,
@@ -50,13 +50,13 @@
     {
       "name": "vakil",
       "classification": "EPIC",
-      "composite": 70.4,
+      "composite": 69.7,
       "axes": {
         "stability": 89.3,
         "mass": 60,
         "anomaly": 80,
         "luminosity": 47,
-        "cadence": 62.3
+        "cadence": 56.3
       },
       "parts": {
         "stability": {
@@ -96,7 +96,7 @@
           "social": 0
         },
         "cadence": {
-          "recency": 30,
+          "recency": 24,
           "activeDays": 11.3,
           "activeMonths": 11,
           "issueActivity": 0,
@@ -137,7 +137,7 @@
         },
         {
           "label": "Score",
-          "value": "70.4"
+          "value": "69.7"
         }
       ],
       "stack": [
@@ -154,24 +154,24 @@
         "code": "https://github.com/Hem60/vakil",
         "live": null
       },
-      "updated": "2026-09-05T13:34:46.703Z"
+      "updated": "2026-09-10T04:16:23.427Z"
     },
     {
       "name": "PatelHem",
       "classification": "RARE",
-      "composite": 51.8,
+      "composite": 50.4,
       "axes": {
-        "stability": 76.1,
-        "mass": 58.1,
+        "stability": 65,
+        "mass": 64,
         "anomaly": 24,
         "luminosity": 40,
-        "cadence": 44.6
+        "cadence": 46.6
       },
       "parts": {
         "stability": {
-          "tests": 23.1,
+          "tests": 24,
           "ci": 18,
-          "ciGreen": 12,
+          "ciGreen": 0,
           "coverage": 10,
           "lint": 0,
           "typing": 5,
@@ -179,10 +179,10 @@
           "pinned": 8
         },
         "mass": {
-          "commits": 13.3,
-          "code": 20.7,
+          "commits": 17.6,
+          "code": 21,
           "modules": 13.2,
-          "lifespan": 2.6,
+          "lifespan": 3.9,
           "languages": 8.3
         },
         "anomaly": {
@@ -206,43 +206,39 @@
         },
         "cadence": {
           "recency": 30,
-          "activeDays": 7.7,
+          "activeDays": 9.7,
           "activeMonths": 6.9,
           "issueActivity": 0,
           "sustained": 0
         }
       },
       "thesis": "PatelHem is a self-classifying engineering portfolio that reads repositories, scores them on five fixed axes, and publishes a self-updating catalogue.",
-      "description": "The repository includes a TypeScript engine (src files such as adapter.ts, classify.ts, score.ts) with its package configuration, a test suite of 14 files, and CI workflows defined in .github. Supporting files provide deployment instructions, documentation, and cached data for repository analysis. The project is built with TypeScript, CSS, and HTML and is deployed for public access.",
+      "description": "The repository includes a TypeScript engine (src files such as adapter.ts, axes.ts, classify.ts, score.ts) with a test suite of 14 files, package configuration, and CI workflows defined in .github/workflows. Deployment files like .vercelignore and documentation (README, PLAN.md) support automated publishing. The system processes repository data to compute objective scores without self-reporting.",
       "thesisSource": "groq",
       "annotated": false,
       "summary": [
-        "12 test files under `tests/`.",
-        "Continuous integration runs on every push, green on the last run.",
-        "9 commits.",
+        "14 test files under `tests/`.",
+        "Continuous integration is configured.",
+        "20 commits.",
         "Written in TypeScript, CSS and HTML.",
         "Deployed and reachable."
       ],
       "facts": [
         {
           "label": "Commits",
-          "value": "9"
+          "value": "20"
         },
         {
           "label": "Tests",
-          "value": "12"
-        },
-        {
-          "label": "CI",
-          "value": "success"
+          "value": "14"
         },
         {
           "label": "Code",
-          "value": "605 KB"
+          "value": "652 KB"
         },
         {
           "label": "Score",
-          "value": "51.8"
+          "value": "50.4"
         }
       ],
       "stack": [
@@ -253,25 +249,25 @@
       ],
       "authorship": {
         "share": 100,
-        "mine": 9,
-        "total": 9
+        "mine": 20,
+        "total": 20
       },
       "links": {
         "code": "https://github.com/Hem60/PatelHem",
         "live": "https://meridian-hem.vercel.app"
       },
-      "updated": "2026-09-05T13:34:46.703Z"
+      "updated": "2026-09-10T04:16:23.427Z"
     },
     {
       "name": "RAG-CHAT-BOT",
       "classification": "UNCOMMON",
-      "composite": 39.9,
+      "composite": 38.9,
       "axes": {
         "stability": 12.9,
         "mass": 37.5,
         "anomaly": 72,
         "luminosity": 41.4,
-        "cadence": 52.7
+        "cadence": 43.7
       },
       "parts": {
         "stability": {
@@ -311,7 +307,7 @@
           "social": 0
         },
         "cadence": {
-          "recency": 24,
+          "recency": 15,
           "activeDays": 7.7,
           "activeMonths": 11,
           "issueActivity": 0,
@@ -338,7 +334,7 @@
         },
         {
           "label": "Score",
-          "value": "39.9"
+          "value": "38.9"
         }
       ],
       "stack": [
@@ -354,7 +350,7 @@
         "code": "https://github.com/Hem60/RAG-CHAT-BOT",
         "live": null
       },
-      "updated": "2026-09-05T13:34:46.703Z"
+      "updated": "2026-09-10T04:16:23.427Z"
     },
     {
       "name": "IRIS-PREDICTOR",
@@ -453,7 +449,7 @@
         "code": "https://github.com/Hem60/IRIS-PREDICTOR",
         "live": null
       },
-      "updated": "2026-09-05T13:34:46.703Z"
+      "updated": "2026-09-10T04:16:23.427Z"
     },
     {
       "name": "MOVIE_RECOMMENDER",
@@ -547,7 +543,7 @@
         "code": "https://github.com/Hem60/MOVIE_RECOMMENDER",
         "live": null
       },
-      "updated": "2026-09-05T13:34:46.703Z"
+      "updated": "2026-09-10T04:16:23.427Z"
     },
     {
       "name": "webathon",
@@ -639,7 +635,7 @@
         "code": "https://github.com/Hem60/webathon",
         "live": null
       },
-      "updated": "2026-09-05T13:34:46.703Z"
+      "updated": "2026-09-10T04:16:23.427Z"
     }
   ],
   "state": {
@@ -647,14 +643,14 @@
       "current": "UNCOMMON",
       "since": "2026-09-05T13:18:40.525Z",
       "history": [
-        51.8,
-        51.8,
         48.8,
         49,
         49.2,
         49.6,
         49.6,
-        51.8
+        51.8,
+        50.4,
+        50.4
       ],
       "axesAtGrant": {
         "stability": 64.1,
@@ -675,8 +671,8 @@
         70.4,
         70.4,
         70.4,
-        70.4,
-        70.4
+        69.7,
+        69.7
       ],
       "axesAtGrant": {
         "stability": 89.3,
@@ -741,8 +737,8 @@
         39.9,
         39.9,
         39.9,
-        39.9,
-        39.9
+        38.9,
+        38.9
       ],
       "axesAtGrant": {
         "stability": 12.9,
