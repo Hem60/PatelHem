@@ -7,6 +7,7 @@
  */
 import { catalogue, revisions } from "@/lib/catalogue";
 import { contributions } from "@/lib/contributions";
+import { external } from "@/lib/external";
 import { record, skills } from "@/lib/content";
 import { FirstLight } from "@/components/FirstLight";
 import { Parallax } from "@/components/Parallax";
@@ -27,6 +28,7 @@ export default function Page() {
   const log = record();
   const skillList = skills();
   const contrib = contributions();
+  const ext = external();
 
   return (
     <>
@@ -34,7 +36,7 @@ export default function Page() {
       <Parallax cat={cat} record={log} skills={skillList} />
       <Roster cat={cat} />
       <ObservingRun cat={cat} />
-      <Catalogue cat={cat} contrib={contrib} />
+      <Catalogue cat={cat} contrib={contrib} ext={ext} />
       <CapabilityTree cat={cat} />
       <LogRevisions cat={cat} revisions={revs} record={log} />
       <HowToRead cat={cat} />

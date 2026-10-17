@@ -195,3 +195,34 @@ quietly drop the caveat to make the drift look smaller.
 Authorship is computed, never asserted. `WEBATHON2` is 29% yours (12/42
 commits); `VortiFi` and `hashhawks-3d-showcase` are 0%. Do not write copy
 implying sole authorship of shared work — the commit graph is one click away.
+
+### Work on other people's accounts
+
+`pipeline/data/external.json` holds repositories owned by a collaborator that
+the owner committed to. Added 2026-10-17 at the owner's instruction, after the
+disclosure was put to them explicitly.
+
+- `CODER7657/raksha-ai` — 24% (30 of 124), **private**
+- `CODER7657/saakshi` — 17% (29 of 167), **private**
+
+`CODER7657` is Pavan Patel, who also owns `assay-probe` → `myselfpavan.vercel.app`,
+the reference build this site matches. These are his repositories, not Hem's.
+
+Four rules hold here and are pinned by tests in `site/test/system.test.ts`:
+
+1. **Never ranked.** They go in the contributions strip, never the vault. A
+   composite on a 17%-authored repository owned by someone else is the exact
+   forgery this build exists not to be.
+2. **A private entry publishes no link and no commit subjects.** Every other
+   contribution card quotes the subjects verbatim; in a repository nobody else
+   can open they are the most revealing thing in it, so the arithmetic is
+   published and the wording is not. File paths and topics are withheld too.
+3. **Collected by hand, and labelled as such.** `scripts/external.mjs` is run
+   manually with a token that can read them. The survey's `GITHUB_TOKEN` is
+   scoped to this repository and cannot — do not try to make this part of the
+   workflow, and do not put a token with another account's private repositories
+   into an Actions secret. The page states that these are the only figures on
+   it a reader cannot reproduce.
+4. **The survey must never regenerate this file.** `contributions.mjs` writes
+   `contributions.json` only. If anything ever rewrites `external.json` in CI,
+   it will erase it, because CI cannot read the repositories it describes.

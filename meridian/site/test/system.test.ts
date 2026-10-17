@@ -12,6 +12,7 @@ import { join } from "node:path";
 import { BANDS, band, bandOf, classVar, nextClass, AXES } from "../lib/bands";
 import { catalogue, entriesByRank, revisions, prose } from "../lib/catalogue";
 import { SHELF, shelf } from "../lib/shelf";
+import { external } from "../lib/external";
 import { machineView, readout } from "../lib/machine";
 import { positions, record } from "../lib/content";
 import { figure, plateMark, stamp, daysBetween } from "../lib/format";
@@ -193,6 +194,53 @@ describe("authored content", () => {
     /* today's case: six entries, ten slots, all six on the shelf */
     expect(shelf(cat, SHELF)).toHaveLength(cat.entries.length);
     expect(cat.entries.length).toBeLessThanOrEqual(SHELF);
+  });
+
+  it("keeps external shared work out of the catalogue", () => {
+    /*
+     * A repository on somebody else's account must never be ranked. The vault
+     * is "repositories the survey found on this account", and a card there for
+     * work that is 17% mine and owned by another person is the forgery this
+     * build exists not to be.
+     */
+    const ext = external();
+    if (ext === null) return;
+    const ranked = new Set(cat.entries.map((e) => e.name.toLowerCase()));
+    for (const e of ext.external) {
+      expect(ranked.has(e.name.toLowerCase()), `${e.name} is ranked`).toBe(false);
+      expect(e.owner.toLowerCase()).not.toBe(ext.owner.toLowerCase());
+    }
+  });
+
+  it("publishes no link and no commit subjects for a private repository", () => {
+    /*
+     * The disclosure rule, pinned. A private repository belongs to its owner;
+     * what goes out is the arithmetic, not the contents. A link that 404s for
+     * every visitor is worse than no link, and the commit subjects are the
+     * most revealing thing in a repository nobody else can open.
+     */
+    const ext = external();
+    if (ext === null) return;
+    for (const e of ext.external) {
+      if (!e.private) continue;
+      expect(e.url, e.name).toBe(null);
+      expect(Object.keys(e), e.name).not.toContain("work");
+      expect(Object.keys(e), e.name).not.toContain("paths");
+      expect(Object.keys(e), e.name).not.toContain("topics");
+    }
+  });
+
+  it("computes the external share the same way every other share is computed", () => {
+    const ext = external();
+    if (ext === null) return;
+    for (const e of ext.external) {
+      expect(e.commits.mine, e.name).toBeLessThanOrEqual(e.commits.total);
+      expect(e.commits.substantive, e.name).toBeLessThanOrEqual(e.commits.mine);
+      const share = e.commits.total === 0 ? 0 : Math.round((e.commits.mine / e.commits.total) * 100);
+      expect(e.share, e.name).toBe(share);
+      /* it is a contribution, not ownership — that is the whole point */
+      expect(e.share, e.name).toBeLessThan(100);
+    }
   });
 
   it("only annotates entries that have a hand-written thesis", () => {

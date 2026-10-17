@@ -19,6 +19,7 @@ import { SHELF, shelf as shelfOf } from "@/lib/shelf";
 import { Observed } from "./Calibration";
 import { Marker, Note, Notes } from "./Marginalia";
 import type { Contributions as ContribData } from "@/lib/contributions";
+import type { ExternalFile } from "@/lib/external";
 import { SectionHead } from "./Plate";
 import { VaultCard } from "./VaultCard";
 import { ContributionStrip } from "./Contributions";
@@ -28,7 +29,16 @@ type SortKey = "composite" | (typeof AXES)[number]["key"];
 const ALL = "ALL";
 
 
-export function Catalogue({ cat, contrib }: { cat: CatalogueData; contrib: ContribData }) {
+export function Catalogue({
+  cat,
+  contrib,
+  ext,
+}: {
+  cat: CatalogueData;
+  contrib: ContribData;
+  /** Shared work on other accounts. Null when the file does not exist. */
+  ext: ExternalFile | null;
+}) {
   const [klass, setKlass] = useState<string>(ALL);
   const [language, setLanguage] = useState<string>(ALL);
   const [sort, setSort] = useState<SortKey>("composite");
@@ -182,7 +192,7 @@ export function Catalogue({ cat, contrib }: { cat: CatalogueData; contrib: Contr
         * a reader looking at the work should see all of it, with the ownership
         * stated on each card.
         */}
-      <ContributionStrip data={contrib} />
+      <ContributionStrip data={contrib} ext={ext} />
     </Observed>
   );
 }

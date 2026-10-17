@@ -1,0 +1,17 @@
+{
+  "comment": [
+    "Shared repositories on somebody else's account that the owner contributed to.",
+    "",
+    "contributions.mjs can only ever find forks sitting on Hem60's own account,",
+    "so work done directly on a collaborator's repository is invisible to it.",
+    "This is that list, written by hand because there is no API that can derive",
+    "it: GitHub will not tell you every private repository a user has committed",
+    "to on someone else's account.",
+    "",
+    "Collect with: node scripts/external.mjs   (needs a token that can read them)",
+    "",
+    "A private repository is published with a PRIVATE badge, no commit subjects",
+    "and no file paths. See scripts/external.mjs for exactly what is withheld."
+  ],
+  "repos": ["CODER7657/raksha-ai", "CODER7657/saakshi"]
+}
