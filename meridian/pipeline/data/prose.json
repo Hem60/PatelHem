@@ -17,11 +17,11 @@
   },
   "PatelHem": {
     "thesis": "PatelHem is a self-classifying engineering portfolio that reads repositories, scores them on five fixed axes, and publishes a self-updating catalogue.",
-    "description": "The repository includes a TypeScript engine (src files such as adapter.ts, axes.ts, classify.ts, score.ts, cli.ts) with accompanying tests, a CLI entry point, and configuration files (package.json, tsconfig.json). It also contains GitHub workflow definitions for CI, deployment scripts, and supporting markdown documentation. The project is built with TypeScript, CSS, and HTML and is deployed for public access.",
+    "description": "The repository includes a TypeScript-based engine (src files such as adapter.ts, axes.ts, classify.ts, cli.ts, score.ts) with accompanying tests (14 test files) and a CI workflow defined in .github/workflows. Supporting files provide deployment instructions, configuration, and cached data for repository analysis. The project is deployed and reachable.",
     "source": "groq",
     "model": "openai/gpt-oss-120b",
-    "generated": "2026-10-17T08:21:38.383Z",
-    "factsHash": "b82cc6c3ee8b98dd"
+    "generated": "2026-10-17T08:46:35.986Z",
+    "factsHash": "7589bfcb72d29371"
   },
   "RAG-CHAT-BOT": {
     "thesis": "RAG-CHAT-BOT enables fully local retrieval-augmented QA over technical PDFs using CPU embeddings, FAISS indexing, and an LLM-as-judge evaluation harness.",
