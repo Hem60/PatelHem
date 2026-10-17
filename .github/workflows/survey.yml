@@ -132,3 +132,16 @@ jobs:
             console.log('shelf: the site shows the top 10 by composite');
           " >> "$GITHUB_STEP_SUMMARY"
           echo '```' >> "$GITHUB_STEP_SUMMARY"
+
+          # Stated on every run, not only when something is missing. A private
+          # repository is invisible to the collector, and the first time that
+          # happened the run went green and the catalogue did not move with
+          # nothing anywhere saying why.
+          {
+            echo ""
+            echo "**Only public repositories are surveyed.** The collector reads"
+            echo "\`users/${{ github.repository_owner }}/repos\`, the public listing."
+            echo "A private repository is invisible to it and will never appear in the"
+            echo "catalogue, however many times this button is pressed — make it public"
+            echo "and the next run ranks it. See DEPLOY.md, \"Private repositories\"."
+          } >> "$GITHUB_STEP_SUMMARY"

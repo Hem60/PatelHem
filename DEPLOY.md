@@ -114,3 +114,43 @@ A commit pushed by the Actions runner uses `GITHUB_TOKEN`, and GitHub does not
 emit workflow-triggering events for such pushes. That restriction does not
 apply here — Vercel's GitHub App sees the push regardless, so no deploy hook
 is needed.
+
+## Private repositories
+
+**The survey never sees them, and that is by design.**
+
+`phase00/collect.mjs` reads `users/<name>/repos` — the *public* listing. It
+returns public repositories only, regardless of who is authenticated; a token
+does not widen it. Private repositories live behind `/user/repos`, the
+authenticated-user endpoint, which needs a user-to-server token with `repo`
+scope.
+
+The workflow has no such token. It authenticates with `GITHUB_TOKEN`, an
+installation token scoped to this one repository, which cannot enumerate the
+owner's other repositories at all. The public endpoint works there precisely
+because it needs no scope.
+
+So a private repository is invisible twice over. Pressing the button again
+will not help.
+
+**To get a new repository ranked: make it public.** The next survey collects
+it, scores it on the same five axes, drafts a thesis line for it and publishes
+a card — no code change, nothing to configure.
+
+### Why not just add a token and rank them anyway
+
+Because a rank is a claim, and the claim this site makes is that anyone can
+check it: clone the repository, run the engine, get the same numbers. A card
+for a repository nobody else can open is a score nobody can reproduce. It
+would be the one figure on the page taken purely on trust, sitting in the same
+grid as figures that are not.
+
+Shared work on a collaborator's private repository is handled instead by
+`pipeline/data/external.json` — collected by hand, labelled private, never
+ranked, and shown with the arithmetic rather than a composite. That is the
+shape any private work should take here. See **Attribution** in `CLAUDE.md`.
+
+It failed silently once: a private repository was created, the button pressed,
+the run went green, and the catalogue did not move with nothing saying why.
+The collector and the run summary now state the public-only rule on every run,
+whether or not anything is missing.
