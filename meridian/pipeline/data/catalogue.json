@@ -1,6 +1,6 @@
 {
   "user": "Hem60",
-  "generated": "2026-10-17T09:47:37.160Z",
+  "generated": "2026-10-17T09:50:09.576Z",
   "partMax": {
     "stability": {
       "tests": 26,
@@ -155,15 +155,15 @@
         "code": "https://github.com/Hem60/vakil",
         "live": null
       },
-      "updated": "2026-10-17T09:47:37.160Z"
+      "updated": "2026-10-17T09:50:09.576Z"
     },
     {
       "name": "PatelHem",
       "classification": "RARE",
-      "composite": 55.3,
+      "composite": 55.4,
       "axes": {
         "stability": 65.5,
-        "mass": 75.1,
+        "mass": 75.3,
         "anomaly": 24,
         "luminosity": 40,
         "cadence": 64.6
@@ -180,7 +180,7 @@
           "pinned": 8
         },
         "mass": {
-          "commits": 20.2,
+          "commits": 20.4,
           "code": 21.2,
           "modules": 13.2,
           "lifespan": 12.2,
@@ -214,20 +214,20 @@
         }
       },
       "thesis": "PatelHem is a self-classifying engineering portfolio that reads repositories, scores them on five fixed axes, and publishes a self-updating catalogue.",
-      "description": "The repository includes a TypeScript engine (src files like classify.ts, score.ts, cli.ts) with accompanying tests, a CLI, and configuration files (package.json, tsconfig.json). It also contains GitHub Actions workflows for CI, deployment scripts, and supporting markdown documentation. The project is built with Node/TypeScript and deployed as a reachable web service.",
+      "description": "The repository includes a TypeScript engine (src files such as adapter.ts, axes.ts, classify.ts, cli.ts, explain.ts, score.ts, signals.ts) with a test suite (15 test files) and package configuration. It also contains GitHub Actions workflows for CI, deployment files, and supporting documentation. The project is built with Node/TypeScript and deployed via Vercel.",
       "thesisSource": "groq",
       "annotated": false,
       "summary": [
         "15 test files under `tests/`.",
         "Continuous integration is configured.",
-        "32 commits across 2 months.",
+        "33 commits across 2 months.",
         "Written in TypeScript, CSS and HTML.",
         "Deployed and reachable."
       ],
       "facts": [
         {
           "label": "Commits",
-          "value": "32"
+          "value": "33"
         },
         {
           "label": "Tests",
@@ -239,7 +239,7 @@
         },
         {
           "label": "Score",
-          "value": "55.3"
+          "value": "55.4"
         }
       ],
       "stack": [
@@ -258,7 +258,7 @@
         "code": "https://github.com/Hem60/PatelHem",
         "live": "https://meridian-hem.vercel.app"
       },
-      "updated": "2026-10-17T09:47:37.160Z"
+      "updated": "2026-10-17T09:50:09.576Z"
     },
     {
       "name": "linkedin_agent",
@@ -360,7 +360,7 @@
         "code": "https://github.com/Hem60/linkedin_agent",
         "live": null
       },
-      "updated": "2026-10-17T09:47:37.160Z"
+      "updated": "2026-10-17T09:50:09.576Z"
     },
     {
       "name": "RAG-CHAT-BOT",
@@ -455,7 +455,7 @@
         "code": "https://github.com/Hem60/RAG-CHAT-BOT",
         "live": null
       },
-      "updated": "2026-10-17T09:47:37.160Z"
+      "updated": "2026-10-17T09:50:09.576Z"
     },
     {
       "name": "IRIS-PREDICTOR",
@@ -555,7 +555,7 @@
         "code": "https://github.com/Hem60/IRIS-PREDICTOR",
         "live": null
       },
-      "updated": "2026-10-17T09:47:37.160Z"
+      "updated": "2026-10-17T09:50:09.576Z"
     },
     {
       "name": "MOVIE_RECOMMENDER",
@@ -650,7 +650,7 @@
         "code": "https://github.com/Hem60/MOVIE_RECOMMENDER",
         "live": null
       },
-      "updated": "2026-10-17T09:47:37.160Z"
+      "updated": "2026-10-17T09:50:09.576Z"
     },
     {
       "name": "webathon",
@@ -743,87 +743,7 @@
         "code": "https://github.com/Hem60/webathon",
         "live": null
       },
-      "updated": "2026-10-17T09:47:37.160Z"
-    },
-    {
-      "name": "Insta_agent-",
-      "classification": "COMMON",
-      "composite": 13.6,
-      "axes": {
-        "stability": 0,
-        "mass": 0,
-        "anomaly": 50,
-        "luminosity": 0,
-        "cadence": 30
-      },
-      "parts": {
-        "stability": {
-          "tests": 0,
-          "ci": 0,
-          "ciGreen": 0,
-          "coverage": 0,
-          "lint": 0,
-          "typing": 0,
-          "license": 0,
-          "pinned": 0
-        },
-        "mass": {
-          "commits": 0,
-          "code": 0,
-          "modules": 0,
-          "lifespan": 0,
-          "languages": 0
-        },
-        "anomaly": {
-          "base": 50,
-          "rareDomain": 0,
-          "commonDomain": 0,
-          "evaluates": 0,
-          "onChain": 0,
-          "uncommonLanguages": 0,
-          "repeatedStack": 0
-        },
-        "luminosity": {
-          "deployed": 0,
-          "readme": 0,
-          "images": 0,
-          "description": 0,
-          "topics": 0,
-          "releases": 0,
-          "docs": 0,
-          "social": 0
-        },
-        "cadence": {
-          "recency": 30,
-          "activeDays": 0,
-          "activeMonths": 0,
-          "issueActivity": 0,
-          "sustained": 0
-        }
-      },
-      "thesis": null,
-      "description": null,
-      "thesisSource": null,
-      "annotated": false,
-      "summary": [],
-      "facts": [
-        {
-          "label": "Score",
-          "value": "13.6"
-        }
-      ],
-      "stack": [],
-      "authorship": {
-        "share": null,
-        "mine": 0,
-        "total": 0
-      },
-      "private": false,
-      "links": {
-        "code": "https://github.com/Hem60/Insta_agent-",
-        "live": null
-      },
-      "updated": "2026-10-17T09:47:37.160Z"
+      "updated": "2026-10-17T09:50:09.576Z"
     }
   ],
   "state": {
@@ -833,12 +753,12 @@
       "history": [
         55,
         55,
-        55,
-        55,
         55.1,
         55.1,
         55.3,
-        55.3
+        55.3,
+        55.4,
+        55.4
       ],
       "axesAtGrant": {
         "stability": 65,
@@ -849,26 +769,12 @@
       },
       "compositeAtGrant": 54.8
     },
-    "Insta_agent-": {
-      "current": "COMMON",
-      "since": "2026-10-17T09:47:37.160Z",
-      "history": [
-        13.6,
-        13.6
-      ],
-      "axesAtGrant": {
-        "stability": 0,
-        "mass": 0,
-        "anomaly": 50,
-        "luminosity": 0,
-        "cadence": 30
-      },
-      "compositeAtGrant": 13.6
-    },
     "linkedin_agent": {
       "current": "UNCOMMON",
       "since": "2026-10-17T09:13:55.827Z",
       "history": [
+        47,
+        47,
         47,
         47,
         47,
@@ -889,8 +795,8 @@
       "history": [
         68.6,
         68.6,
-        68.6,
-        68.6,
+        67.4,
+        67.4,
         67.4,
         67.4,
         67.4,
@@ -955,8 +861,8 @@
       "history": [
         38.9,
         38.9,
-        38.9,
-        38.9,
+        37.7,
+        37.7,
         37.7,
         37.7,
         37.7,
