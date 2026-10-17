@@ -137,7 +137,8 @@ export const COMMANDS: readonly Command[] = [
               instrumentFor(e).name.toLowerCase(),
             ],
             e.classification,
-            e.links.code,
+            /* private entries carry no link; the row renders as plain text */
+            e.links.code ?? undefined,
           ),
         ),
         blank(),
@@ -158,7 +159,12 @@ export const COMMANDS: readonly Command[] = [
       if (!entry) return [error(`No entry called "${name}". Run projects for the list.`)];
       return [
         text(`Opening ${entry.name} in a new tab.`, "dim"),
-        row(["url", entry.links.code], undefined, entry.links.code, "label"),
+        row(
+          ["url", entry.links.code ?? "private — no public link"],
+          undefined,
+          entry.links.code ?? undefined,
+          "label",
+        ),
       ];
     },
     opens: (args, { cat }) => {

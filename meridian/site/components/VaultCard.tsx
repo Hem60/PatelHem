@@ -40,6 +40,13 @@ export function VaultCard({ entry }: { entry: Entry }) {
   const share = entry.authorship.share;
   /* whether the thesis line came out of the drafter rather than off a keyboard */
   const drafted = entry.thesisSource === "groq";
+  /*
+   * A private repository is ranked by the same engine as every other, but
+   * nobody else can clone it and re-run that engine. It is the one card whose
+   * number a reader cannot check, so it is marked on the face and explained
+   * on the back rather than left to look like the rest.
+   */
+  const isPrivate = entry.private === true;
 
   const onMove = useCallback((event: React.PointerEvent<HTMLLIElement>) => {
     const node = ref.current;
@@ -102,6 +109,11 @@ export function VaultCard({ entry }: { entry: Entry }) {
             </div>
 
             <p className="label mt-2" style={{ color: "var(--ink-faint)" }}>
+              {isPrivate && (
+                <span className="private-mark" title="Private repository — this rank cannot be reproduced by a reader">
+                  Private
+                </span>
+              )}
               {categoryOf(entry)}
             </p>
 
@@ -230,6 +242,19 @@ export function VaultCard({ entry }: { entry: Entry }) {
                 * look up is worse than no mark. Both facts are true at once,
                 * so both are shown.
                 */}
+              {isPrivate && (
+                <p className="t-data mt-2">
+                  <strong>This repository is private, so this rank is the one number on the
+                  page you cannot check.</strong>{" "}
+                  Every other card here can be re-derived: clone the repository, run the engine,
+                  get the same composite. You cannot clone this one. The arithmetic is the same
+                  and the assay plate still shows every component, but the readings behind it
+                  came from a repository only I can open — so take it on trust or not at all.
+                  There is no link for the same reason: one that fails for every visitor is
+                  worse than none.
+                </p>
+              )}
+
               {drafted && (
                 <p className="t-data mt-2">
                   <strong>The thesis line was drafted, not written.</strong> A model was given the
@@ -280,16 +305,22 @@ export function VaultCard({ entry }: { entry: Entry }) {
               ▸ Tap to close
             </button>
             {/* the one thing on the card that must not turn it over */}
-            <a
-              className="vault__code"
-              href={entry.links.code}
-              rel="noreferrer noopener"
-              target="_blank"
-              tabIndex={flipped ? 0 : -1}
-              onClick={(event) => event.stopPropagation()}
-            >
-              Code ↗
-            </a>
+            {entry.links.code ? (
+              <a
+                className="vault__code"
+                href={entry.links.code}
+                rel="noreferrer noopener"
+                target="_blank"
+                tabIndex={flipped ? 0 : -1}
+                onClick={(event) => event.stopPropagation()}
+              >
+                Code ↗
+              </a>
+            ) : (
+              <span className="vault__code" style={{ color: "var(--ink-faint)" }}>
+                Private — no link
+              </span>
+            )}
           </div>
         </div>
       </div>

@@ -52,7 +52,13 @@ before typecheck, tests and build.
 
 The survey workflow is `.github/workflows/survey.yml` — `workflow_dispatch`
 only, no cron. It runs when a button is pressed, never on a schedule. It
-collects every public non-fork repository, scores it, publishes the catalogue,
+collects every non-fork repository — public, and private too when the optional
+`SURVEY_TOKEN` secret is set (changed 2026-10-17 at the owner's instruction;
+see DEPLOY.md, "Private repositories"). A private entry is ranked by the same
+engine, badged on its card, carries no code link, and says that its rank is
+the one number on the page a reader cannot reproduce. `phase00/exclude.json`
+keeps a named repository out of the survey entirely, dropped before anything
+is requested about it. It scores each one, publishes the catalogue,
 drafts prose for anything unwritten, runs all three test suites, and commits
 only when a reading moved. A new repository becomes a ranked card on the first
 run that sees it; no code change is needed, and nothing gates an entry but

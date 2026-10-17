@@ -1,0 +1,18 @@
+{
+  "comment": [
+    "Repositories the survey must never collect, by exact name.",
+    "",
+    "Since the collector reads the owned listing, a private repository is",
+    "catalogued and published like any other. That is the point of it, and it",
+    "is also the risk: a card on a public site carries the name, description,",
+    "file paths and commit counts of whatever is listed.",
+    "",
+    "A name here is dropped before any request is made for it, so nothing",
+    "about it reaches out/raw.json, the catalogue, or the site. Excluding is",
+    "cheaper than regretting: add first, remove once you are sure.",
+    "",
+    "Forks and the profile repo are already excluded by the engine and do not",
+    "need listing here."
+  ],
+  "repos": []
+}

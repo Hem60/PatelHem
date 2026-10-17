@@ -117,40 +117,64 @@ is needed.
 
 ## Private repositories
 
-**The survey never sees them, and that is by design.**
+The survey can catalogue them, and does not by default.
 
-`phase00/collect.mjs` reads `users/<name>/repos` — the *public* listing. It
-returns public repositories only, regardless of who is authenticated; a token
-does not widen it. Private repositories live behind `/user/repos`, the
-authenticated-user endpoint, which needs a user-to-server token with `repo`
-scope.
+`phase00/collect.mjs` asks for `user/repos` — the authenticated listing, which
+returns public *and* private repositories owned by the account. It falls back
+to `users/<name>/repos`, the public listing, when the token cannot answer. The
+collect step prints which one did.
 
-The workflow has no such token. It authenticates with `GITHUB_TOKEN`, an
-installation token scoped to this one repository, which cannot enumerate the
-owner's other repositories at all. The public endpoint works there precisely
-because it needs no scope.
+| token | listing | private repositories |
+|---|---|---|
+| `GITHUB_TOKEN` (default) | `users/<name>/repos` | invisible |
+| `SURVEY_TOKEN` (optional secret) | `user/repos` | catalogued and ranked |
 
-So a private repository is invisible twice over. Pressing the button again
-will not help.
+`GITHUB_TOKEN` is an installation token scoped to this one repository and
+cannot enumerate the owner's others, which is why the fallback exists at all.
 
-**To get a new repository ranked: make it public.** The next survey collects
-it, scores it on the same five axes, drafts a thesis line for it and publishes
-a card — no code change, nothing to configure.
+### Turning it on
 
-### Why not just add a token and rank them anyway
+1. Create a fine-grained personal access token on the account, with
+   **Repository access: all repositories** and **Repository permissions →
+   Contents: read-only**. Nothing needs write.
+2. Add it at **Settings → Secrets and variables → Actions** as
+   `SURVEY_TOKEN`. Do not paste it anywhere else.
+3. Run the survey.
 
-Because a rank is a claim, and the claim this site makes is that anyone can
-check it: clone the repository, run the engine, get the same numbers. A card
-for a repository nobody else can open is a score nobody can reproduce. It
-would be the one figure on the page taken purely on trust, sitting in the same
-grid as figures that are not.
+The run never fails for want of the secret. Without it the survey behaves
+exactly as it did before.
 
-Shared work on a collaborator's private repository is handled instead by
-`pipeline/data/external.json` — collected by hand, labelled private, never
-ranked, and shown with the arithmetic rather than a composite. That is the
-shape any private work should take here. See **Attribution** in `CLAUDE.md`.
+### What a private card publishes, and what it costs
 
-It failed silently once: a private repository was created, the button pressed,
-the run went green, and the catalogue did not move with nothing saying why.
-The collector and the run summary now state the public-only rule on every run,
-whether or not anything is missing.
+A private repository is scored by the same engine on the same five axes — the
+badge changes what a reader can verify, never how the number is calculated,
+and `site/test/system.test.ts` pins that.
+
+What goes onto a public site is the name, description, file paths, language
+map and commit counts. The card is badged **Private**, carries **no code
+link** (one that 404s for every visitor is worse than none), and says on its
+back that its rank is the one number on the page a reader cannot reproduce —
+because they cannot clone the repository and re-run the engine.
+
+That last point is the real cost. Every other figure here can be re-derived by
+anyone. A private card's cannot, and pretending otherwise would weaken the
+claim the whole page rests on.
+
+### Keeping a repository off the site
+
+Add its name to `meridian/phase00/exclude.json`:
+
+```json
+{ "repos": ["FINANCE", "myselfhem"] }
+```
+
+It is dropped *before* anything is requested about it, so nothing reaches
+`out/raw.json`, the catalogue, or the site — and the log counts it without
+naming it. Excluding is cheaper than regretting.
+
+### A hazard when running the collector locally
+
+`phase00/out/raw.json` and `phase00/cache/` are tracked in git, and with a
+token they fill with private repositories' file paths and manifests. **Do not
+commit them.** The survey workflow never does — it commits
+`meridian/pipeline/data` only, and clears the cache before collecting.

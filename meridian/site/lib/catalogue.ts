@@ -51,7 +51,13 @@ const entrySchema = z.object({
     mine: z.number(),
     total: z.number(),
   }),
-  links: z.object({ code: z.string(), live: z.string().nullable() }),
+  /*
+   * Optional so a catalogue published before private repositories were
+   * surveyed still loads. Absent means public, which is what every entry in
+   * such a catalogue was.
+   */
+  private: z.boolean().optional().default(false),
+  links: z.object({ code: z.string().nullable(), live: z.string().nullable() }),
   updated: z.string(),
 });
 

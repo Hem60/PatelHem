@@ -196,6 +196,40 @@ describe("authored content", () => {
     expect(cat.entries.length).toBeLessThanOrEqual(SHELF);
   });
 
+  it("publishes no code link for a private repository", () => {
+    /*
+     * A private repository is ranked by the same engine as every other, but
+     * its URL 404s for every reader but its owner. A link that fails for
+     * everyone is worse than none, so there is none — the same rule the
+     * external shared work follows.
+     */
+    for (const entry of cat.entries) {
+      if (!entry.private) continue;
+      expect(entry.links.code, entry.name).toBe(null);
+    }
+  });
+
+  it("gives every public entry a real code link", () => {
+    /* the other half: `private` must not become a way to lose links */
+    for (const entry of cat.entries) {
+      if (entry.private) continue;
+      expect(entry.links.code, entry.name).toMatch(/^https:\/\/github\.com\//);
+    }
+  });
+
+  it("ranks a private entry on the same five axes as every other", () => {
+    /*
+     * Private changes what a reader can verify, never how the engine scores.
+     * If this ever stops holding, the badge would be hiding a different
+     * calculation rather than a different level of proof.
+     */
+    for (const entry of cat.entries) {
+      if (!entry.private) continue;
+      const sum = AXES.reduce((t, a) => t + (entry.axes[a.key] ?? 0) * a.weight, 0);
+      expect(Math.round(sum * 10) / 10, entry.name).toBeCloseTo(entry.composite, 1);
+    }
+  });
+
   it("keeps external shared work out of the catalogue", () => {
     /*
      * A repository on somebody else's account must never be ranked. The vault

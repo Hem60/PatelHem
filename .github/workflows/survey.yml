@@ -37,9 +37,25 @@ jobs:
       - name: Clear the response cache
         run: rm -rf meridian/phase00/cache && mkdir -p meridian/phase00/cache
 
+      # ── the token decides whether private repositories are surveyed ───────
+      # GITHUB_TOKEN is an installation token scoped to this repository. It
+      # cannot enumerate the owner's other repositories, so with it the
+      # collector falls back to the public listing and a private repository
+      # stays invisible.
+      #
+      # SURVEY_TOKEN is an optional personal access token with read access to
+      # the owner's repositories. With it the collector reads user/repos and
+      # private repositories are catalogued like any other — which is the
+      # point, and also the risk: their names, descriptions, file paths and
+      # commit counts go onto a public site. phase00/exclude.json is the
+      # control for that, and the collector drops an excluded name before it
+      # requests anything about it.
+      #
+      # The run never fails for want of the secret. Without it the survey
+      # behaves exactly as it did before, and says which listing it used.
       - name: Collect the account
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.SURVEY_TOKEN || secrets.GITHUB_TOKEN }}
         run: node meridian/phase00/collect.mjs "${{ github.repository_owner }}"
 
       - name: Build the instruments
@@ -139,9 +155,14 @@ jobs:
           # nothing anywhere saying why.
           {
             echo ""
-            echo "**Only public repositories are surveyed.** The collector reads"
-            echo "\`users/${{ github.repository_owner }}/repos\`, the public listing."
-            echo "A private repository is invisible to it and will never appear in the"
-            echo "catalogue, however many times this button is pressed — make it public"
-            echo "and the next run ranks it. See DEPLOY.md, \"Private repositories\"."
+            echo "Which repositories were surveyed depends on the token: with the"
+            echo "optional \`SURVEY_TOKEN\` secret the collector reads \`user/repos\` and"
+            echo "catalogues private repositories too; without it, only the public"
+            echo "listing. The collect step prints which listing answered."
+            echo ""
+            echo "A private entry is badged on its card, carries no code link, and says"
+            echo "that its rank is the one number on the page a reader cannot reproduce."
+            echo "To keep a repository off the site entirely, add its name to"
+            echo "\`meridian/phase00/exclude.json\` — it is dropped before anything is"
+            echo "requested about it. See DEPLOY.md, \"Private repositories\"."
           } >> "$GITHUB_STEP_SUMMARY"

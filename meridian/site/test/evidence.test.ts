@@ -71,9 +71,29 @@ describe("claim detection", () => {
   });
 
   it("gives every capability as much evidence as it claims support", () => {
+    /*
+     * An href is either a real github.com URL or nothing at all, and nothing
+     * is allowed only for a private repository.
+     *
+     * The middle case is the one that bit: an earlier cut returned "" for a
+     * private entry, and the caller appends "/tree/HEAD/<path>", so the empty
+     * string became a RELATIVE link quietly pointing at a page on this site
+     * that does not exist. A dead link that looks alive is worse than an
+     * absent one, so the type is nullable and this pins both halves.
+     */
+    const byName = new Map(cat.entries.map((e) => [e.name, e]));
+
     for (const cap of capabilities(cat)) {
       expect(cap.evidence.length, cap.id).toBe(cap.repos.length);
-      for (const e of cap.evidence) expect(e.href).toMatch(/^https:\/\/github\.com\//);
+      for (const e of cap.evidence) {
+        if (e.href === null) {
+          expect(byName.get(e.repo)?.private, `${e.repo} has no href but is not private`).toBe(
+            true,
+          );
+          continue;
+        }
+        expect(e.href, `${cap.id} → ${e.repo}`).toMatch(/^https:\/\/github\.com\//);
+      }
     }
   });
 

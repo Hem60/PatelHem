@@ -2705,3 +2705,19 @@ body {
   padding: 0 0.25em;
   white-space: nowrap;
 }
+
+/*
+ * The private mark.
+ *
+ * On the face of the card, in the oxide, beside the category. A private entry
+ * is ranked like any other and is the one rank a reader cannot reproduce, so
+ * the difference is visible before you turn the card rather than only after.
+ */
+.private-mark {
+  display: inline-block;
+  margin-right: 0.55ch;
+  padding: 0 0.3em;
+  border: 1px solid var(--oxide);
+  color: var(--oxide);
+  letter-spacing: 0.1em;
+}

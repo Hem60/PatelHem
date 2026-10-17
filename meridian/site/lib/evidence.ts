@@ -137,10 +137,28 @@ export interface Capability {
   /** Repositories that evidence it, strongest first. */
   readonly repos: readonly string[];
   /** The sentence, per repository, that put it here. */
-  readonly evidence: readonly { readonly repo: string; readonly text: string; readonly href: string }[];
+  readonly evidence: readonly {
+    readonly repo: string;
+    readonly text: string;
+    /** Null for a private repository: there is no URL a reader could open. */
+    readonly href: string | null;
+  }[];
 }
 
-const repoUrl = (entry: Entry): string => entry.links.code;
+/*
+ * Where a piece of evidence points, or null when nowhere.
+ *
+ * A private entry has no code link. An earlier cut returned "" here, which is
+ * worse than it looks: the caller appends "/tree/HEAD/<path>", so the empty
+ * string produced a RELATIVE href — a link that silently pointed at a page on
+ * this site that does not exist. test/evidence.test.ts caught it.
+ *
+ * The evidence itself is kept. The repository really does evidence the
+ * capability, and dropping it would understate a graph whose whole claim is
+ * that it is computed from what the account contains. It simply has nowhere
+ * to point, and the caller renders text instead of an anchor.
+ */
+const repoUrl = (entry: Entry): string | null => entry.links.code;
 
 /** Capabilities the account can actually evidence, strongest support first. */
 export function capabilities(cat: Catalogue): Capability[] {
@@ -165,7 +183,9 @@ export function capabilities(cat: Catalogue): Capability[] {
       evidence: hits.map((h) => ({
         repo: h.entry.name,
         text: h.text,
-        href: d.path ? `${repoUrl(h.entry)}/tree/HEAD/${d.path}` : repoUrl(h.entry),
+        href: ((base) => (base === null ? null : d.path ? `${base}/tree/HEAD/${d.path}` : base))(
+          repoUrl(h.entry),
+        ),
       })),
     });
   }

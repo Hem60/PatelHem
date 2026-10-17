@@ -139,9 +139,15 @@ export function Roster({ cat }: { cat: Catalogue }) {
                           style={{ fontSize: "var(--t-xs)", color: "var(--ink-soft)" }}
                         >
                           <span style={{ color: `var(${s.token})` }}>▸</span>
-                          <a href={e.links.code} rel="noreferrer noopener" target="_blank">
-                            {e.name}
-                          </a>
+                          {/* a private entry has no link: it would 404 for
+                              every reader but its owner */}
+                          {e.links.code ? (
+                            <a href={e.links.code} rel="noreferrer noopener" target="_blank">
+                              {e.name}
+                            </a>
+                          ) : (
+                            <span title="Private repository — no public link">{e.name}</span>
+                          )}
                           <span style={{ color: "var(--ink-faint)" }}>
                             {s.axis} {(e.axes[s.axis] ?? 0).toFixed(1)}
                           </span>

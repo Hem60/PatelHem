@@ -111,8 +111,10 @@ export function composeEntry(
     authorship: {
       share: r.authorship.share, mine: r.authorship.mine, total: r.authorship.total,
     },
+    private: s.private,
     links: {
-      code: "https://github.com/" + user + "/" + s.name,
+      /* no link for a private repository — it would 404 for every reader */
+      code: s.private ? null : "https://github.com/" + user + "/" + s.name,
       live: s.homepageStatus === 200 ? s.homepage : null,
     },
     updated: now,

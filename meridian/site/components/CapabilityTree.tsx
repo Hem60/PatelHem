@@ -67,9 +67,16 @@ export function CapabilityTree({ cat }: { cat: Catalogue }) {
                 <ul className="mt-2">
                   {selected.evidence.map((e) => (
                     <li key={`${e.repo}-${e.text}`} className="margin-note">
-                      <a href={e.href} rel="noreferrer noopener" target="_blank" style={{ color: "var(--oxide)" }}>
+                      {/* a private repository has nowhere to point */}
+                      {e.href ? (
+                        <a href={e.href} rel="noreferrer noopener" target="_blank" style={{ color: "var(--oxide)" }}>
                         {e.repo} ↗
-                      </a>{" "}
+                      </a>
+                      ) : (
+                        <span style={{ color: "var(--oxide)" }} title="Private repository — no public link">
+                        {e.repo} ↗
+                      </span>
+                      )}{" "}
                       {e.text}
                     </li>
                   ))}

@@ -53,7 +53,17 @@ export interface Entry {
   readonly facts: readonly { readonly label: string; readonly value: string }[];
   readonly stack: readonly string[];
   readonly authorship: { readonly share: number | null; readonly mine: number; readonly total: number };
-  readonly links: { readonly code: string; readonly live: string | null };
+  /**
+   * Whether the repository is private.
+   *
+   * Load-bearing, not decorative. A private entry is ranked by the same engine
+   * as every other, but nobody else can clone it and re-run that engine — so
+   * it is the one card on the page whose number cannot be checked. The card
+   * says so, and `links.code` is null because a link that fails for every
+   * visitor is worse than none.
+   */
+  readonly private: boolean;
+  readonly links: { readonly code: string | null; readonly live: string | null };
   /** ISO date this entry was last written by the pipeline. */
   readonly updated: string;
 }
