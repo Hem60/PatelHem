@@ -1,3 +1,22 @@
 {
-  "revisions": []
+  "revisions": [
+    {
+      "date": "2026-10-17",
+      "repo": "PatelHem",
+      "from": "UNCOMMON",
+      "to": "RARE",
+      "compositeFrom": 48.3,
+      "compositeTo": 54.8,
+      "cause": {
+        "axis": "cadence",
+        "from": 44.6,
+        "to": 64.6,
+        "evidence": [
+          "activeDays=6",
+          "activeMonths=2"
+        ]
+      },
+      "headline": "PATELHEM · UNCOMMON → RARE · cadence 44.6 → 64.6"
+    }
+  ]
 }
