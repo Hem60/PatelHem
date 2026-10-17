@@ -12,6 +12,30 @@ mkdirSync(OUT, { recursive: true });
 
 const key = p => p.replace(/[^a-z0-9]+/gi, "_").slice(0, 120) + ".json";
 
+/**
+ * Decode a response body that may legitimately be empty.
+ *
+ * GitHub answers 204 No Content with a zero-length body on endpoints that
+ * have nothing to report — `contributors` on a repository with no commits is
+ * the one that bites. `gh api` prints nothing, and `JSON.parse("")` throws
+ * "Unexpected end of JSON input".
+ *
+ * That took down an entire survey. A repository created on the web and not
+ * yet pushed to is empty, the collector reached it third, and the crash
+ * aborted the run before a single other repository was measured — one empty
+ * repository, and nothing on the site could update.
+ *
+ * An empty body is reported in the shape every caller in collectRepo already
+ * branches on: `__error` there does not mean "the request failed", it means
+ * "there is nothing usable here", and 204 is exactly that. `__empty`
+ * distinguishes it from a real failure for anyone reading the cache.
+ */
+export function decode(out) {
+  const body = out.trim();
+  if (body === "") return { __error: true, __empty: true, status: 204 };
+  return JSON.parse(body);
+}
+
 export function api(path, { headers = false } = {}) {
   const f = join(CACHE, (headers ? "H_" : "") + key(path));
   if (existsSync(f)) return JSON.parse(readFileSync(f, "utf8"));
@@ -29,7 +53,7 @@ export function api(path, { headers = false } = {}) {
     let i = out.indexOf("\r\n\r\n"); if (i < 0) i = out.indexOf("\n\n");
     const body = out.slice(i).trim();
     val = { headers: out.slice(0, i), body: body ? JSON.parse(body) : null };
-  } else val = JSON.parse(out);
+  } else val = decode(out);
   writeFileSync(f, JSON.stringify(val));
   return val;
 }
