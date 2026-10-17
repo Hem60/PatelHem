@@ -1,6 +1,6 @@
 {
   "user": "Hem60",
-  "generated": "2026-10-17T09:04:16.264Z",
+  "generated": "2026-10-17T09:13:55.827Z",
   "partMax": {
     "stability": {
       "tests": 26,
@@ -50,11 +50,11 @@
     {
       "name": "vakil",
       "classification": "EPIC",
-      "composite": 68.6,
+      "composite": 67.4,
       "axes": {
         "stability": 89.3,
         "mass": 60,
-        "anomaly": 80,
+        "anomaly": 74,
         "luminosity": 47,
         "cadence": 47.3
       },
@@ -83,7 +83,7 @@
           "evaluates": 8,
           "onChain": 0,
           "uncommonLanguages": 0,
-          "repeatedStack": 0
+          "repeatedStack": -6
         },
         "luminosity": {
           "deployed": 0,
@@ -137,7 +137,7 @@
         },
         {
           "label": "Score",
-          "value": "68.6"
+          "value": "67.4"
         }
       ],
       "stack": [
@@ -155,15 +155,15 @@
         "code": "https://github.com/Hem60/vakil",
         "live": null
       },
-      "updated": "2026-10-17T09:04:16.264Z"
+      "updated": "2026-10-17T09:13:55.827Z"
     },
     {
       "name": "PatelHem",
       "classification": "RARE",
-      "composite": 55,
+      "composite": 55.1,
       "axes": {
         "stability": 65,
-        "mass": 74.3,
+        "mass": 74.5,
         "anomaly": 24,
         "luminosity": 40,
         "cadence": 64.6
@@ -180,7 +180,7 @@
           "pinned": 8
         },
         "mass": {
-          "commits": 19.5,
+          "commits": 19.7,
           "code": 21.1,
           "modules": 13.2,
           "lifespan": 12.2,
@@ -214,20 +214,20 @@
         }
       },
       "thesis": "PatelHem is a self-classifying engineering portfolio that reads repositories, scores them on five fixed axes, and publishes a self-updating catalogue.",
-      "description": "The repository includes a TypeScript engine (src files such as adapter.ts, axes.ts, classify.ts, cli.ts, score.ts) with a test suite and CI workflows defined in .github/workflows. Supporting files provide deployment configuration (.vercelignore, DEPLOY.md) and documentation (README, PLAN.md). The project builds with Node/TypeScript and runs automated tests and continuous integration.",
+      "description": "The repository includes a TypeScript engine (src files such as adapter.ts, axes.ts, classify.ts, cli.ts, score.ts) with a package.json and test suite (14 test files). It also contains GitHub Actions workflows for CI and deployment configuration files (.vercelignore, DEPLOY.md). The project is built with Node/TypeScript and uses CSS/HTML for its front-end presentation.",
       "thesisSource": "groq",
       "annotated": false,
       "summary": [
         "14 test files under `tests/`.",
         "Continuous integration is configured.",
-        "28 commits across 2 months.",
+        "29 commits across 2 months.",
         "Written in TypeScript, CSS and HTML.",
         "Deployed and reachable."
       ],
       "facts": [
         {
           "label": "Commits",
-          "value": "28"
+          "value": "29"
         },
         {
           "label": "Tests",
@@ -239,7 +239,7 @@
         },
         {
           "label": "Score",
-          "value": "55.0"
+          "value": "55.1"
         }
       ],
       "stack": [
@@ -258,16 +258,118 @@
         "code": "https://github.com/Hem60/PatelHem",
         "live": "https://meridian-hem.vercel.app"
       },
-      "updated": "2026-10-17T09:04:16.264Z"
+      "updated": "2026-10-17T09:13:55.827Z"
+    },
+    {
+      "name": "linkedin_agent",
+      "classification": "UNCOMMON",
+      "composite": 47,
+      "axes": {
+        "stability": 54,
+        "mass": 49.1,
+        "anomaly": 44,
+        "luminosity": 22,
+        "cadence": 64.6
+      },
+      "parts": {
+        "stability": {
+          "tests": 26,
+          "ci": 0,
+          "ciGreen": 0,
+          "coverage": 10,
+          "lint": 10,
+          "typing": 0,
+          "license": 0,
+          "pinned": 8
+        },
+        "mass": {
+          "commits": 20.8,
+          "code": 20,
+          "modules": 0,
+          "lifespan": 0.1,
+          "languages": 8.3
+        },
+        "anomaly": {
+          "base": 50,
+          "rareDomain": 0,
+          "commonDomain": 0,
+          "evaluates": 0,
+          "onChain": 0,
+          "uncommonLanguages": 0,
+          "repeatedStack": -6
+        },
+        "luminosity": {
+          "deployed": 0,
+          "readme": 22,
+          "images": 0,
+          "description": 0,
+          "topics": 0,
+          "releases": 0,
+          "docs": 0,
+          "social": 0
+        },
+        "cadence": {
+          "recency": 30,
+          "activeDays": 13.6,
+          "activeMonths": 11,
+          "issueActivity": 0,
+          "sustained": 10
+        }
+      },
+      "thesis": "A Python web application that automates posting and managing LinkedIn content.",
+      "description": "The repository contains a Python backend with modules for LinkedIn integration, publishing, scheduling, and user management, plus HTML/CSS front-end assets. Database schema changes are handled with Alembic migration scripts. The project includes tests, linting configuration, and environment setup files.",
+      "thesisSource": "groq",
+      "annotated": false,
+      "summary": [
+        "22 test files under `tests/`.",
+        "Linting is configured and part of the build.",
+        "35 commits across 2 months.",
+        "Written in Python, HTML and CSS."
+      ],
+      "facts": [
+        {
+          "label": "Commits",
+          "value": "35"
+        },
+        {
+          "label": "Tests",
+          "value": "22"
+        },
+        {
+          "label": "Code",
+          "value": "484 KB"
+        },
+        {
+          "label": "Score",
+          "value": "47.0"
+        }
+      ],
+      "stack": [
+        "Python",
+        "HTML",
+        "CSS",
+        "Mako"
+      ],
+      "authorship": {
+        "share": 100,
+        "mine": 35,
+        "total": 35
+      },
+      "private": false,
+      "links": {
+        "code": "https://github.com/Hem60/linkedin_agent",
+        "live": null
+      },
+      "updated": "2026-10-17T09:13:55.827Z"
     },
     {
       "name": "RAG-CHAT-BOT",
       "classification": "UNCOMMON",
-      "composite": 38.9,
+      "composite": 37.7,
       "axes": {
         "stability": 12.9,
         "mass": 37.5,
-        "anomaly": 72,
+        "anomaly": 66,
         "luminosity": 41.4,
         "cadence": 43.7
       },
@@ -296,7 +398,7 @@
           "evaluates": 0,
           "onChain": 0,
           "uncommonLanguages": 0,
-          "repeatedStack": 0
+          "repeatedStack": -6
         },
         "luminosity": {
           "deployed": 0,
@@ -336,7 +438,7 @@
         },
         {
           "label": "Score",
-          "value": "38.9"
+          "value": "37.7"
         }
       ],
       "stack": [
@@ -353,7 +455,7 @@
         "code": "https://github.com/Hem60/RAG-CHAT-BOT",
         "live": null
       },
-      "updated": "2026-10-17T09:04:16.264Z"
+      "updated": "2026-10-17T09:13:55.827Z"
     },
     {
       "name": "IRIS-PREDICTOR",
@@ -453,7 +555,7 @@
         "code": "https://github.com/Hem60/IRIS-PREDICTOR",
         "live": null
       },
-      "updated": "2026-10-17T09:04:16.264Z"
+      "updated": "2026-10-17T09:13:55.827Z"
     },
     {
       "name": "MOVIE_RECOMMENDER",
@@ -548,7 +650,7 @@
         "code": "https://github.com/Hem60/MOVIE_RECOMMENDER",
         "live": null
       },
-      "updated": "2026-10-17T09:04:16.264Z"
+      "updated": "2026-10-17T09:13:55.827Z"
     },
     {
       "name": "webathon",
@@ -641,22 +743,38 @@
         "code": "https://github.com/Hem60/webathon",
         "live": null
       },
-      "updated": "2026-10-17T09:04:16.264Z"
+      "updated": "2026-10-17T09:13:55.827Z"
     }
   ],
   "state": {
+    "linkedin_agent": {
+      "current": "UNCOMMON",
+      "since": "2026-10-17T09:13:55.827Z",
+      "history": [
+        47,
+        47
+      ],
+      "axesAtGrant": {
+        "stability": 54,
+        "mass": 49.1,
+        "anomaly": 44,
+        "luminosity": 22,
+        "cadence": 64.6
+      },
+      "compositeAtGrant": 47
+    },
     "PatelHem": {
       "current": "RARE",
       "since": "2026-10-17T08:21:31.813Z",
       "history": [
-        49.4,
-        49.4,
         54.8,
         54.8,
         55,
         55,
         55,
-        55
+        55,
+        55.1,
+        55.1
       ],
       "axesAtGrant": {
         "stability": 65,
@@ -677,8 +795,8 @@
         68.6,
         68.6,
         68.6,
-        68.6,
-        68.6
+        67.4,
+        67.4
       ],
       "axesAtGrant": {
         "stability": 89.3,
@@ -743,8 +861,8 @@
         38.9,
         38.9,
         38.9,
-        38.9,
-        38.9
+        37.7,
+        37.7
       ],
       "axesAtGrant": {
         "stability": 12.9,
