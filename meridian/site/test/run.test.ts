@@ -26,9 +26,32 @@ describe("the run's target list", () => {
     expect(res.status).toBe(400);
   });
 
-  it("accepts every catalogued repository", async () => {
+  it("refuses a private repository even though the catalogue lists it", async () => {
+    /*
+     * The run executes on the server with the server's token. A private entry
+     * admitted here would let any visitor stream that repository's file tree,
+     * README and commit history out through this endpoint. The catalogue
+     * publishes a private entry's NUMBERS on purpose; it does not publish its
+     * contents, and this is the line.
+     *
+     * Deliberately not dependent on the deployment holding a public-only
+     * token: a wider token is a configuration mistake, and a configuration
+     * mistake must not be the only thing standing between a visitor and a
+     * private repository.
+     */
+    for (const entry of cat.entries) {
+      if (!entry.private) continue;
+      const res = await GET(
+        new Request(`http://localhost/api/run?repo=${encodeURIComponent(entry.name)}`),
+      );
+      expect(res.status, entry.name).toBe(400);
+    }
+  });
+
+  it("accepts every catalogued public repository", async () => {
     /* the stream is not consumed here — only the admission decision is */
     for (const entry of cat.entries) {
+      if (entry.private) continue;
       const res = await GET(new Request(`http://localhost/api/run?repo=${encodeURIComponent(entry.name)}`));
       expect(res.status, entry.name).toBe(200);
       expect(res.headers.get("content-type")).toContain("text/event-stream");

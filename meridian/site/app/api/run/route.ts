@@ -16,10 +16,28 @@ import { runContext } from "@/lib/run/context";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-/** Only repositories the catalogue already lists. An open box here is an open
- *  proxy to the GitHub API on somebody else's rate limit. */
+/**
+ * Only public repositories the catalogue already lists.
+ *
+ * Two separate reasons, and both are load-bearing.
+ *
+ * Listed, because an open target box here would be an open proxy to the
+ * GitHub API on somebody else's rate limit.
+ *
+ * Public, because once private repositories are surveyed they appear in the
+ * catalogue like any other — and this route runs on the server with the
+ * server's token. A private entry reaching here would let any visitor stream
+ * that repository's file tree, README and commit history out through this
+ * endpoint. The catalogue publishes a private entry's NUMBERS deliberately;
+ * it does not publish its contents, and this is where that line is held.
+ *
+ * It does not depend on the deployment being given a public-only token. A
+ * token with wider access is a configuration mistake, and a configuration
+ * mistake should not be the only thing standing between a visitor and a
+ * private repository.
+ */
 function permitted(repo: string): boolean {
-  return catalogue().entries.some((e) => e.name === repo);
+  return catalogue().entries.some((e) => e.name === repo && !e.private);
 }
 
 export async function GET(request: Request): Promise<Response> {

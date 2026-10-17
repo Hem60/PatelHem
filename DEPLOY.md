@@ -46,6 +46,13 @@ above. Everything else comes from `meridian/site/vercel.json`.
 |---|---|---|
 | `GITHUB_TOKEN` | no | Raises the observing run's GitHub rate limit from 60 requests an hour to 5,000. Use a fine-grained token with **public repositories, read-only** and no write scopes. |
 
+> **Use a PUBLIC-repositories token here, and never the `SURVEY_TOKEN`.**
+> This variable is read by `/api/run`, which any visitor can call. The route
+> refuses private entries outright — `permitted()` checks `!e.private`, and
+> `test/run.test.ts` pins it — so a wider token does not open a hole on its
+> own. But the two tokens have different jobs and different blast radii, and
+> the one a stranger's click can reach should be the narrow one.
+
 Neither the site nor its build needs a Groq key. Drafting happens in the
 survey workflow only, and what reaches the site is a committed JSON file.
 

@@ -66,7 +66,19 @@ const EMPTY_METER: Meter = {
 };
 
 export function ObservingRun({ cat }: { cat: Catalogue }) {
-  const entries = [...cat.entries].sort((a, b) => b.composite - a.composite);
+  /*
+   * Public entries only.
+   *
+   * A private repository is ranked and carded like any other, but it cannot
+   * be dispatched here: the run executes on the server with the server's
+   * token, so offering one would let any visitor stream its file tree, README
+   * and commit history out through /api/run. The route refuses them too —
+   * this is the half that keeps a button from appearing that would only fail.
+   */
+  const entries = [...cat.entries]
+    .filter((e) => !e.private)
+    .sort((a, b) => b.composite - a.composite);
+  const withheld = cat.entries.length - entries.length;
   const [target, setTarget] = useState(entries[0]?.name ?? "");
   const [running, setRunning] = useState(false);
   const [lines, setLines] = useState<Line[]>([]);
@@ -282,9 +294,18 @@ export function ObservingRun({ cat }: { cat: Catalogue }) {
         </ul>
 
         <p className="margin-note px-4 pb-3 pt-1">
-          Estimated cost: {ESTIMATED_CALLS} calls per mission. Only catalogued repositories can be
-          dispatched — an open target box here would be an open proxy on somebody else&rsquo;s rate
-          limit.
+          Estimated cost: {ESTIMATED_CALLS} calls per mission. Only catalogued public
+          repositories can be dispatched — an open target box here would be an open proxy on
+          somebody else&rsquo;s rate limit.
+          {withheld > 0 && (
+            <>
+              {" "}
+              {withheld} private {withheld === 1 ? "entry is" : "entries are"} ranked in the vault
+              but not offered here: this run executes on the server, so dispatching one would
+              stream a repository you cannot open out through this endpoint. The numbers are
+              published; the contents are not.
+            </>
+          )}
         </p>
 
         {/*
