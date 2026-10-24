@@ -132,6 +132,32 @@ operative names, quotes or project copy. Every fact on this page is Hem's and
 computed. A cloned layout carrying someone else's credentials is a forgery, not
 a portfolio.
 
+## A rename is not a new repository
+
+`pipeline/src/rename.ts`. GitHub's numeric repository id is recorded into
+catalogue `state` and a rename is recognised by **id only** — never by name
+similarity, which would eventually migrate one project's class history onto
+another.
+
+When one is detected, three things follow the new name automatically:
+
+1. **catalogue state** — the class, the grant date and the score history.
+   Without this a rename reads as a deletion plus a creation: the grant date
+   resets and the hysteresis that stops a project flickering between bands
+   starts again from nothing.
+2. **`data/prose.json`** — the thesis line, moved to the new key. It never
+   overwrites a line already written under the new name.
+3. **`site/content/skills.json`** — the authored evidence sentences, where
+   the name is rewritten in the text because there is no key to move.
+
+This exists because `RAG-CHAT-BOT` → `agentic-rag-chat-bot` failed a survey on
+a skill citing evidence from a repository the catalogue no longer held. The
+guard was right to fail; nothing propagated the change.
+
+**State written before ids existed has none, so the first run after a rename
+lands adopts ids and detects nothing.** That is correct — there is no evidence
+a rename happened, so none is claimed. Only renames from then on migrate.
+
 ## Three fixes that must not be undone
 
 1. **Stability reads config from inside manifests** — `[tool.mypy]`,

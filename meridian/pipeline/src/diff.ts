@@ -68,6 +68,15 @@ export function advance(
   changes: readonly Change[],
   now: string,
   historyLimit = 8,
+  /**
+   * GitHub's numeric id per repository name, from this collection.
+   *
+   * Recorded into state so the NEXT run can tell a rename from a deletion
+   * plus a creation. Without it a renamed repository loses its class history
+   * and its grant date, and the hysteresis that stops a project flickering
+   * between bands starts again from nothing.
+   */
+  ids: Readonly<Record<string, number>> = {},
 ): Catalogue["state"] {
   const next: Record<string, StateEntry> = {};
   const byName = new Map(changes.map(c => [c.repo, c]));
@@ -87,7 +96,11 @@ export function advance(
       : prior.axesAtGrant;
     const compositeAtGrant = granting ? r.composite : prior.compositeAtGrant;
 
-    next[r.name] = { current, since, history, axesAtGrant, compositeAtGrant };
+    const id = ids[r.name] ?? prior?.id;
+    next[r.name] = {
+      ...(id === undefined ? {} : { id }),
+      current, since, history, axesAtGrant, compositeAtGrant,
+    };
   }
   return next;
 }

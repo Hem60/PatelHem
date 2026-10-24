@@ -12,6 +12,7 @@ import {
 } from "./catalogue.js";
 import { composeEntry, type Prose } from "./compose.js";
 import { advance, diff, type Change } from "./diff.js";
+import { detectRenames, migrateKeys, rewriteNames } from "./rename.js";
 import { loadSignals } from "./load.js";
 import { PART_MAX } from "@meridian/engine";
 
@@ -52,7 +53,7 @@ const stage = (name: string, msg: string): void => { console.log("  " + name.pad
 log();
 log("  MERIDIAN SURVEY" + (DRY ? "  ·  dry run, nothing will be written" : ""));
 log();
-const { user, collectedAt, repos } = loadSignals(RAW);
+const { user, collectedAt, repos, ids } = loadSignals(RAW);
 stage("01 collect", repos.length + " repositories read");
 
 // ---- 02 measure -----------------------------------------------------------
@@ -71,9 +72,71 @@ stage("02 measure", scored.length + " scored · five axes · no model involved")
 // ---- 03 diff --------------------------------------------------------------
 const catPath = resolve(DATA, "catalogue.json");
 const revPath = resolve(DATA, "revisions.json");
-const prose = readJson<Prose>(resolve(DATA, "prose.json"), {});
+const proseOnDisk = readJson<Prose>(resolve(DATA, "prose.json"), {});
 const previous = readJson<Catalogue>(catPath, emptyCatalogue(user, collectedAt));
-const { changes, dirty } = diff(previous, scored, collectedAt);
+
+/* reassigned only when a rename moves state onto a new key */
+let previousState: Catalogue["state"] = previous.state;
+
+/*
+ * Renames, before anything else looks at a name.
+ *
+ * A repository that kept its GitHub id and changed its name is the same
+ * project. Everything keyed by name by hand has to follow it, or the next
+ * stage sees the old entry vanish and a new one appear: the class history is
+ * lost, the grant date resets, and the hysteresis that stops a project
+ * flickering between bands starts again from nothing.
+ *
+ * Detected by id only. A name match proves nothing and a heuristic would
+ * eventually migrate one project's history onto another.
+ */
+const renames = detectRenames(previous, ids);
+let prose: Prose = proseOnDisk;
+
+if (renames.length > 0) {
+  for (const r of renames) stage("", "renamed: " + r.from + " → " + r.to + " (id " + r.id + ")");
+
+  /* the class history, so a rename does not read as a new repository */
+  const migratedState = migrateKeys(previous.state, renames);
+  if (migratedState.moved.length > 0) {
+    previousState = migratedState.next;
+    stage("", "  carried the class history: " + migratedState.moved.join(", "));
+  }
+
+  /* the drafted or hand-written thesis lines */
+  const migratedProse = migrateKeys(proseOnDisk, renames);
+  if (migratedProse.moved.length > 0) {
+    prose = migratedProse.next;
+    writeFileSync(
+      resolve(DATA, "prose.json"),
+      JSON.stringify(
+        Object.fromEntries(Object.keys(migratedProse.next).sort().map(k => [k, migratedProse.next[k]!])),
+        null,
+        2,
+      ) + "\n",
+    );
+    stage("", "  moved prose: " + migratedProse.moved.join(", "));
+  }
+
+  /*
+   * The authored evidence lines in the site's skill set. There is no key to
+   * move here — a person wrote the repository name inside a sentence — so the
+   * name is replaced in the text. Leaving it stale fails the build, which is
+   * correct but unhelpful: a skill citing a repository the catalogue does not
+   * hold is a claim with nothing behind it.
+   */
+  const skillsPath = resolve(DATA, "..", "..", "site", "content", "skills.json");
+  if (existsSync(skillsPath)) {
+    const before = readFileSync(skillsPath, "utf8");
+    const after = rewriteNames(before, renames);
+    if (after !== before) {
+      writeFileSync(skillsPath, after);
+      stage("", "  rewrote the skill evidence in site/content/skills.json");
+    }
+  }
+}
+
+const { changes, dirty } = diff({ ...previous, state: previousState }, scored, collectedAt);
 
 const kinds: Record<string, number> = {};
 for (const c of changes) kinds[c.kind] = (kinds[c.kind] ?? 0) + 1;
@@ -150,7 +213,7 @@ const next: Catalogue = {
   generated: collectedAt,
   partMax: PART_MAX,
   entries: [...entries].sort((a, b) => b.composite - a.composite),
-  state: advance(previous, scored, changes, collectedAt),
+  state: advance({ ...previous, state: previousState }, scored, changes, collectedAt, undefined, ids),
 };
 const nextLog: RevisionLog = { revisions: [...fresh, ...revisionLog.revisions] };
 

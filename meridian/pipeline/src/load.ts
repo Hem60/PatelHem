@@ -3,6 +3,8 @@ import type { Signals } from "@meridian/engine";
 
 /** The one place the collector JSON shape is known. */
 interface RawRepo {
+  /** GitHub's numeric id — stable across renames. Absent in older files. */
+  id?: number | null;
   name: string; description: string | null; fork: boolean; archived: boolean; private: boolean;
   paths?: string[]; manifests?: Record<string, string>; languages?: Record<string, number>;
   commit_count?: number; commit_dates?: string[];
@@ -13,11 +15,28 @@ interface RawRepo {
   readme_len?: number; readme_images?: number; last_run_conclusion: string | null;
 }
 
-export function loadSignals(path: string): { user: string; collectedAt: string; repos: Signals[] } {
+/**
+ * Load the collected account.
+ *
+ * `ids` is returned alongside the signals rather than inside them. The engine
+ * contract is "everything the engine needs, and nothing it does not", and an
+ * id is not used for scoring — but the pipeline needs it to notice that a
+ * repository it already knows has appeared under a new name.
+ */
+export function loadSignals(path: string): {
+  user: string;
+  collectedAt: string;
+  repos: Signals[];
+  ids: Record<string, number>;
+} {
   const raw = JSON.parse(readFileSync(path, "utf8")) as { user: string; collected_at: string; repos: RawRepo[] };
+  const ids: Record<string, number> = {};
+  for (const r of raw.repos) if (typeof r.id === "number") ids[r.name] = r.id;
+
   return {
     user: raw.user,
     collectedAt: raw.collected_at,
+    ids,
     repos: raw.repos.map(r => ({
       name: r.name, description: r.description, fork: r.fork, archived: r.archived, private: r.private,
       paths: r.paths ?? [], manifests: r.manifests ?? {}, languages: r.languages ?? {},

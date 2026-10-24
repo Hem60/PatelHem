@@ -85,6 +85,16 @@ export interface Catalogue {
 }
 
 export interface StateEntry {
+  /**
+   * GitHub's numeric id for the repository.
+   *
+   * Recorded so a rename can be recognised. A name is not an identity: rename
+   * a repository and every file that pinned the old one by hand goes stale at
+   * once, which is how a survey came to fail on a skill citing evidence from a
+   * repository the catalogue no longer held. Optional, because state written
+   * before this field existed has none.
+   */
+  readonly id?: number;
   readonly current: Classification;
   /** ISO date the current class was granted. */
   readonly since: string;

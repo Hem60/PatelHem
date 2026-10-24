@@ -101,6 +101,10 @@ export async function collectRepo(r) {
   }
 
   return {
+    /* GitHub's numeric id. Stable across a rename, which is the only handle
+       anything has for noticing that a repository is the same project under a
+       new name. Not used for scoring — it never reaches Signals. */
+    id: r.id ?? null,
     name: r.name, full_name: full, description: r.description,
     fork: r.fork, archived: r.archived, private: r.private,
     language: r.language, languages: languages.__error ? {} : languages,
