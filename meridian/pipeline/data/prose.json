@@ -32,12 +32,12 @@
     "factsHash": "138828c2b3bf7463"
   },
   "linkedin_agent": {
-    "thesis": "A Python web application that automates posting and managing LinkedIn content.",
-    "description": "The repository contains a Python backend with modules for LinkedIn integration, publishing, scheduling, and user management, plus HTML/CSS front-end assets. Database schema changes are handled with Alembic migration scripts. The project includes tests, linting configuration, and environment setup files.",
+    "thesis": "An automated LinkedIn posting and management tool that schedules, publishes, and tracks content.",
+    "description": "The repository holds a Python application with modules for authentication, LinkedIn API interaction, scheduling, publishing, image generation, and notifications, plus HTML/CSS front-end templates. Database schema migrations are managed with Alembic, and the project includes a test suite and linting configuration as part of its build process.",
     "source": "groq",
     "model": "openai/gpt-oss-120b",
-    "generated": "2026-10-17T09:14:02.059Z",
-    "factsHash": "eb3e455520f3c9e4"
+    "generated": "2026-10-24T12:27:18.743Z",
+    "factsHash": "718b4020e317572d"
   },
   "vakil": "Most merchants lose chargebacks by default rather than by argument — nobody assembled the evidence pack before the window closed. That gap is the product.",
   "webathon": {
