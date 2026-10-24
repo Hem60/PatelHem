@@ -12,7 +12,7 @@
       "name": "Shell",
       "kind": "language",
       "level": 58,
-      "evidence": "Tooling and automation in vakil and RAG-CHAT-BOT",
+      "evidence": "Tooling and automation in vakil and agentic-rag-chat-bot",
       "source": "catalogue"
     },
     {
@@ -61,14 +61,14 @@
       "name": "Retrieval & RAG",
       "kind": "ai",
       "level": 78,
-      "evidence": "RAG-CHAT-BOT — retrieval pipeline over an embedding store",
+      "evidence": "agentic-rag-chat-bot — retrieval pipeline over an embedding store",
       "source": "catalogue"
     },
     {
       "name": "Embedding stores",
       "kind": "ai",
       "level": 66,
-      "evidence": "RAG-CHAT-BOT — vector lookup behind the chat surface",
+      "evidence": "agentic-rag-chat-bot — vector lookup behind the chat surface",
       "source": "catalogue"
     },
     {
@@ -131,7 +131,7 @@
       "name": "Docker & Compose",
       "kind": "ops",
       "level": 84,
-      "evidence": "Containerised in 4 of 5, with a Compose stack in vakil and RAG-CHAT-BOT",
+      "evidence": "Containerised in 4 of 5, with a Compose stack in vakil and agentic-rag-chat-bot",
       "source": "catalogue"
     },
     {
