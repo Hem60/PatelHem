@@ -1,6 +1,6 @@
 {
   "user": "Hem60",
-  "generated": "2026-10-24T12:15:00.587Z",
+  "generated": "2026-10-24T12:19:18.188Z",
   "partMax": {
     "stability": {
       "tests": 26,
@@ -155,22 +155,22 @@
         "code": "https://github.com/Hem60/vakil",
         "live": null
       },
-      "updated": "2026-10-24T12:15:00.587Z"
+      "updated": "2026-10-24T12:19:18.188Z"
     },
     {
       "name": "PatelHem",
       "classification": "RARE",
-      "composite": 55.7,
+      "composite": 55.9,
       "axes": {
-        "stability": 65.5,
-        "mass": 76.1,
+        "stability": 65.9,
+        "mass": 76.5,
         "anomaly": 24,
         "luminosity": 40,
         "cadence": 65.6
       },
       "parts": {
         "stability": {
-          "tests": 24.5,
+          "tests": 24.9,
           "ci": 18,
           "ciGreen": 0,
           "coverage": 10,
@@ -180,7 +180,7 @@
           "pinned": 8
         },
         "mass": {
-          "commits": 20.8,
+          "commits": 21.1,
           "code": 21.2,
           "modules": 13.2,
           "lifespan": 12.7,
@@ -218,28 +218,28 @@
       "thesisSource": "groq",
       "annotated": false,
       "summary": [
-        "15 test files under `tests/`.",
+        "16 test files under `tests/`.",
         "Continuous integration is configured.",
-        "35 commits across 2 months.",
+        "37 commits across 2 months.",
         "Written in TypeScript, CSS and HTML.",
         "Deployed and reachable."
       ],
       "facts": [
         {
           "label": "Commits",
-          "value": "35"
+          "value": "37"
         },
         {
           "label": "Tests",
-          "value": "15"
+          "value": "16"
         },
         {
           "label": "Code",
-          "value": "696 KB"
+          "value": "710 KB"
         },
         {
           "label": "Score",
-          "value": "55.7"
+          "value": "55.9"
         }
       ],
       "stack": [
@@ -258,7 +258,7 @@
         "code": "https://github.com/Hem60/PatelHem",
         "live": "https://meridian-hem.vercel.app"
       },
-      "updated": "2026-10-24T12:15:00.587Z"
+      "updated": "2026-10-24T12:19:18.188Z"
     },
     {
       "name": "agentic-rag-chat-bot",
@@ -316,9 +316,9 @@
           "sustained": 10
         }
       },
-      "thesis": null,
-      "description": null,
-      "thesisSource": null,
+      "thesis": "A Python tool for fully local retrieval-augmented question answering over technical PDFs using CPU embeddings, FAISS, and an LLM-as-judge evaluation harness.",
+      "description": "The repository includes a Python application (app.py), a corpus of technical PDF texts, Docker configuration for containerised local execution, and test suites. It builds embeddings with CPU-based sentence-transformers, stores them in a FAISS index, and provides an LLM-as-judge harness for evaluating QA performance.",
+      "thesisSource": "groq",
       "annotated": false,
       "summary": [
         "8 test files under `tests/`.",
@@ -357,7 +357,7 @@
         "code": "https://github.com/Hem60/agentic-rag-chat-bot",
         "live": null
       },
-      "updated": "2026-10-24T12:15:00.587Z"
+      "updated": "2026-10-24T12:19:18.188Z"
     },
     {
       "name": "linkedin_agent",
@@ -459,7 +459,7 @@
         "code": "https://github.com/Hem60/linkedin_agent",
         "live": null
       },
-      "updated": "2026-10-24T12:15:00.587Z"
+      "updated": "2026-10-24T12:19:18.188Z"
     },
     {
       "name": "IRIS-PREDICTOR",
@@ -559,7 +559,7 @@
         "code": "https://github.com/Hem60/IRIS-PREDICTOR",
         "live": null
       },
-      "updated": "2026-10-24T12:15:00.587Z"
+      "updated": "2026-10-24T12:19:18.188Z"
     },
     {
       "name": "MOVIE_RECOMMENDER",
@@ -654,7 +654,7 @@
         "code": "https://github.com/Hem60/MOVIE_RECOMMENDER",
         "live": null
       },
-      "updated": "2026-10-24T12:15:00.587Z"
+      "updated": "2026-10-24T12:19:18.188Z"
     },
     {
       "name": "webathon",
@@ -747,22 +747,23 @@
         "code": "https://github.com/Hem60/webathon",
         "live": null
       },
-      "updated": "2026-10-24T12:15:00.587Z"
+      "updated": "2026-10-24T12:19:18.188Z"
     }
   ],
   "state": {
     "PatelHem": {
+      "id": 1356848983,
       "current": "RARE",
       "since": "2026-10-17T08:21:31.813Z",
       "history": [
-        55,
-        55.1,
         55.1,
         55.3,
         55.3,
         55.4,
         55.4,
-        55.7
+        55.7,
+        55.9,
+        55.9
       ],
       "axesAtGrant": {
         "stability": 65,
@@ -774,9 +775,12 @@
       "compositeAtGrant": 54.8
     },
     "agentic-rag-chat-bot": {
+      "id": 1293680624,
       "current": "RARE",
       "since": "2026-10-24T12:15:00.587Z",
       "history": [
+        50.4,
+        50.4,
         50.4
       ],
       "axesAtGrant": {
@@ -789,6 +793,7 @@
       "compositeAtGrant": 50.4
     },
     "linkedin_agent": {
+      "id": 1423085669,
       "current": "UNCOMMON",
       "since": "2026-10-17T09:13:55.827Z",
       "history": [
@@ -797,7 +802,8 @@
         47,
         47,
         47,
-        47,
+        48.9,
+        48.9,
         48.9
       ],
       "axesAtGrant": {
@@ -810,10 +816,11 @@
       "compositeAtGrant": 47
     },
     "vakil": {
+      "id": 1345634331,
       "current": "EPIC",
       "since": "2026-08-26T12:33:08.193Z",
       "history": [
-        68.6,
+        67.4,
         67.4,
         67.4,
         67.4,
@@ -832,6 +839,7 @@
       "compositeAtGrant": 67.4
     },
     "MOVIE_RECOMMENDER": {
+      "id": 1295132734,
       "current": "COMMON",
       "since": "2026-08-26T12:33:08.193Z",
       "history": [
@@ -854,6 +862,7 @@
       "compositeAtGrant": 22.3
     },
     "IRIS-PREDICTOR": {
+      "id": 1293931449,
       "current": "COMMON",
       "since": "2026-08-26T12:33:08.193Z",
       "history": [
@@ -876,6 +885,7 @@
       "compositeAtGrant": 33
     },
     "webathon": {
+      "id": 1040875179,
       "current": "COMMON",
       "since": "2026-08-26T12:33:08.193Z",
       "history": [
