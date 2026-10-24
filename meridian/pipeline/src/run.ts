@@ -136,7 +136,27 @@ if (renames.length > 0) {
   }
 }
 
-const { changes, dirty } = diff({ ...previous, state: previousState }, scored, collectedAt);
+/*
+ * A partial run must never publish.
+ *
+ * `--repo one-project` scores exactly one repository, and everything
+ * downstream is built from what was scored: the catalogue would be rewritten
+ * with a single entry and the state of every other project discarded. That
+ * was true before removals were detected and merely latent; with removals it
+ * would also report the rest of the account as deleted. It is a diagnostic
+ * flag, so it reads and reports and writes nothing.
+ */
+const PARTIAL = ONLY !== undefined;
+
+const { changes, dirty } = diff({ ...previous, state: previousState }, scored, collectedAt, {
+  complete: !PARTIAL,
+});
+
+const removed = changes.filter(c => c.kind === "removed").map(c => c.repo);
+if (removed.length > 0) {
+  stage("", "no longer on the account: " + removed.join(", "));
+  stage("", "  their cards come off the site with this publish");
+}
 
 const kinds: Record<string, number> = {};
 for (const c of changes) kinds[c.kind] = (kinds[c.kind] ?? 0) + 1;
@@ -216,6 +236,20 @@ const next: Catalogue = {
   state: advance({ ...previous, state: previousState }, scored, changes, collectedAt, undefined, ids),
 };
 const nextLog: RevisionLog = { revisions: [...fresh, ...revisionLog.revisions] };
+
+if (PARTIAL) {
+  /*
+   * Refused, not silently truncated. Everything downstream is built from what
+   * was scored, so publishing one repository would rewrite the catalogue with
+   * a single entry and drop the state of every other project.
+   */
+  stage("06 publish", "refused — --repo scores one repository and cannot publish a catalogue");
+  log();
+  log("  " + scored.length + " scored, " + previous.entries.length + " in the published catalogue");
+  log("  drop --repo to publish, or add --dry-run to silence this");
+  log();
+  process.exit(0);
+}
 
 if (DRY) {
   stage("06 publish", "skipped — dry run");

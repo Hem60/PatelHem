@@ -11,7 +11,17 @@ export type Change =
   | { readonly kind: "promote"; readonly repo: string; readonly to: ScoredRepo; readonly fromClass: string }
   | { readonly kind: "demote"; readonly repo: string; readonly to: ScoredRepo; readonly fromClass: string }
   | { readonly kind: "rescore"; readonly repo: string; readonly to: ScoredRepo; readonly delta: number }
-  | { readonly kind: "hold"; readonly repo: string; readonly to: ScoredRepo; readonly reason: string };
+  | { readonly kind: "hold"; readonly repo: string; readonly to: ScoredRepo; readonly reason: string }
+  /**
+   * In the previous catalogue and not in this survey.
+   *
+   * Deleted, archived, made private, or renamed without the rename being
+   * recognised. There is no ScoredRepo because there is nothing left to
+   * score — which is exactly why this was missed: every other change is
+   * discovered by walking what WAS collected, and a deletion is the one
+   * thing that can only be found by walking what was not.
+   */
+  | { readonly kind: "removed"; readonly repo: string };
 
 export interface DiffResult {
   readonly changes: readonly Change[];
@@ -26,7 +36,19 @@ export function diff(
   previous: Catalogue,
   scored: readonly ScoredRepo[],
   now: string,
+  options: {
+    /**
+     * Whether `scored` is the whole account.
+     *
+     * A removal can only be inferred from absence, and absence means nothing
+     * unless everything was looked at. A partial run — `--repo one-project` —
+     * would otherwise report every other repository as deleted and the
+     * catalogue would be emptied by a diagnostic command.
+     */
+    readonly complete?: boolean;
+  } = {},
 ): DiffResult {
+  const { complete = true } = options;
   const changes: Change[] = [];
 
   for (const r of scored) {
@@ -54,6 +76,22 @@ export function diff(
       changes.push({ kind: "rescore", repo: r.name, to: r, delta: Math.round(delta * 10) / 10 });
     } else {
       changes.push({ kind: "hold", repo: r.name, to: r, reason: move.reason });
+    }
+  }
+
+  if (complete) {
+    /*
+     * What the survey no longer finds.
+     *
+     * Walked over the previous catalogue rather than the current readings,
+     * because a deleted repository leaves nothing behind to iterate. Without
+     * this a deletion produced no change at all: every survivor held, `dirty`
+     * stayed false, the run exited without a commit, and the deleted
+     * project kept its card on the site indefinitely.
+     */
+    const present = new Set(scored.map(r => r.name));
+    for (const name of Object.keys(previous.state)) {
+      if (!present.has(name)) changes.push({ kind: "removed", repo: name });
     }
   }
 

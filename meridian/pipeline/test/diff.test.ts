@@ -122,3 +122,53 @@ describe("dominantAxis", () => {
     expect(dominantAxis(null, after).axis).toBe("anomaly");
   });
 });
+
+describe("a repository that is no longer on the account", () => {
+  /*
+   * The bug: diff only ever walked what WAS collected, so a deletion produced
+   * no change at all. Every survivor held, `dirty` stayed false, the run
+   * exited without a commit, and the deleted project kept its card on the
+   * site indefinitely. Reproduced against the live catalogue before the fix.
+   */
+  const previous = {
+    user: "Hem60",
+    generated: "",
+    partMax: {},
+    entries: [],
+    state: {
+      kept: { current: "COMMON", since: "2026-01-01T00:00:00.000Z", history: [20], axesAtGrant: {}, compositeAtGrant: 20 },
+      gone: { current: "COMMON", since: "2026-01-01T00:00:00.000Z", history: [16], axesAtGrant: {}, compositeAtGrant: 16 },
+    },
+  } as unknown as Parameters<typeof diff>[0];
+
+  const kept = [{ name: "kept", composite: 20, classification: "COMMON", axes: {}, authorship: {} }] as unknown as Parameters<typeof diff>[1];
+
+  it("reports it as removed", () => {
+    const r = diff(previous, kept, NOW);
+    expect(r.changes.filter((c) => c.kind === "removed").map((c) => c.repo)).toEqual(["gone"]);
+  });
+
+  it("marks the run dirty, so the card actually comes off the site", () => {
+    /* the whole bug in one assertion: this was false */
+    expect(diff(previous, kept, NOW).dirty).toBe(true);
+  });
+
+  it("reports nothing removed when every repository is still there", () => {
+    const both = [
+      { name: "kept", composite: 20, classification: "COMMON", axes: {}, authorship: {} },
+      { name: "gone", composite: 16, classification: "COMMON", axes: {}, authorship: {} },
+    ] as unknown as Parameters<typeof diff>[1];
+    expect(diff(previous, both, NOW).changes.some((c) => c.kind === "removed")).toBe(false);
+  });
+
+  it("infers nothing from absence on a partial run", () => {
+    /*
+     * `--repo one-project` scores one repository. Absence means nothing when
+     * not everything was looked at, and treating it as deletion would let a
+     * diagnostic command empty the catalogue.
+     */
+    const r = diff(previous, kept, NOW, { complete: false });
+    expect(r.changes.some((c) => c.kind === "removed")).toBe(false);
+    expect(r.dirty).toBe(false);
+  });
+});

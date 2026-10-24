@@ -132,6 +132,20 @@ operative names, quotes or project copy. Every fact on this page is Hem's and
 computed. A cloned layout carrying someone else's credentials is a forgery, not
 a portfolio.
 
+## A deletion is found by absence, not by reading
+
+`diff()` walked only what WAS collected, so a repository deleted from the
+account produced no change at all: every survivor held, `dirty` stayed false,
+the run exited without a commit, and the deleted project kept its card on the
+site indefinitely. It now walks the previous state as well and emits a
+`removed` change, which makes the run dirty and takes the card off.
+
+**A partial run must never infer a deletion.** Absence means nothing unless
+everything was looked at, so `diff()` takes `complete` and `--repo` sets it
+false. `--repo` also refuses to publish outright — everything downstream is
+built from what was scored, so publishing one repository would rewrite the
+catalogue with a single entry and discard the state of every other project.
+
 ## A rename is not a new repository
 
 `pipeline/src/rename.ts`. GitHub's numeric repository id is recorded into
